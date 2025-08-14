@@ -82,5 +82,5 @@ class Matricula(ControleDeRegistros):
     def __str__(self):
         return f"{self.aluno.nome} - {self.sala.nome} - {self.ano}" # type: ignore
     
-class AtribuicaoProfessor(ControleDeRegistros):
+# class AtribuicaoProfessor(ControleDeRegistros):
 
