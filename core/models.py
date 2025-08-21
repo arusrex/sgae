@@ -9,3 +9,7 @@ class ControleDeRegistros(models.Model):
 
     class Meta:
         abstract = True
+
+class Auditoria(ControleDeRegistros):
+    ip = models.CharField(max_length=100, blank=True, null=True)
+    info = models.TextField(blank=True, null=True)
