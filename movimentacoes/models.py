@@ -1,3 +1,68 @@
 from django.db import models
+from cadastros.models import Professor, Aluno, Disciplina, Sala
+from core.models import ControleDeRegistros
+from datetime import date
 
-# Create your models here.
+ano_atual = date.today().year
+
+class Turma(ControleDeRegistros):
+    STATUS = [
+        ('ativo', 'Ativo'),
+        ('inativo', 'Inativo'),
+        ('remanejado', 'Remanejado'),
+        ('transferido', 'Transferido'),
+        ('concluido', 'Concluído'),
+    ]
+
+    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
+    numero = models.IntegerField(blank=True, null=True)
+    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
+    status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
+
+    def __str__(self):
+        aluno = self.aluno.nome if self.aluno else "Sem aluno"
+        sala = self.sala.nome if self.sala else "Sem sala"
+        ano = self.sala.ano if self.sala else "Sem ano"
+
+        return f"{aluno} - {sala} - {ano}"
+    
+class AtribuicaoProfessor(ControleDeRegistros):
+    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
+    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.SET_NULL, blank=True, null=True)
+
+    def __str__(self):
+        professor = self.professor.user.get_full_name() if self.professor else "Sem professor(a)"
+        sala = self.sala.nome if self .sala else "Sem sala"
+
+        return f"Professor(a): {professor} - Sala: {sala}"
+    
+class Movimentacoes(ControleDeRegistros):
+    TIPOS = [
+        ('matricula', 'Matrícula'),
+        ('remanejamento', 'Remanejamento'),
+        ('transferencia', 'Transferência')
+    ]
+
+    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
+    origem = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
+    destino = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
+    tipo = models.CharField(max_length=30, choices=TIPOS, default='Matrícula')
+    ano = models.IntegerField(default=ano_atual)
+
+    def __str__(self):
+        aluno = self.aluno.nome if self.aluno else "Sem aluno"
+
+        return f"{self.tipo} de {aluno}"
+    
+class FrequenciaProfessores(ControleDeRegistros):
+    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
+    data = models.DateField()
+    quantidade = models.IntegerField(default=5)
+
+    def __str__(self):
+        professor = self.professor.user.get_full_name() if self.professor else "Sem professor"
+
+        return f"Professor(a): {professor}"
+    
+

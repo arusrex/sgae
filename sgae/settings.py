@@ -27,7 +27,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+AUTH_USER_MODEL = 'usuarios.models.Usuarios'
 # Application definition
 
 INSTALLED_APPS = [
@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'cadastros',
     'core',
     'movimentacoes',
+    'usuarios',
 ]
 
 MIDDLEWARE = [
@@ -158,3 +159,4 @@ MESSAGE_TAGS = {
 }
 
 USE_X_FORWARDED_HOST = True
+
