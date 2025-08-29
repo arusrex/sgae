@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+    {% include "partials/head.html" %}
+    <body>
+        <div id="layoutError">
+            <div id="layoutError_content">
+                <main>
+                    <div class="container">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-6">
+                                <div class="text-center mt-4">
+                                    <img class="mb-4 img-error" src="assets/img/error-404-monochrome.svg" />
+                                    <p class="lead">A url solicitada não foi encontrada no servidor.</p>
+                                    <a href="{% url "index" %}">
+                                        <i class="fas fa-arrow-left me-1"></i>
+                                        Retornar
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            </div>
+            <div id="layoutError_footer">
+                {% include "partials/footer.html" %}
+            </div>
+        </div>
+        {% include "partials/scripts.html" %}
+    </body>
+</html>

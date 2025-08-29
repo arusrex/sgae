@@ -11,3 +11,13 @@ class ControleDeRegistros(models.Model):
 
     class Meta:
         abstract = True
+
+class Sistema(ControleDeRegistros):
+    nome = models.CharField(max_length=150, blank=True, null=True)
+    descricao = models.TextField(blank=True, null=True)
+    logo = models.CharField(max_length=255, blank=True, null=True)
+    cabecalho = models.CharField(max_length=255, blank=True, null=True)
+    rodape = models.CharField(max_length=255, blank=True, null=True)
+
+    def __str__(self):
+        return self.nome if self.nome else "Sistema Administrativo"
