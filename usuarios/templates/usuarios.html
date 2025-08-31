@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class='container-fluid px-4'>
+    <h1 class='mt-4'>Usuários do Sistema</h1>
+    <ol class='breadcrumb mb-4'>
+        <li class='breadcrumb-item active'><a href="{% url "usuarios:usuarios" %}" class="text-decoration-none">Usuários</a></li>
+    </ol>
+    <div class='row justify-content-center'>
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-users me-1"></i>
+                    Administração dos Usuários
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div><a href="{% url 'usuarios:novo-usuario' %}" class="btn btn-primary btn-block">Novo Usuário</a></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-users me-1"></i>
+                    Dados dos Usuários
+                </div>
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Sobrenome</th>
+                        <th>Email</th>
+                        <th>Ações</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for usuario in usuarios %}
+                    <tr>
+                        <td>{{usuario.first_name}}</td>
+                        <td>{{usuario.last_name}}</td>
+                        <td>{{usuario.email}}</td>
+                        <td>
+                            <a href="{% url "usuarios:editar-usuario" usuario.pk %}" class="btn btn-warning btn-block">Editar</a>
+                            <a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-danger btn-block">Excluir</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+                </div>
+                <div class="card-footer text-center py-3">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

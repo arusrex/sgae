@@ -25,7 +25,18 @@
                     Salas
                 </a>
                 <div class="sb-sidenav-menu-heading">Movimentações</div>
-                
+                <a class="nav-link collapsed" href="{% url "movimentacoes:matriculas" %}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-file-circle-plus"></i></div>
+                    Matriculas
+                </a>
+                <a class="nav-link collapsed" href="{% url "movimentacoes:remanejamentos" %}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-down-left-and-up-right-to-center"></i></div>
+                    Remanejamentos
+                </a>
+                <a class="nav-link collapsed" href="{% url "movimentacoes:transferencias" %}">
+                    <div class="sb-nav-link-icon"><i class="fas fa-right-from-bracket"></i></div>
+                    Transferências
+                </a>
                 {% comment %}  <div class="sb-sidenav-menu-heading">Interface</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
@@ -91,6 +102,9 @@
                         
                         <a class="nav-link collapsed" href="{% url "core:sistema" %}">
                             Dados do Sistema
+                        </a>
+                        <a class="nav-link collapsed" href="{% url "usuarios:usuarios" %}">
+                            Usuarios
                         </a>
                         
                     </nav>

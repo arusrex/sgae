@@ -25,4 +25,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('sistema/', include('core.urls')),
     path('cadastros/', include('cadastros.urls')),
+    path('movimentacoes/', include('movimentacoes.urls')),
+    path('usuarios/', include('usuarios.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

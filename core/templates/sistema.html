@@ -4,7 +4,7 @@
 <div class="container-fluid px-4">
     <h1 class="mt-4">Configurações</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active">Sistema</li>
+        <li class="breadcrumb-item active"><a href="{% url 'core:sistema' %}" class="text-decoration-none">Sistema</a></li>
     </ol>
     <div class="row justify-content-center">
         <div class="col-lg-12">
@@ -14,7 +14,8 @@
                      Dados do Sistema
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST">
+                        {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-12">
                                 <label for="nome" class="form-label">Nome</label>
@@ -46,7 +47,7 @@
                             </div>
                         </div>
                         <div class="mt-4 mb-0">
-                            <div><a class="btn btn-primary btn-block" href="{% url "index" %}">Salvar dados</a></div>
+                            <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
                         </div>
                     </form>
                 </div>
