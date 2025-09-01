@@ -145,9 +145,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 7
 
 
-LOGIN_URL = 'login/'
+LOGIN_URL = '/sistema/login/'
 
-LOGOUT_REDIRECT_URL = 'login/'
+# LOGOUT_REDIRECT_URL = '/login/'
 
 from django.contrib import messages
 from django.contrib.messages import constants

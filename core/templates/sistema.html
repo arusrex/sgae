@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block content %}
 <div class="container-fluid px-4">
@@ -20,7 +21,7 @@
                             <div class="col-md-12">
                                 <label for="nome" class="form-label">Nome</label>
                                 <div class="mb-3 mb-md-0">
-                                    <input class="form-control" id="nome" type="text" placeholder="Insira o nome do sistema" />
+                                    <input class="form-control" id="nome" name="nome" type="text" value="{{sistema_nome}}" placeholder="Insira o nome do sistema" />
                                 </div>
                             </div>
                         </div>
@@ -28,20 +29,24 @@
                             <div class="col-md-12">
                                 <label for="descricao" class="form-label">Descrição</label>
                                 <div class=" mb-3 mb-md-0">
-                                    <textarea class="form-control" rows="5" id="descricao" placeholder="Insira aqui a descrição do sistema"></textarea>
+                                    <textarea class="form-control" rows="5" id="descricao" name="descricao" value="{{sistema_descricao}}" placeholder="Insira aqui a descrição do sistema"></textarea>
                                 </div>
                             </div>
                         </div>
+                        <hr>
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-1">
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if logo %}{{logo}}{% else %}{{sistema_logo}}{% endif %}" class="img-fluid" alt="Logotipo"></div>
                                 <label for="logotipo" class="form-label">Logotipo</label>
                                 <input class="form-control" id="logotipo" name="logotipo" type="file" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-1">
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if cabecalho %}{{cabecalho}}{% else %}{{sistema_cabecalho}}{% endif %}" class="img-fluid" alt="Cabeçalho"></div>
                                 <label for="cabecalho" class="form-label">Cabeçalho</label>
                                 <input class="form-control" id="cabecalho" name="cabecalho" type="file" />
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-4 mt-1">
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if rodape %}{{rodape}}{% else %}{{sistema_rodape}}{% endif %}" class="img-fluid" alt="Rodapé"></div>
                                 <label for="rodape" class="form-label">Rodapé</label>
                                 <input class="form-control" id="rodape" name="rodape" type="file" />
                             </div>

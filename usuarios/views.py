@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
+from django.contrib.auth.decorators import login_required
 from core.models import Auditoria
 from .models import Usuarios
 
-
+@login_required
 def usuarios(request):
     usuarios = Usuarios.objects.all()
 
@@ -13,6 +14,7 @@ def usuarios(request):
 
     return render(request, 'usuarios.html', context)
 
+@login_required
 def novo_usuario(request):
 
     if request.method == 'POST':
@@ -49,6 +51,7 @@ def novo_usuario(request):
 
     return render(request, 'form-usuario.html', context)
 
+@login_required
 def editar_usuario(request, pk):
 
     if request.method == 'POST':
@@ -98,7 +101,7 @@ def editar_usuario(request, pk):
 
         return redirect('usuarios:usuarios')
         
-
+@login_required
 def excluir_usuario(request, pk):
     usuario = Usuarios.objects.get(pk=pk)
 
