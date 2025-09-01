@@ -52,3 +52,23 @@ def sistema(request):
     }
 
     return render(request, 'sistema.html', context)
+
+def context_processors(request):
+    dados = Sistema.objects.first()
+
+    if not dados:
+        nome = 'Sistema Administrativo'
+        descricao = 'Administração e Gestão Descomplicada - ARUS DIGITAL TECH'
+        logo = '/assets/img/arus_logo.png'
+        cabecalho = '/assets/img/arus_logo.png'
+        rodape = '/assets/img/arus_logo.png'
+
+    context = {
+        'sistema_nome': nome,
+        'sistema_descricao': descricao,
+        'sistema_logo': logo,
+        'sistema_cabecalho': cabecalho,
+        'sistema_rodape': rodape
+    }
+
+    return context
