@@ -37,11 +37,11 @@
                                     <input class="form-control" id="email" name="email" type="email" value="{{email}}" placeholder="nome@exemplo.com" />
                                 </div>
                             </div>
-                            {% if user.pk != usuario_pk %}
+                            {% if user.pk != usuario.pk %}
                             <div class="col-md-3 mb-3">
                                 <label for="status" class="form-check-label">Status</label>
                                 <div class="mb-3 mb-md-0 form-check">
-                                    <input class="form-check-input" id="status" name="status" type="checkbox" {% if usuario.is_active %}value="1" checked{% endif %} />
+                                    <input class="form-check-input" id="status" name="status" type="checkbox" {% if usuario.is_active %}value="1" checked {% else %}value="0"{% endif %} />
                                     * Marque para ativar o usuário
                                 </div>
                             </div>

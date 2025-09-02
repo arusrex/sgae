@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 from core.models import Auditoria
 from .models import Usuarios
 
@@ -61,7 +62,6 @@ def editar_usuario(request, pk):
 
     if request.method == 'POST':
         usuario = Usuarios.objects.get(pk=pk)
-        usuario_id = usuario.pk
 
         nome = request.POST.get('nome')
         sobrenome = request.POST.get('sobrenome')
@@ -78,11 +78,15 @@ def editar_usuario(request, pk):
             usuario.first_name = nome
             usuario.last_name = sobrenome
             usuario.email = email
-            usuario.is_active = status
 
             if senha1 and senha1 == senha2:
                 usuario.password = make_password(senha1)
-            
+
+            if user.pk == usuario.pk:
+                usuario.is_active = True
+            else:
+                usuario.is_active = status
+                        
             usuario.save()
 
             Auditoria.objects.create(
@@ -91,7 +95,7 @@ def editar_usuario(request, pk):
                 info=f'O usuário foi editado - {usuario.get_full_name()}'
             )
 
-            return redirect('usuarios:editar-usuario', usuario_id)
+            return redirect('usuarios:editar-usuario', usuario.pk)
         
     usuario = Usuarios.objects.get(pk=pk)
 
@@ -102,7 +106,7 @@ def editar_usuario(request, pk):
                 'sobrenome': usuario.last_name,
                 'email': usuario.email,
                 'is_active': usuario.is_active,
-                'usuario_pk': usuario.pk
+                'usuario': usuario
             }
         
         return render(request, 'form-usuario.html', context)
@@ -128,7 +132,7 @@ def status_usuario(request, pk):
     Auditoria.objects.create(
         acao='Alteração de status de usuário',
         criado_por=user.get_full_name(),
-        infor=f'Status atualizado para: {status}'
+        info=f'Status atualizado para: {status}'
     )
 
     return redirect('usuarios:usuarios')
@@ -156,3 +160,34 @@ def excluir_usuario(request, pk):
             info=f'Erro ao tentar excluir o usuário - {usuario.get_full_name()}'
         )
         return redirect('usuarios:usuarios')
+
+
+@login_required
+def usuario_administrador(request, pk):
+    usuario = Usuarios.objects.get(pk=pk)
+
+    if usuario.is_superuser:
+        usuario.is_superuser = False
+    else:
+        usuario.is_superuser = True
+    
+    usuario.save()
+
+    return redirect('usuarios:usuarios')
+
+@login_required
+def atividades(request):
+    user = request.user
+
+    dados = Auditoria.objects.filter(
+        Q(criado_por=user.get_full_name()) |
+        Q(criado_por=user.email) |
+        Q(atualizado_por=user.get_full_name()) |
+        Q(atualizado_por=user.email)
+        )
+
+    context = {
+        'dados': dados
+    }
+
+    return render(request, 'log_atividades.html', context)

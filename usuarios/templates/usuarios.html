@@ -50,13 +50,18 @@
                         <td>{{usuario.last_name}}</td>
                         <td>{{usuario.email}}</td>
                         <td>
-                            <a href="{% url "usuarios:editar-usuario" usuario.pk %}" class="btn btn-warning btn-block">Editar</a>
-                            {% if user.is_superuser %}<a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-danger btn-block">Excluir</a>{% endif %}
+                            <a href="{% url "usuarios:editar-usuario" usuario.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                            {% if user.is_superuser %}<a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             {% if user.pk != usuario.pk %}
                             {% if usuario.is_active %}
-                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-secondary btn-block">Desativar usuário</a>
+                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-sm btn-secondary btn-block">Desativar usuário</a>
                             {% else %}
-                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-success btn-block">Ativar usuário</a>
+                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-sm btn-success btn-block">Ativar usuário</a>
+                            {% endif %}
+                            {% if user.is_superuser and not usuario.is_superuser %}
+                            <a href="{% url "usuarios:usuario-administrador" usuario.pk %}" class="btn btn-sm btn-primary btn-block">Delegar administrador</a>
+                            {% elif user.is_superuser and usuario.is_superuser %}
+                            <a href="{% url "usuarios:usuario-administrador" usuario.pk %}" class="btn btn-sm btn-dark btn-block">Remover administrador</a>
                             {% endif %}
                             {% endif %}
                         </td>

@@ -69,12 +69,27 @@ def registro(request):
     return render(request, "registro.html")
 
 def redefinir_senha(request):
+    if request.method == 'POST':
+        email = request.POST['email']
 
-    context = {
-        'mensagem': 'Se este endereço de e-mail estiver registrado no sistema, um e-mail com instruções será enviado!'
-    }
+        if email == '':
+            mensagem = 'Digite um e-mail!'
+        
+        if email:
+            usuario = Usuarios.objects.filter(email=email).first()
 
-    return render(request, "redefinir_senha.html", context)
+            if usuario:
+                mensagem = 'Um e-mail foi enviado com instruções para a redefinir sua senha!'
+            else:
+                mensagem = 'Usuário não encontrado'
+
+        context = {
+            'mensagem': mensagem,
+        }
+        return render(request, "redefinir_senha.html", context)
+    
+
+    return render(request, "redefinir_senha.html")
 
 @login_required
 def index(request):
