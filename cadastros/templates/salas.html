@@ -14,7 +14,8 @@
                     Cadastro de sala
                 </div>
                 <div class="card-body">
-                    <form>
+                    <form method="POST">
+                        {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-2">
                                 <label for="numero" class="form-label">Número</label>
@@ -37,7 +38,7 @@
                         </div>
                         
                         <div class="mt-4 mb-0">
-                            <div><a class="btn btn-primary btn-block" href="{% url "index" %}">Salvar dados</a></div>
+                            <div><button class="btn btn-primary btn-block">Salvar dados</button></div>
                         </div>
                     </form>
                 </div>

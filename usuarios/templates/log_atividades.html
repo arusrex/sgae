@@ -2,54 +2,49 @@
 
 {% block content %}
 <div class="container-fluid p-4">
-    <div class="row">
-        <div class="card mb-4">
-            <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                Atividades
-            </div>
-            {% if dados %}
-            <div class="card-body">
-                <table id="datatablesSimple">
-                    <thead>
-                        <tr>
-                            <th>Ação</th>
-                            <th>Data</th>
-                            <th>Usuário</th>
-                            <th>Última atualização</th>
-                            <th>Atualizado por</th>
-                            <th>IP</th>
-                            <th>Informações</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Ação</th>
-                            <th>Data</th>
-                            <th>Usuário</th>
-                            <th>Última atualização</th>
-                            <th>Atualizado por</th>
-                            <th>IP</th>
-                            <th>Informações</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for dado in dados %}
-                        <tr>
-                            <td>{{dado.acao}}</td>
-                            <td>{{dado.criado_em}}</td>
-                            <td>{{dado.criado_por | default_if_none:""}}</td>
-                            <td>{{dado.atualizado_em}}</td>
-                            <td>{{dado.atualizado_por | default_if_none:""}}</td>
-                            <td>{{dado.IP}}</td>
-                            <td>{{dado.info}}</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Atividades
         </div>
+        {% if dados %}
+        <div class="card-body">
+            <table id="datatablesSimple">
+                <thead>
+                    <tr>
+                        <th>Ação</th>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Atualizado por</th>
+                        <th>IP</th>
+                        <th>Informações</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Ação</th>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Atualizado por</th>
+                        <th>IP</th>
+                        <th>Informações</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    {% for dado in dados %}
+                    <tr>
+                        <td>{{dado.acao}}</td>
+                        <td>{{dado.criado_em}}</td>
+                        <td>{{dado.criado_por | default_if_none:""}}</td>
+                        <td>{{dado.atualizado_por | default_if_none:""}}</td>
+                        <td>{{dado.IP}}</td>
+                        <td>{{dado.info}}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
     </div>
 </div>
 {% endblock content %}
