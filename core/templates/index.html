@@ -75,9 +75,9 @@
                 <thead>
                     <tr>
                         <th>Ação</th>
-                        <th>Criado em</th>
-                        <th>Criado por</th>
-                        <th>Atualizado em</th>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Última atualização</th>
                         <th>Atualizado por</th>
                         <th>IP</th>
                         <th>Informações</th>
@@ -86,9 +86,9 @@
                 <tfoot>
                     <tr>
                         <th>Ação</th>
-                        <th>Criado em</th>
-                        <th>Criado por</th>
-                        <th>Atualizado em</th>
+                        <th>Data</th>
+                        <th>Usuário</th>
+                        <th>Última atualização</th>
                         <th>Atualizado por</th>
                         <th>IP</th>
                         <th>Informações</th>
@@ -99,9 +99,9 @@
                     <tr>
                         <td>{{acao.acao}}</td>
                         <td>{{acao.criado_em}}</td>
-                        <td>{{acao.criado_por}}</td>
+                        <td>{{acao.criado_por | default_if_none:""}}</td>
                         <td>{{acao.atualizado_em}}</td>
-                        <td>{{acao.atualizado_por}}</td>
+                        <td>{{acao.atualizado_por | default_if_none:""}}</td>
                         <td>{{acao.IP}}</td>
                         <td>{{acao.info}}</td>
                     </tr>

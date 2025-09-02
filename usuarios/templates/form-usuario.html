@@ -12,7 +12,7 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-plus me-1"></i>
-                    Novo Usuário
+                    Dados do usuário
                 </div>
                 <div class="card-body">
                     <div class="row">
@@ -31,12 +31,21 @@
                                     <input class="form-control" id="sobrenome" name="sobrenome" type="text" value="{{sobrenome}}" placeholder="Insira o sobrenome do usuário" />
                                 </div>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <div class="col-md-9 mb-3">
                                 <label for="email" class="form-label">Endereço de E-mail</label>
                                 <div class="mb-3 mb-md-0">
                                     <input class="form-control" id="email" name="email" type="email" value="{{email}}" placeholder="nome@exemplo.com" />
                                 </div>
                             </div>
+                            {% if user.pk != usuario_pk %}
+                            <div class="col-md-3 mb-3">
+                                <label for="status" class="form-check-label">Status</label>
+                                <div class="mb-3 mb-md-0 form-check">
+                                    <input class="form-check-input" id="status" name="status" type="checkbox" {% if usuario.is_active %}value="1" checked{% endif %} />
+                                    * Marque para ativar o usuário
+                                </div>
+                            </div>
+                            {% endif %}
                             <div class="col-md-6">
                                 <label for="senha" class="form-label">Senha</label>
                                 <div class="mb-3 mb-md-0">

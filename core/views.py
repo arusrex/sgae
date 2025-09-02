@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.hashers import check_password
-from django.contrib.auth.models import User
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from .models import Auditoria, Sistema
+from usuarios.models import Usuarios
 
 def entrar(request):
     if request.method == 'POST':
@@ -24,17 +24,55 @@ def entrar(request):
 def sair(request):
     logout(request)
 
-    return redirect('core:login')
+    return redirect('core:entrar')
 
 def registro(request):
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        email = request.POST['email']
+        senha1 = request.POST['senha']
+        senha2 = request.POST['confirmar-senha']
 
-    context = {}
+        if senha1 == '' or senha1 != senha2:
+            return render(request, 'registro.html', {
+                'nome': nome,
+                'sobrenome': sobrenome,
+                'email':email
+            })
 
-    return render(request, "registro.html", context)
+        email_exists = Usuarios.objects.filter(email=email).exists()
+
+        if email_exists:
+            print('Email já registrado!')
+            return render(request, 'registro.html', {
+                'nome': nome,
+                'sobrenome': sobrenome,
+            })
+        
+        usuario = Usuarios.objects.create(
+                first_name=nome,
+                last_name=sobrenome,
+                email=email,
+                is_active=False,
+                password=make_password(senha1)
+            )
+        
+        Auditoria.objects.create(
+            acao='Registro externo de usuário',
+            criado_por=usuario.get_full_name(),
+            info='Novo registro de usuário aguardando ativação no painel'
+        )
+
+        return redirect('core:entrar')
+
+    return render(request, "registro.html")
 
 def redefinir_senha(request):
 
-    context = {}
+    context = {
+        'mensagem': 'Se este endereço de e-mail estiver registrado no sistema, um e-mail com instruções será enviado!'
+    }
 
     return render(request, "redefinir_senha.html", context)
 

@@ -11,6 +11,10 @@
                                 <div class="card shadow-lg border-0 rounded-lg mt-5">
                                     <div class="card-header"><h3 class="text-center font-weight-light my-4">Entrar</h3></div>
                                     <div class="card-body">
+                                        {% if user.is_authenticated %}
+                                        <p>Usuário logado como - {{user.get_full_name}}</p>
+                                        <a href="{% url "index" %}" class="btn btn-secondary btn-block">Ir para o painel de controle</a>
+                                        {% else %}
                                         <form method="POST">
                                             {% csrf_token %}
                                             <div class="form-floating mb-3">
@@ -30,9 +34,15 @@
                                                 <button type="submit" class="btn btn-primary">Entrar</button>
                                             </div>
                                         </form>
+                                        {% endif %}
+                                        
                                     </div>
                                     <div class="card-footer text-center py-3">
-                                        <div class="small"><a href="{% url "core:registro" %}">Criar nova conta!</a></div>
+                                        {% if not user.is_authenticated %}
+                                        <div class="small">
+                                            <a href="{% url "core:registro" %}">Criar nova conta!</a>
+                                        </div>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </div>

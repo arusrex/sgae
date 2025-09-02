@@ -51,7 +51,14 @@
                         <td>{{usuario.email}}</td>
                         <td>
                             <a href="{% url "usuarios:editar-usuario" usuario.pk %}" class="btn btn-warning btn-block">Editar</a>
-                            <a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-danger btn-block">Excluir</a>
+                            {% if user.is_superuser %}<a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-danger btn-block">Excluir</a>{% endif %}
+                            {% if user.pk != usuario.pk %}
+                            {% if usuario.is_active %}
+                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-secondary btn-block">Desativar usuário</a>
+                            {% else %}
+                            <a href="{% url "usuarios:status-usuario" usuario.pk %}" class="btn btn-success btn-block">Ativar usuário</a>
+                            {% endif %}
+                            {% endif %}
                         </td>
                     </tr>
                     {% endfor %}
