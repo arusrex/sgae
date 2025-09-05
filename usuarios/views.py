@@ -1,5 +1,4 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from core.models import Auditoria
@@ -37,13 +36,14 @@ def novo_usuario(request):
             'erro': 'Senhas não coincidem!'
         })
 
-        usuario = Usuarios.objects.create(
+        usuario = Usuarios(
             first_name=nome,
             last_name=sobrenome,
             email=email,
             is_active=status,
-            password=make_password(senha1)
         )
+        usuario.set_password(senha1)
+        usuario.save()
 
         Auditoria.objects.create(
             acao=f'Usúario criado',
@@ -80,7 +80,7 @@ def editar_usuario(request, pk):
             usuario.email = email
 
             if senha1 and senha1 == senha2:
-                usuario.password = make_password(senha1)
+                usuario.set_password(senha1)
 
             if user.pk == usuario.pk:
                 usuario.is_active = True

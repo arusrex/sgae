@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.hashers import make_password
+from datetime import date, datetime
 from .models import Sala, Disciplina, Professor, Aluno
-from 
+from usuarios.models import Usuarios
 from core.models import Auditoria
 
 @login_required
@@ -11,7 +11,7 @@ def salas(request, pk=None):
     salas = Sala.objects.all()
     
     if pk:
-        sala = Sala.objects.get(pk=pk)
+        sala = get_object_or_404(Sala, pk=pk)
     else:
         sala = None
 
@@ -59,7 +59,7 @@ def salas(request, pk=None):
 
 def excluir_sala(request, pk):
     user = request.user
-    sala = Sala.objects.get(pk=pk)
+    sala = get_object_or_404(Sala, pk=pk)
 
     if sala:
         Auditoria.objects.create(
@@ -77,7 +77,7 @@ def disciplinas(request, pk=None):
     disciplinas = Disciplina.objects.all()
 
     if pk:
-        disciplina = Disciplina.objects.get(pk=pk)
+        disciplina = get_object_or_404(Disciplina, pk=pk)
     else:
         disciplina = None
     
@@ -115,7 +115,7 @@ def disciplinas(request, pk=None):
 @login_required
 def excluir_disciplina(request, pk):
     user = request.user
-    disciplina = Disciplina.objects.get(pk=pk)
+    disciplina = get_object_or_404(Disciplina, pk=pk)
 
     if disciplina:
         Auditoria.objects.create(
@@ -133,22 +133,98 @@ def professores(request, pk=None):
     professores = Professor.objects.all()
 
     if pk:
-        professor = Professor.objects.get(pk=pk)
+        professor = get_object_or_404(Professor, pk=pk)
+        usuario = professor.user
+        professor.nascimento.strftime("%d/%m/%Y")
     else:
         professor = None
-    
-    if professor is not None and request.method == 'POST':
+        usuario = None
 
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        sobrenome = request.POST['sobrenome']
+        email = request.POST['email']
+        senha1 = request.POST['senha']
+        senha2 = request.POST['confirmar-senha']
+        matricula = request.POST['matricula']
+        cpf = request.POST['cpf']
+        rg = request.POST['rg']
+        nascimento = request.POST['nascimento']
+        funcao = request.POST['funcao']
+        telefone = request.POST['telefone']
+        endereco = request.POST['endereco']
+        observacoes = request.POST['observacoes']
+
+        email_exists = Usuarios.objects.filter(email=email).exists()
+
+        if professor is not None and usuario is not None:
+            if usuario.email != email:
+                email_diferente = Usuarios.objects.filter(email=email).exclude(pk=usuario.pk).exists()
+                if email_diferente:
+                    return redirect('cadastros:professores')
+            
+            usuario.first_name = nome
+            usuario.last_name = sobrenome
+            usuario.email = email
+
+            if senha1 is not None and senha1 == senha2:
+                usuario.set_password(senha1)
+
+            usuario.cpf = cpf
+
+            usuario.save()
+
+            professor.matricula = matricula
+            professor.rg = rg
+            professor.nascimento = nascimento
+            professor.funcao = funcao
+            professor.telefone = telefone
+            professor.endereco = endereco
+            professor.observacoes = observacoes
+
+            print(nascimento)
+
+            professor.save()
+            
+            return redirect('cadastros:professores')
+        else:
+            if senha1 == '' or senha1 != senha2 or email_exists:
+                return redirect('cadastros:professores')
+            
+            usuario_criado = Usuarios(
+                first_name=nome,
+                last_name=sobrenome,
+                email=email,
+                cpf=cpf
+            )
+            usuario_criado.set_password(senha1)
+            usuario_criado.save()
+
+            if usuario_criado:
+                professor_criado = Professor(
+                    user=usuario_criado,
+                    matricula=matricula,
+                    rg=rg,
+                    nascimento=nascimento,
+                    funcao=funcao,
+                    telefone=telefone,
+                    endereco=endereco,
+                    observacoes=observacoes
+                )
+                professor_criado.save()
+
+            return redirect('cadastros:professores')
 
     context = {
         'professores': professores,
-        'professor': professor
+        'professor': professor,
+        'usuario': usuario
     }
 
     return render(request, 'professores.html', context)
 
 @login_required
-def excluir_professor(request):
+def excluir_professor(request, pk):
     return redirect('cadastros:professores')
 
 @login_required
