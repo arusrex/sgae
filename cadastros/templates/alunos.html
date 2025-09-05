@@ -1,1 +1,141 @@
 {% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Cadastros</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:alunos" %}" class="text-decoration-none">Alunos</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-plus me-1"></i>
+                    Cadastro de aluno(a)
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-9">
+                                <label for="nome" class="form-label">Nome</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="nome" name="nome" type="text" value="{% if aluno.nome %}{{aluno.nome}}{% endif %}" required />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="rm" class="form-label">RM</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="rm" name="rm" type="text" value="{% if aluno.rm %}{{aluno.rm}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="ra" class="form-label">RA</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="ra" name="ra" type="text" value="{% if aluno.ra %}{{aluno.ra}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="rg" class="form-label">RG</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="rg" name="rg" type="text" value="{% if aluno.rg %}{{aluno.rg}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="cpf" name="cpf" type="text" value="{% if aluno.cpf %}{{aluno.cpf}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="nascimento" class="form-label">Nascimento</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="nascimento" name="nascimento" type="date" value="{% if aluno.nascimento %}{{aluno.nascimento|date:'Y-m-d'}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="cidade" class="form-label">Cidade</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="cidade" name="cidade" type="text" value="{% if aluno.cidade %}{{aluno.cidade}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="estado" class="form-label">Estado</label>
+                                <div class="mb-3 mb-md-0">
+                                    <select class="form-control" id="estado" name="estado">
+                                        {% for estado, label in estados %}
+                                        <option value="{{estado}}" {% if aluno.estado == estado %}selected{% endif %}>{{label}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="cor_raca" class="form-label">Cor/Raça</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="cor_raca" name="cor_raca" type="text" value="{% if aluno.cor_raca %}{{aluno.cor_raca}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="sexo" class="form-label">Sexo/Gênero</label>
+                                <div class="mb-3 mb-md-0">
+                                    <select class="form-control" id="sexo" name="sexo">
+                                        {% for sexo, label in generos %}
+                                        <option value="{{sexo}}" {% if aluno.sexo == sexo %}selected{% endif %}>{{label}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 mb-0">
+                            <div><button class="btn btn-primary btn-block">Salvar dados</button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Discilpinas registradas
+        </div>
+        
+        <div class="card-body">
+            {% if disciplinas %}
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for disciplina in disciplinas %}
+                        <tr>
+                            <td>{{disciplina.nome | default_if_none:""}}</td>
+                            <td>
+                                <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

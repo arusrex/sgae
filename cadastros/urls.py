@@ -14,5 +14,7 @@ urlpatterns = [
     path('editar-professor/<str:pk>/', views.professores, name='editar-professor'),
     path('excluir-professor/<str:pk>/', views.excluir_professor, name='excluir-professor'),
     path('alunos/', views.alunos, name='alunos'),
+    path('editar-aluno/<str:pk>/', views.alunos, name='editar-aluno'),
+    path('excluir-aluno/<str:pk>/', views.excluir_aluno, name='excluir-aluno'),
 ]
 

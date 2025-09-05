@@ -135,7 +135,7 @@ def professores(request, pk=None):
     if pk:
         professor = get_object_or_404(Professor, pk=pk)
         usuario = professor.user
-        professor.nascimento.strftime("%d/%m/%Y")
+
     else:
         professor = None
         usuario = None
@@ -181,8 +181,7 @@ def professores(request, pk=None):
             professor.telefone = telefone
             professor.endereco = endereco
             professor.observacoes = observacoes
-
-            print(nascimento)
+            professor.atualizado_por = user.get_full_name()
 
             professor.save()
             
@@ -209,7 +208,8 @@ def professores(request, pk=None):
                     funcao=funcao,
                     telefone=telefone,
                     endereco=endereco,
-                    observacoes=observacoes
+                    observacoes=observacoes,
+                    criado_por=user.get_full_name()
                 )
                 professor_criado.save()
 
@@ -225,11 +225,32 @@ def professores(request, pk=None):
 
 @login_required
 def excluir_professor(request, pk):
+    user = request.user
+    professor = get_object_or_404(Professor, pk=pk)
+
+    if professor:
+        auditoria = Auditoria(
+            acao='Exclusão de professor(a)',
+            criado_por=user.get_full_name(),
+            info=f'Professor(a) {professor} excluído'
+        )
+        professor.delete()
+        auditoria.save()
+    
     return redirect('cadastros:professores')
 
 @login_required
-def alunos(request):
+def alunos(request, pk=None):
+    alunos = Aluno.objects.all()
 
-    context = {}
+    context = {
+        'tansportes': Aluno.TRANSPORTE,
+        'generos': Aluno.SEXO,
+        'estados': Aluno.ESTADOS,
+        'alunos': alunos
+    }
 
     return render(request, 'alunos.html', context)
+
+def excluir_aluno(request, pk):
+    return redirect('cadastros:alunos')

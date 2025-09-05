@@ -5,35 +5,6 @@ from datetime import date
 
 ano_atual = date.today().year
 
-ESTADOS = [
-    ('AC', 'AC'),
-    ('AL', 'AL'),
-    ('AP', 'AP'),
-    ('AM', 'AM'),
-    ('BA', 'BA'),
-    ('CE', 'CE'),
-    ('DF', 'DF'),
-    ('ES', 'ES'),
-    ('GO', 'GO'),
-    ('MA', 'MA'),
-    ('MT', 'MT'),
-    ('MS', 'MS'),
-    ('MG', 'MG'),
-    ('PA', 'PA'),
-    ('PB', 'PB'),
-    ('PR', 'PR'),
-    ('PE', 'PE'),
-    ('PI', 'PI'),
-    ('RJ', 'RJ'),
-    ('RN', 'RN'),
-    ('RS', 'RS'),
-    ('RO', 'RO'),
-    ('RR', 'RR'),
-    ('SC', 'SC'),
-    ('SP', 'SP'),
-    ('SE', 'SE'),
-    ('TO', 'TO'),
-]
 
 class Sala(ControleDeRegistros):
     numero = models.IntegerField(blank=True, null=True)
@@ -72,6 +43,36 @@ class Aluno(ControleDeRegistros):
     SEXO = [
         ('masculino', 'Masculino'),
         ('feminino', 'Feminino'),
+    ]
+    
+    ESTADOS = [
+        ('AC', 'AC'),
+        ('AL', 'AL'),
+        ('AP', 'AP'),
+        ('AM', 'AM'),
+        ('BA', 'BA'),
+        ('CE', 'CE'),
+        ('DF', 'DF'),
+        ('ES', 'ES'),
+        ('GO', 'GO'),
+        ('MA', 'MA'),
+        ('MT', 'MT'),
+        ('MS', 'MS'),
+        ('MG', 'MG'),
+        ('PA', 'PA'),
+        ('PB', 'PB'),
+        ('PR', 'PR'),
+        ('PE', 'PE'),
+        ('PI', 'PI'),
+        ('RJ', 'RJ'),
+        ('RN', 'RN'),
+        ('RS', 'RS'),
+        ('RO', 'RO'),
+        ('RR', 'RR'),
+        ('SC', 'SC'),
+        ('SP', 'SP'),
+        ('SE', 'SE'),
+        ('TO', 'TO'),
     ]
 
     nome = models.CharField(max_length=150)
