@@ -10,4 +10,4 @@ class Usuarios(AbstractUser):
     REQUIRED_FIELDS = ["cpf"]
 
     def __str__(self):
-        return self.email
+        return self.get_full_name()

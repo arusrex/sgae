@@ -1,1 +1,79 @@
 {% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Cadastros</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:disciplinas" %}" class="text-decoration-none">Disciplinas</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-plus me-1"></i>
+                    Cadastro de disciplina
+                </div>
+                <div class="card-body">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="nome" class="form-label">Nome</label>
+                                <div class="mb-3 mb-md-0">
+                                    <input class="form-control" id="nome" name="nome" type="text" value="{{disciplina.nome}}" placeholder="Insira o nome da sala" required />
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 mb-0">
+                            <div><button class="btn btn-primary btn-block">Salvar dados</button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Discilpinas registradas
+        </div>
+        
+        <div class="card-body">
+            {% if disciplinas %}
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tfoot>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Ações</th>
+                        </tr>
+                    </tfoot>
+                    <tbody>
+                        {% for disciplina in disciplinas %}
+                        <tr>
+                            <td>{{disciplina.nome | default_if_none:""}}</td>
+                            <td>
+                                <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
