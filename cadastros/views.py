@@ -125,12 +125,13 @@ def excluir_disciplina(request, pk):
         )
         disciplina.delete()
 
-    return redirect('cadastros:salas')
+    return redirect('cadastros:disciplinas')
 
 @login_required
 def professores(request, pk=None):
     user = request.user
     professores = Professor.objects.all()
+    disciplinas = Disciplina.objects.all()
 
     if pk:
         professor = get_object_or_404(Professor, pk=pk)
@@ -149,8 +150,9 @@ def professores(request, pk=None):
         matricula = request.POST['matricula']
         cpf = request.POST['cpf']
         rg = request.POST['rg']
-        nascimento = request.POST['nascimento']
+        nascimento = request.POST.get('nascimento')
         funcao = request.POST['funcao']
+        disciplina = get_object_or_404(Disciplina, pk=request.POST.get('disciplina')) or None
         telefone = request.POST['telefone']
         endereco = request.POST['endereco']
         observacoes = request.POST['observacoes']
@@ -178,6 +180,7 @@ def professores(request, pk=None):
             professor.rg = rg
             professor.nascimento = nascimento
             professor.funcao = funcao
+            professor.disciplina = disciplina
             professor.telefone = telefone
             professor.endereco = endereco
             professor.observacoes = observacoes
@@ -206,6 +209,7 @@ def professores(request, pk=None):
                     rg=rg,
                     nascimento=nascimento,
                     funcao=funcao,
+                    disciplina=disciplina,
                     telefone=telefone,
                     endereco=endereco,
                     observacoes=observacoes,
@@ -218,7 +222,8 @@ def professores(request, pk=None):
     context = {
         'professores': professores,
         'professor': professor,
-        'usuario': usuario
+        'usuario': usuario,
+        'disciplinas': disciplinas
     }
 
     return render(request, 'professores.html', context)
@@ -386,4 +391,16 @@ def alunos(request, pk=None):
     return render(request, 'alunos.html', context)
 
 def excluir_aluno(request, pk):
+    user = request.user.get_full_name()
+    aluno = get_object_or_404(Aluno, pk=pk)
+
+    if aluno:
+        auditoria = Auditoria(
+            acao = "Exclusão de aluno",
+            criado_por = user,
+            info = f"Aluno(a) {aluno.nome} excluído"
+        )
+        auditoria.save()
+        aluno.delete()
+
     return redirect('cadastros:alunos')

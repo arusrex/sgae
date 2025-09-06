@@ -155,7 +155,7 @@ def context_processors(request):
         rodape = '/static/assets/img/arus_logo.png'
 
     context = {
-        'usuario': usuario,
+        'usuario_sistema': usuario,
         'sistema_nome': nome,
         'sistema_descricao': descricao,
         'sistema_logo': logo,

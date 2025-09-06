@@ -85,12 +85,22 @@
                                     />
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-4">
                                 <label for="funcao" class="form-label">Função</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="funcao" name="funcao" type="text" 
                                     value="{% if professor.funcao %}{{professor.funcao}}{% endif %}"
                                     />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="disciplina" class="form-label">Disciplina</label>
+                                <div class="mb-3">
+                                    <select class="form-select" id="disciplina" name="disciplina">
+                                        {% for disciplina in disciplinas %}
+                                        <option value="{{disciplina.pk}}" {% if professor.disciplina and disciplina.pk == professor.disciplina.pk %}selected{% endif %}>{{disciplina}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                             <div class="col-md-4">

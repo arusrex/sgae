@@ -62,7 +62,7 @@
                             <div class="col-md-3">
                                 <label for="estado" class="form-label">Estado</label>
                                 <div class="mb-4">
-                                    <select class="form-control" id="estado" name="estado">
+                                    <select class="form-select" id="estado" name="estado">
                                         {% for estado, label in estados %}
                                         <option value="{{estado}}" {% if aluno.estado == estado %}selected{% endif %}>{{label}}</option>
                                         {% endfor %}
@@ -78,7 +78,7 @@
                             <div class="col-md-4">
                                 <label for="sexo" class="form-label">Sexo/Gênero</label>
                                 <div class="mb-3">
-                                    <select class="form-control" id="sexo" name="sexo">
+                                    <select class="form-select" id="sexo" name="sexo">
                                         {% for sexo, label in generos %}
                                         <option value="{{sexo}}" {% if aluno.sexo == sexo %}selected{% endif %}>{{label}}</option>
                                         {% endfor %}
@@ -198,7 +198,7 @@
                             <div class="col-md-3">
                                 <label for="transporte" class="form-label">Transporte</label>
                                 <div class="mb-3">
-                                    <select class="form-control" id="transporte" name="transporte">
+                                    <select class="form-select" id="transporte" name="transporte">
                                         {% for transporte, label in transportes %}
                                         <option value="{{transporte}}" {% if aluno.transporte == transporte %}selected{% endif %}>{{label}}</option>
                                         {% endfor %}

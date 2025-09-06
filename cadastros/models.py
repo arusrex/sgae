@@ -27,6 +27,7 @@ class Professor(ControleDeRegistros):
     nascimento = models.DateField(blank=True, null=True)
     telefone = models.CharField(max_length=30, blank=True, null=True)
     funcao = models.CharField(max_length=150, blank=True, null=True)
+    disciplina = models.ForeignKey(Disciplina, on_delete=models.SET_NULL, blank=True, null=True, related_name='disciplina')
     endereco = models.CharField(max_length=200, blank=True, null=True)
     observacoes = models.TextField(blank=True, null=True)
 
