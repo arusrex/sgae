@@ -19,49 +19,49 @@
                         <div class="row mb-3">
                             <div class="col-md-9">
                                 <label for="nome" class="form-label">Nome</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="nome" name="nome" type="text" value="{% if aluno.nome %}{{aluno.nome}}{% endif %}" required />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label for="rm" class="form-label">RM</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="rm" name="rm" type="text" value="{% if aluno.rm %}{{aluno.rm}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="ra" class="form-label">RA</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="ra" name="ra" type="text" value="{% if aluno.ra %}{{aluno.ra}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="rg" class="form-label">RG</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="rg" name="rg" type="text" value="{% if aluno.rg %}{{aluno.rg}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
                                 <label for="cpf" class="form-label">CPF</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="cpf" name="cpf" type="text" value="{% if aluno.cpf %}{{aluno.cpf}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label for="nascimento" class="form-label">Nascimento</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-4">
                                     <input class="form-control" id="nascimento" name="nascimento" type="date" value="{% if aluno.nascimento %}{{aluno.nascimento|date:'Y-m-d'}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="cidade" class="form-label">Cidade</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-4">
                                     <input class="form-control" id="cidade" name="cidade" type="text" value="{% if aluno.cidade %}{{aluno.cidade}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label for="estado" class="form-label">Estado</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-4">
                                     <select class="form-control" id="estado" name="estado">
                                         {% for estado, label in estados %}
                                         <option value="{{estado}}" {% if aluno.estado == estado %}selected{% endif %}>{{label}}</option>
@@ -71,13 +71,13 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="cor_raca" class="form-label">Cor/Raça</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="cor_raca" name="cor_raca" type="text" value="{% if aluno.cor_raca %}{{aluno.cor_raca}}{% endif %}" />
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-4">
                                 <label for="sexo" class="form-label">Sexo/Gênero</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <select class="form-control" id="sexo" name="sexo">
                                         {% for sexo, label in generos %}
                                         <option value="{{sexo}}" {% if aluno.sexo == sexo %}selected{% endif %}>{{label}}</option>
@@ -85,10 +85,155 @@
                                     </select>
                                 </div>
                             </div>
+                            <div class="col-md-4">
+                                <label for="nis" class="form-label">NIS</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="nis" name="nis" type="text" value="{% if aluno.nis %}{{aluno.nis}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="necessita_educacao_especial" name="necessita_educacao_especial" type="checkbox" {% if aluno.necessita_educacao_especial %}value="1" checked{% else %}value="0"{% endif %} />
+                                    <label for="necessita_educacao_especial" class="form-check-label">Necessita Educação Especial?</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="diabete" name="diabete" type="checkbox" {% if aluno.diabete %}value="1" checked{% endif %} />
+                                    <label for="diabete" class="form-check-label">Diabete?</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="alergia" name="alergia" type="checkbox" {% if aluno.alergia %}value="1" checked{% endif %} />
+                                    <label for="alergia" class="form-check-label">Alergia?</label>
+                                </div>
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="cardiaco" name="cardiaco" type="checkbox" {% if aluno.cardiaco %}value="1" checked{% endif %} />
+                                    <label for="cardiaco" class="form-check-label">Cardíaco?</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="medicamento" name="medicamento" type="checkbox" {% if aluno.medicamento %}value="1" checked{% endif %} />
+                                    <label for="medicamento" class="form-check-label">Medicamento?</label>
+                                </div>
+                                <label for="qual_medicamento" class="form-label">Qual medicamento?</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="qual_medicamento" name="qual_medicamento" type="text" value="{% if aluno.qual_medicamento %}{{aluno.qual_medicamento}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="neuro" name="neuro" type="checkbox" {% if aluno.neuro %}value="1" checked{% endif %} />
+                                    <label for="neuro" class="form-check-label">Já foi em Neuro?</label>
+                                </div>
+                                <label for="motivo_neuro" class="form-label">Qual motivo para Neuro?</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="motivo_neuro" name="motivo_neuro" type="text" value="{% if aluno.motivo_neuro %}{{aluno.motivo_neuro}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="psicologo" name="psicologo" type="checkbox" {% if aluno.psicologo %}value="1" checked{% endif %} />
+                                    <label for="psicologo" class="form-check-label">Já foi em Psicólogo?</label>
+                                </div>
+                                <label for="motivo_psicologo" class="form-label">Qual motivo para Psicólogo?</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="motivo_psicologo" name="motivo_psicologo" type="text" value="{% if aluno.motivo_psicologo %}{{aluno.motivo_psicologo}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="fono" name="fono" type="checkbox" {% if aluno.fono %}value="1" checked{% endif %} />
+                                    <label for="fono" class="form-check-label">Já foi em Fono?</label>
+                                </div>
+                                <label for="motivo_fono" class="form-label">Qual motivo para Fono?</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="motivo_fono" name="motivo_fono" type="text" value="{% if aluno.motivo_fono %}{{aluno.motivo_fono}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="mora_com_os_pais" name="mora_com_os_pais" type="checkbox" {% if aluno.mora_com_os_pais %}value="1" checked{% endif %} />
+                                    <label for="mora_com_os_pais" class="form-check-label">Mora com os pais?</label>
+                                </div>
+                                <label for="motivo_mora_com_os_pais" class="form-label">Porque não mora com os pais?</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="motivo_mora_com_os_pais" name="motivo_mora_com_os_pais" type="text" value="{% if aluno.motivo_mora_com_os_pais %}{{aluno.motivo_mora_com_os_pais}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="responsavel_1" class="form-label">Filiação 1</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="responsavel_1" name="responsavel_1" type="text" value="{% if aluno.responsavel_1 %}{{aluno.responsavel_1}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="contato_1" class="form-label">Contato Filiação 1</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="contato_1" name="contato_1" type="text" value="{% if aluno.contato_1 %}{{aluno.contato_1}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-8">
+                                <label for="responsavel_2" class="form-label">Filiação 2</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="responsavel_2" name="responsavel_2" type="text" value="{% if aluno.responsavel_2 %}{{aluno.responsavel_2}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <label for="contato_2" class="form-label">Contato Filiação 2</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="contato_2" name="contato_2" type="text" value="{% if aluno.contato_2 %}{{aluno.contato_2}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="outros_contatos" class="form-label">Outros contatos</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="outros_contatos" name="outros_contatos" type="text" value="{% if aluno.outros_contatos %}{{aluno.outros_contatos}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="endereco" class="form-label">Endereço</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="endereco" name="endereco" type="text" value="{% if aluno.endereco %}{{aluno.endereco}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="transporte" class="form-label">Transporte</label>
+                                <div class="mb-3">
+                                    <select class="form-control" id="transporte" name="transporte">
+                                        {% for transporte, label in transportes %}
+                                        <option value="{{transporte}}" {% if aluno.transporte == transporte %}selected{% endif %}>{{label}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-9">
+                                <label for="obs_transporte" class="form-label">Observações de transporte</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="obs_transporte" name="obs_transporte" type="text" value="{% if aluno.obs_transporte %}{{aluno.obs_transporte}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <label for="retirada_aluno" class="form-label">Autorizações de retirada</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="retirada_aluno" name="retirada_aluno" type="text" value="{% if aluno.retirada_aluno %}{{aluno.retirada_aluno}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3 form-check">
+                                    <input class="form-check-input" id="integral" name="integral" type="checkbox" {% if aluno.integral %}value="1" checked{% endif %} />
+                                    <label for="integral" class="form-check-label">Interesse no período integral?</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="mb-3">
+                                    <textarea rows="5" class="form-control" id="observacoes" name="observacoes">{% if aluno.observacoes %}{{aluno.observacoes}}{% endif %}</textarea>
+                                    <label for="observacoes" class="form-label">Observações gerais</label>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="mt-4 mb-0">
-                            <div><button class="btn btn-primary btn-block">Salvar dados</button></div>
+                            <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
                         </div>
                     </form>
                 </div>
@@ -106,7 +251,7 @@
         </div>
         
         <div class="card-body">
-            {% if disciplinas %}
+            {% if alunos %}
             <div class="card-body">
                 <table id="datatablesSimple">
                     <thead>
@@ -122,12 +267,12 @@
                         </tr>
                     </tfoot>
                     <tbody>
-                        {% for disciplina in disciplinas %}
+                        {% for aluno in alunos %}
                         <tr>
-                            <td>{{disciplina.nome | default_if_none:""}}</td>
+                            <td>{{aluno.nome | default_if_none:""}}</td>
                             <td>
-                                <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                <a href="{% url "cadastros:editar-aluno" aluno.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-aluno" aluno.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}

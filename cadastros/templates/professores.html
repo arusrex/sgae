@@ -19,7 +19,7 @@
                         <div class="row mb-3">
                             <div class="col-md-6">
                                 <label for="nome" class="form-label">Nome</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="nome" name="nome" type="text"
                                     value="{% if usuario.first_name %}{{usuario.first_name}}{% endif %}" 
                                     required />
@@ -27,7 +27,7 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="sobrenome" class="form-label">Sobrenome</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="sobrenome" name="sobrenome" type="text" 
                                     value="{% if usuario.last_name %}{{usuario.last_name}}{% endif %}" 
                                     required />
@@ -35,7 +35,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="email" class="form-label">Endereço de E-mail</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="email" name="email" type="text"
                                     value="{% if usuario.email %}{{usuario.email}}{% endif %}"
                                     required />
@@ -43,18 +43,18 @@
                             </div>
                             <div class="col-md-6">
                                 <label for="senha" class="form-label">Senha</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="senha" name="senha" type="password" placeholder="Insira a senha" />
                                 </div>
                             </div><div class="col-md-6">
                                 <label for="confirmar-senha" class="form-label">Confirme a senha</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="confirmar-senha" name="confirmar-senha" type="password" placeholder="Confirme a senha do professor" />
                                 </div>
                             </div>
                             <div class="col-md-3">
                                 <label for="matricula" class="form-label">Matrícula</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="matricula" name="matricula" type="number"
                                     value="{% if professor.matricula %}{{professor.matricula}}{% endif %}"
                                     />
@@ -62,7 +62,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="cpf" class="form-label">CPF</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="cpf" name="cpf" name="cpf" type="number"
                                     value="{% if usuario.cpf %}{{usuario.cpf}}{% endif %}"
                                     />
@@ -70,7 +70,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="rg" class="form-label">RG</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="rg" name="rg" name="rg" type="number"
                                     value="{% if professor.rg %}{{professor.rg}}{% endif %}"
                                     />
@@ -78,7 +78,7 @@
                             </div>
                             <div class="col-md-3">
                                 <label for="nascimento" class="form-label">Nascimento</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="nascimento" name="nascimento" type="date"
                                     value="{{professor.nascimento|date:"Y-m-d"}}"
                                     {{nascimento_formatado}}
@@ -87,7 +87,7 @@
                             </div>
                             <div class="col-md-8">
                                 <label for="funcao" class="form-label">Função</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="funcao" name="funcao" type="text" 
                                     value="{% if professor.funcao %}{{professor.funcao}}{% endif %}"
                                     />
@@ -95,7 +95,7 @@
                             </div>
                             <div class="col-md-4">
                                 <label for="telefone" class="form-label">Telefone/Contato</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="telefone" name="telefone" type="text"
                                     value="{% if professor.telefone %}{{professor.telefone}}{% endif %}"
                                     />
@@ -103,7 +103,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="endereco" class="form-label">Endereço completo</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <input class="form-control" id="endereco" name="endereco" type="text"
                                     value="{% if professor.endereco %}{{professor.endereco}}{% endif %}"
                                     />
@@ -111,7 +111,7 @@
                             </div>
                             <div class="col-md-12">
                                 <label for="observacoes" class="form-label">Observações</label>
-                                <div class="mb-3 mb-md-0">
+                                <div class="mb-3">
                                     <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
                                     value=""
                                     >{% if professor.observacoes %}{{professor.observacoes}}{% endif %}</textarea>
@@ -120,7 +120,7 @@
                         </div>
                         
                         <div class="mt-4 mb-0">
-                            <div><button class="btn btn-primary btn-block" type="submit" href="{% url "cadastros:professores" %}">Salvar dados</button></div>
+                            <div><button class="btn btn-primary btn-block" type="submit">Salvar dados</button></div>
                         </div>
                     </form>
                 </div>

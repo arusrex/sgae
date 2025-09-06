@@ -241,13 +241,146 @@ def excluir_professor(request, pk):
 
 @login_required
 def alunos(request, pk=None):
+    user = request.user
     alunos = Aluno.objects.all()
 
+    if pk:
+        aluno = get_object_or_404(Aluno, pk=pk)
+    else:
+        aluno = None
+    
+    if request.method == 'POST':
+        nome = request.POST['nome']
+        rm = request.POST['rm']
+        ra = request.POST['ra']
+        rg = request.POST['rg']
+        cpf = request.POST['cpf']
+        nascimento = request.POST['nascimento']
+        cidade = request.POST['cidade']
+        estado = request.POST['estado']
+        cor_raca = request.POST['cor_raca']
+        sexo = request.POST['sexo']
+        nis = request.POST['nis']
+        necessita_educacao_especial = bool(request.POST.get('necessita_educacao_especial'))
+        diabete = bool(request.POST.get('diabete'))
+        alergia = bool(request.POST.get('alergia'))
+        cardiaco = bool(request.POST.get('cardiaco'))
+        medicamento = bool(request.POST.get('medicamento'))
+        qual_medicamento = request.POST['qual_medicamento']
+        neuro = bool(request.POST.get('neuro'))
+        motivo_neuro = request.POST['motivo_neuro']
+        psicologo = bool(request.POST.get('psicologo'))
+        motivo_psicologo = request.POST['motivo_psicologo']
+        fono = bool(request.POST.get('fono'))
+        motivo_fono = request.POST['motivo_fono']
+        mora_com_os_pais = bool(request.POST.get('mora_com_os_pais'))
+        motivo_mora_com_os_pais = request.POST['motivo_mora_com_os_pais']
+        responsavel_1 = request.POST['responsavel_1']
+        contato_1 = request.POST['contato_1']
+        responsavel_2 = request.POST['responsavel_2']
+        contato_2 = request.POST['contato_2']
+        outros_contatos = request.POST['outros_contatos']
+        endereco = request.POST['endereco']
+        transporte = request.POST['transporte']
+        obs_transporte = request.POST['obs_transporte']
+        retirada_aluno = request.POST['retirada_aluno']
+        integral = bool(request.POST.get('integral'))
+        observacoes = request.POST.get('observacoes')
+
+        if aluno is not None:
+            aluno.nome = nome
+            aluno.rm = rm
+            aluno.ra = ra
+            aluno.rg = rg
+            aluno.cpf = cpf
+            aluno.nascimento = nascimento
+            aluno.cidade = cidade
+            aluno.estado = estado
+            aluno.cor_raca = cor_raca
+            aluno.sexo = sexo
+            aluno.nis = nis
+            aluno.necessita_educacao_especial = necessita_educacao_especial
+            aluno.diabete = diabete
+            aluno.alergia = alergia
+            aluno.cardiaco = cardiaco
+            aluno.medicamento = medicamento
+            aluno.qual_medicamento = qual_medicamento
+            aluno.neuro = neuro
+            aluno.motivo_neuro = motivo_neuro
+            aluno.psicologo = psicologo
+            aluno.motivo_psicologo = motivo_psicologo
+            aluno.fono = fono
+            aluno.motivo_fono = motivo_fono
+            aluno.mora_com_os_pais = mora_com_os_pais
+            aluno.motivo_mora_com_os_pais = motivo_mora_com_os_pais
+            aluno.responsavel_1 = responsavel_1
+            aluno.contato_1 = contato_1
+            aluno.responsavel_2 = responsavel_2
+            aluno.contato_2 = contato_2
+            aluno.outros_contatos = outros_contatos
+            aluno.endereco = endereco
+            aluno.transporte = transporte
+            aluno.obs_transporte = obs_transporte
+            aluno.retirada_aluno = retirada_aluno
+            aluno.integral = integral
+            aluno.atualizado_por = user.get_full_name()
+            aluno.observacoes = observacoes
+
+            aluno.save()
+
+            return redirect('cadastros:alunos')
+        
+        else:
+            aluno = Aluno(
+            nome = nome,
+            rm = rm,
+            ra = ra,
+            rg = rg,
+            cpf = cpf,
+            nascimento = nascimento,
+            cidade = cidade,
+            estado = estado,
+            cor_raca = cor_raca,
+            sexo = sexo,
+            nis = nis,
+            necessita_educacao_especial = necessita_educacao_especial,
+            diabete = diabete,
+            alergia = alergia,
+            cardiaco = cardiaco,
+            medicamento = medicamento,
+            qual_medicamento = qual_medicamento,
+            neuro = neuro,
+            motivo_neuro = motivo_neuro,
+            psicologo = psicologo,
+            motivo_psicologo = motivo_psicologo,
+            fono = fono,
+            motivo_fono = motivo_fono,
+            mora_com_os_pais = mora_com_os_pais,
+            motivo_mora_com_os_pais = motivo_mora_com_os_pais,
+            responsavel_1 = responsavel_1,
+            contato_1 = contato_1,
+            responsavel_2 = responsavel_2,
+            contato_2 = contato_2,
+            outros_contatos = outros_contatos,
+            endereco = endereco,
+            transporte = transporte,
+            obs_transporte = obs_transporte,
+            retirada_aluno = retirada_aluno,
+            integral = integral,
+            criado_por = user.get_full_name(),
+            observacoes = observacoes
+            )
+
+            aluno.save()
+
+            return redirect('cadastros:alunos')
+
     context = {
-        'tansportes': Aluno.TRANSPORTE,
+        'transportes': Aluno.TRANSPORTE,
         'generos': Aluno.SEXO,
         'estados': Aluno.ESTADOS,
-        'alunos': alunos
+        'alunos': alunos,
+        'aluno': aluno
     }
 
     return render(request, 'alunos.html', context)
