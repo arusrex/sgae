@@ -1,5 +1,5 @@
 from django.db import models
-from cadastros.models import Professor, Aluno, Disciplina, Sala
+from cadastros.models import Professor, Aluno, Sala
 from core.models import ControleDeRegistros
 from datetime import date
 
@@ -15,7 +15,6 @@ class Turma(ControleDeRegistros):
     ]
 
     sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
-    numero = models.IntegerField(blank=True, null=True)
     aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
     status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
 
@@ -29,7 +28,6 @@ class Turma(ControleDeRegistros):
 class AtribuicaoProfessor(ControleDeRegistros):
     professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
     sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
-    disciplina = models.ForeignKey(Disciplina, on_delete=models.SET_NULL, blank=True, null=True)
 
     def __str__(self):
         professor = self.professor.user.get_full_name() if self.professor else "Sem professor(a)"
