@@ -11,36 +11,36 @@
             <div class="card">
                 <div class="card-header">Cadastros</div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative">
-                        <i class="fas fa-child link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative hover-primary">
+                        <i class="fas fa-child text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:alunos" %}">
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:alunos" %}">
                             Alunos
                         </a>
                     </div>  
                 
             
-                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative">
-                        <i class="fas fa-scroll link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative hover-primary">
+                        <i class="fas fa-scroll text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:disciplinas" %}">
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:disciplinas" %}">
                             Disciplinas
                         </a>
                     </div>
 
-                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative">
-                        <i class="fas fa-person-chalkboard link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative hover-primary">
+                        <i class="fas fa-person-chalkboard text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:professores" %}">
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:professores" %}">
                             Professores
                         </a>
                     </div>
 
-                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative">
-                        <i class="fas fa-people-roof link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-primary rounded shadow position-relative hover-primary">
+                        <i class="fas fa-people-roof text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:disciplinas" %}">
-                            Disciplinas
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "cadastros:salas" %}">
+                            Salas
                         </a>
                     </div>
                 </div>
@@ -52,11 +52,27 @@
             <div class="card">
                 <div class="card-header">Gestão Escolar</div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-4 p-1 bg-warning rounded shadow position-relative">
-                        <i class="fas fa-file-circle-plus link-light ms-2"></i>
-                        <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "movimentacoes:movimentacoes" %}">
+                    <div class="d-flex align-items-center mb-4 p-1 bg-warning rounded shadow position-relative hover-warning">
+                        <i class="fas fa-file-circle-plus text-secondary ms-2"></i>
+                        <div class="vr text-secondary mx-2"></div>
+                        <a class="text-secondary text-decoration-none flex-grow-1 stretched-link" href="{% url "movimentacoes:movimentacoes" %}">
                             Movimentações
+                        </a>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 p-1 bg-warning rounded shadow position-relative hover-warning">
+                        <i class="fas fa-file-circle-plus text-secondary ms-2"></i>
+                        <div class="vr text-secondary mx-2"></div>
+                        <a class="text-secondary text-decoration-none flex-grow-1 stretched-link" href="{% url "movimentacoes:atribuicao-professor" %}">
+                            Atribuição dos Professores
+                        </a>
+                    </div>
+
+                    <div class="d-flex align-items-center mb-4 p-1 bg-warning rounded shadow position-relative hover-warning">
+                        <i class="fas fa-file-circle-plus text-secondary ms-2"></i>
+                        <div class="vr text-secondary mx-2"></div>
+                        <a class="text-secondary text-decoration-none flex-grow-1 stretched-link" href="{% url "movimentacoes:faltas-professor" %}">
+                            Faltas dos Professores
                         </a>
                     </div>
                 </div>
@@ -68,17 +84,17 @@
             <div class="card">
                 <div class="card-header">Configurações</div>
                 <div class="card-body">
-                    <div class="d-flex align-items-center mb-4 p-1 bg-success rounded shadow position-relative">
-                        <i class="fas fa-gear link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-success rounded shadow position-relative hover-success">
+                        <i class="fas fa-gear text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "core:sistema" %}">
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "core:sistema" %}">
                             Dados do sistema
                         </a>
                     </div>
-                    <div class="d-flex align-items-center mb-4 p-1 bg-success rounded shadow position-relative">
-                        <i class="fas fa-users link-light ms-2"></i>
+                    <div class="d-flex align-items-center mb-4 p-1 bg-success rounded shadow position-relative hover-success">
+                        <i class="fas fa-users text-light ms-2"></i>
                         <div class="vr text-white mx-2"></div>
-                        <a class="link-light text-decoration-none flex-grow-1 stretched-link" href="{% url "usuarios:usuarios" %}">
+                        <a class="text-light text-decoration-none flex-grow-1 stretched-link" href="{% url "usuarios:usuarios" %}">
                             Usuários
                         </a>
                     </div>

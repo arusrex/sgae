@@ -8,5 +8,14 @@ def movimentacoes(request, pk=None):
 
     context = {}
 
-    return render(request, 'matriculas.html', context)
+    return render(request, 'movimentacoes.html', context)
 
+@login_required
+def atribuicao_professor(request, pk=None):
+
+    return render(request, 'atribuicao_professor.html')
+
+@login_required
+def faltas_professor(request, pk=None):
+
+    return render(request, 'faltas_professor.html')

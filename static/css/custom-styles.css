@@ -1,0 +1,116 @@
+:root {
+  --cs-blue: #0d6efd;
+  --cs-link-hover-primary: #0a58ca;
+  --cs-dark-blue: #07377f;
+  --cs-indigo: #6610f2;
+  --cs-purple: #6f42c1;
+  --cs-pink: #d63384;
+  --cs-red: #dc3545;
+  --cs-orange: #fd7e14;
+  --cs-yellow: #ffc107;
+  --cs-green: #198754;
+  --cs-teal: #20c997;
+  --cs-cyan: #0dcaf0;
+  --cs-black: #000;
+  --cs-white: #fff;
+  --cs-gray: #6c757d;
+  --cs-gray-dark: #343a40;
+  --cs-gray-100: #f8f9fa;
+  --cs-gray-200: #e9ecef;
+  --cs-gray-300: #dee2e6;
+  --cs-gray-400: #ced4da;
+  --cs-gray-500: #adb5bd;
+  --cs-gray-600: #6c757d;
+  --cs-gray-700: #495057;
+  --cs-gray-800: #343a40;
+  --cs-gray-900: #212529;
+  --cs-primary: #0d6efd;
+  --cs-secondary: #6c757d;
+  --cs-success: #198754;
+  --cs-dark-success: #0d472c;
+  --cs-link-hover-success: #12653e;
+  --cs-info: #0dcaf0;
+  --cs-warning: #ffc107;
+  --cs-link-hover-warning: #d19d03;
+  --cs-dark-warning: #8a6803;
+  --cs-danger: #dc3545;
+  --cs-light: #f8f9fa;
+  --cs-dark: #212529;
+  --cs-primary-rgb: 13, 110, 253;
+  --cs-secondary-rgb: 108, 117, 125;
+  --cs-success-rgb: 25, 135, 84;
+  --cs-info-rgb: 13, 202, 240;
+  --cs-warning-rgb: 255, 193, 7;
+  --cs-danger-rgb: 220, 53, 69;
+  --cs-light-rgb: 248, 249, 250;
+  --cs-dark-rgb: 33, 37, 41;
+  --cs-white-rgb: 255, 255, 255;
+  --cs-black-rgb: 0, 0, 0;
+  --cs-body-color-rgb: 33, 37, 41;
+  --cs-body-bg-rgb: 255, 255, 255;
+  --cs-font-sans-serif: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --cs-font-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --cs-gradient: linear-gradient(180deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0));
+  --cs-body-font-family: var(--bs-font-sans-serif);
+  --cs-body-font-size: 1rem;
+  --cs-body-font-weight: 400;
+  --cs-body-line-height: 1.5;
+  --cs-body-color: #212529;
+  --cs-body-bg: #fff;
+  --cs-border-width: 1px;
+  --cs-border-style: solid;
+  --cs-border-color: #dee2e6;
+  --cs-border-color-translucent: rgba(0, 0, 0, 0.175);
+  --cs-border-radius: 0.375rem;
+  --cs-border-radius-sm: 0.25rem;
+  --cs-border-radius-lg: 0.5rem;
+  --cs-border-radius-xl: 1rem;
+  --cs-border-radius-2xl: 2rem;
+  --cs-border-radius-pill: 50rem;
+  --cs-link-color: #0d6efd;
+  --cs-link-hover-color: #0a58ca;
+  --cs-code-color: #d63384;
+  --cs-highlight-bg: #fff3cd;
+}
+
+.hover-primary:hover {
+    background: var(--cs-link-hover-primary) !important;
+    transform: scale(1.05, 1.1) !important;
+    transition: transform 0.3s ease-in !important;
+}
+
+.hover-primary:active {
+    background: var(--cs-dark-blue) !important;
+    transform: scale(0.98) !important;
+    transition: none !important;
+}
+
+.hover-warning:hover {
+    background: var(--cs-link-hover-warning) !important;
+    transform: scale(1.05, 1.1) !important;
+    transition: transform 0.3s ease-in !important;
+}
+
+.hover-warning:hover * {
+    color: var(--cs-light) !important;
+}
+
+.hover-warning:active, .hover-warning:active * {
+    background: var(--cs-dark-warning) !important;
+    transform: scale(0.98) !important;
+    transition: none !important;
+    color: var(--cs-light) !important;
+}
+
+.hover-success:hover {
+    background: var(--cs-link-hover-success) !important;
+    transform: scale(1.05, 1.1) !important;
+    transition: transform 0.3s ease-in !important;
+}
+
+.hover-success:active, .hover-success:active * {
+    background: var(--cs-dark-success) !important;
+    transform: scale(0.98) !important;
+    transition: none !important;
+    color: var(--cs-light) !important;
+}
