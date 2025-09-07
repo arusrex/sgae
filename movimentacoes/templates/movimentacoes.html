@@ -2,25 +2,62 @@
 
 {% block content %}
 <div class="container-fluid px-4">
-    <h1 class="mt-4">Cadastros</h1>
+    <h1 class="mt-4">Movimentações</h1>
     <ol class="breadcrumb mb-4">
-        <li class="breadcrumb-item active"><a href="{% url "cadastros:disciplinas" %}" class="text-decoration-none">Disciplinas</a></li>
+        <li class="breadcrumb-item active"><a href="{% url "movimentacoes:movimentacoes" %}" class="text-decoration-none">Movimentações</a></li>
     </ol>
     <div class="row justify-content-center">
         <div class="col-lg-12">
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-plus me-1"></i>
-                    Cadastro de disciplina
+                    Registro de Movimentações
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form name="form_movimentacoes" method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
-                            <div class="col-12">
-                                <label for="nome" class="form-label">Nome</label>
-                                <div class="mb-3">
-                                    <input class="form-control" id="nome" name="nome" type="text" value="{{disciplina.nome}}" placeholder="Insira o nome da sala" required />
+                            <div class="col-md-3">
+                                <label for="tipo" class="form-label">Tipo de movimentação</label>
+                                <div class="mb-4">
+                                    <select class="form-select" id="tipo" name="tipo" onchange="verificaTipo()">
+                                        {% for tipo, label in tipos_movimentacao %}
+                                        <option value="{{tipo}}" {% if movimentacao.tipo == tipo %}selected{% endif %}>{{label}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <label for="aluno" class="form-label">Aluno(a)</label>
+                                <div class="mb-4">
+                                    <select class="form-select" id="aluno" name="aluno">
+                                        {% for aluno in alunos_movimentacao %}
+                                        <option value="{{aluno.pk}}" {% if movimentacao.aluno.pk == aluno.pk %}selected{% endif %}>{{aluno}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <label for="origem" class="form-label">Origem</label>
+                                <div class="mb-4">
+                                    <select class="form-select" id="origem" name="origem">
+                                        {% for sala in salas_movimentacao %}
+                                        <option value="{{sala.pk}}" {% if movimentacao.sala.pk == sala.pk %}selected{% endif %}>{{sala}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-9">
+                                <label for="destino" class="form-label">Destino</label>
+                                <div class="mb-4">
+                                    <select class="form-select" id="destino" name="destino">
+                                        {% for sala in salas_movimentacao %}
+                                        <option value="{{sala.pk}}" {% if movimentacao.sala.pk == sala.pk %}selected{% endif %}>{{sala}}</option>
+                                        {% endfor %}
+                                    </select>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +77,7 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Discilpinas registradas
+            Movimentações registradas
         </div>
         
         <div class="card-body">
@@ -76,4 +113,69 @@
         </div>
     </div>
 </div>
+
+<script>
+
+    window.document.addEventListener('DOMContentLoaded', () => {
+        verificaTipo();
+    })
+
+    function verificaTipo () {
+        let tipo = document.forms['form_movimentacoes']['tipo'].value;
+        let origem = document.getElementById('origem');
+        let destino = document.getElementById('destino');
+        let campos = document.querySelectorAll('#origem');
+        let parenteOrigem = origem.parentNode;
+        let parenteDestino = destino.parentNode;
+
+        let criaInput = (parent, name) => {
+            const input = document.createElement('input');
+            input.setAttribute('name', name);
+            input.setAttribute('id', name);
+            input.setAttribute('class', 'form-control');
+            input.setAttribute('type', 'text')
+            parent.appendChild(input);
+        }
+
+        let criaSelect = (parent, tipo) => {
+            parent.appendChild(tipo);
+        }
+
+        if (tipo == 'matricula') {
+            if (campos.length > 1) {
+                for (let campo of campos) {
+                    if (campo.tagName === 'INPUT') {
+                        console.log('entrou aqui');
+                        campo.remove();
+                    }
+                }
+            }
+
+            criaInput(parenteOrigem, 'origem');
+
+            origem.toggleAttribute('hidden');
+            origem.toggleAttribute('disabled');
+        }
+        
+        if (tipo == 'remanejamento') {
+            console.log(tipo);
+
+            if (campos.length > 1) {
+                for (let campo of campos) {
+                    if(campo.tagName == 'INPUT') {
+                        campo.remove()
+                    }
+                }
+            }
+            origem.removeAttribute('hidden');
+            origem.removeAttribute('disabled');
+        }
+
+        if (tipo == 'transferencia') {
+            console.log(tipo);
+            
+        }
+    }
+    
+</script>
 {% endblock %}

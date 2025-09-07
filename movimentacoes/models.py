@@ -43,8 +43,8 @@ class Movimentacoes(ControleDeRegistros):
     ]
 
     aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
-    origem = models.ForeignKey(Sala, on_delete=models.SET_NULL, related_name='origem', blank=True, null=True)
-    destino = models.ForeignKey(Sala, on_delete=models.SET_NULL, related_name='destino', blank=True, null=True)
+    origem = models.CharField(max_length=150, blank=True, null=True)
+    destino = models.CharField(max_length=150, blank=True, null=True)
     tipo = models.CharField(max_length=30, choices=TIPOS, default='Matrícula')
     ano = models.IntegerField(default=ano_atual)
 
