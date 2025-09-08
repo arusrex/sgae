@@ -28,7 +28,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-9">
+                            <div class="col-md-6">
                                 <label for="aluno" class="form-label">Aluno(a)</label>
                                 <div class="mb-4">
                                     <select class="form-select" id="aluno" name="aluno">
@@ -39,7 +39,14 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-9">
+                            <div class="col-md-3">
+                                <label for="data" class="form-label">Data</label>
+                                <div class="mb-4">
+                                    <input class="form-control" type="date" id="data" name="data" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
                                 <label for="origem" class="form-label">Origem</label>
                                 <div class="mb-4">
                                     <select class="form-select" id="origem" name="origem">
@@ -50,7 +57,7 @@
                                 </div>
                             </div>
 
-                            <div class="col-md-9">
+                            <div class="col-md-6">
                                 <label for="destino" class="form-label">Destino</label>
                                 <div class="mb-4">
                                     <select class="form-select" id="destino" name="destino">
@@ -81,28 +88,28 @@
         </div>
         
         <div class="card-body">
-            {% if disciplinas %}
+            {% if movimentacoes %}
             <div class="card-body">
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
-                            <th>Nome</th>
+                            <th>Tipo</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>Nome</th>
+                            <th>Tipo</th>
                             <th>Ações</th>
                         </tr>
                     </tfoot>
                     <tbody>
-                        {% for disciplina in disciplinas %}
+                        {% for movimentacao in movimentacoes %}
                         <tr>
-                            <td>{{disciplina.nome | default_if_none:""}}</td>
+                            <td>{{movimentacao.tipo | default_if_none:""}}</td>
                             <td>
-                                <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                <a href="{% url "cadastros:editar-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -124,7 +131,8 @@
         let tipo = document.forms['form_movimentacoes']['tipo'].value;
         let origem = document.getElementById('origem');
         let destino = document.getElementById('destino');
-        let campos = document.querySelectorAll('#origem');
+        let camposOrigem = document.querySelectorAll('#origem');
+        let camposDestino = document.querySelectorAll('#destino');
         let parenteOrigem = origem.parentNode;
         let parenteDestino = destino.parentNode;
 
@@ -137,17 +145,16 @@
             parent.appendChild(input);
         }
 
-        let criaSelect = (parent, tipo) => {
-            parent.appendChild(tipo);
-        }
-
         if (tipo == 'matricula') {
-            if (campos.length > 1) {
-                for (let campo of campos) {
-                    if (campo.tagName === 'INPUT') {
-                        console.log('entrou aqui');
-                        campo.remove();
-                    }
+            for (let campo of camposOrigem) {
+                if (campo.tagName === 'INPUT') {
+                    campo.remove();
+                }
+            }
+
+            for (let campo of camposDestino) {
+                if (campo.tagName === 'INPUT') {
+                    campo.remove();
                 }
             }
 
@@ -155,25 +162,41 @@
 
             origem.toggleAttribute('hidden');
             origem.toggleAttribute('disabled');
+            destino.removeAttribute('hidden');
+            destino.removeAttribute('disabled')
         }
         
         if (tipo == 'remanejamento') {
-            console.log(tipo);
-
-            if (campos.length > 1) {
-                for (let campo of campos) {
-                    if(campo.tagName == 'INPUT') {
-                        campo.remove()
-                    }
+            for (let campo of camposOrigem) {
+                if(campo.tagName == 'INPUT') {
+                    campo.remove()
                 }
             }
+            for (let campo of camposDestino) {
+                if(campo.tagName == 'INPUT') {
+                    campo.remove()
+                }
+            }
+            
             origem.removeAttribute('hidden');
             origem.removeAttribute('disabled');
+            destino.removeAttribute('disabled');
+            destino.removeAttribute('hidden');
         }
 
         if (tipo == 'transferencia') {
-            console.log(tipo);
+            for (let campo of camposOrigem) {
+                if(campo.tagName == 'INPUT') {
+                    campo.remove()
+                }
+            }
+
+            criaInput(parenteDestino, 'destino');
             
+            destino.toggleAttribute('disabled');
+            destino.toggleAttribute('hidden');
+            origem.removeAttribute('disabled');
+            origem.removeAttribute('hidden');
         }
     }
     

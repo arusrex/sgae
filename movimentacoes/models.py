@@ -16,6 +16,7 @@ class Turma(ControleDeRegistros):
 
     sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
     aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
+    numero_aluno = models.IntegerField(default=0)
     status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
 
     def __str__(self):
@@ -46,7 +47,7 @@ class Movimentacoes(ControleDeRegistros):
     origem = models.CharField(max_length=150, blank=True, null=True)
     destino = models.CharField(max_length=150, blank=True, null=True)
     tipo = models.CharField(max_length=30, choices=TIPOS, default='Matrícula')
-    ano = models.IntegerField(default=ano_atual)
+    data = models.DateField(blank=True, null=True)
 
     def __str__(self):
         aluno = self.aluno.nome if self.aluno else "Sem aluno"
