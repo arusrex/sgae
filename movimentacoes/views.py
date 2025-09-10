@@ -112,7 +112,7 @@ def faltas_professor(request, pk=None):
 
 @login_required
 def turmas(request, pk=None):
-    turmas = Turma.objects.all()
+    turmas = Turma.objects.all().order_by('sala')
 
     context = {
         'turmas': turmas,
