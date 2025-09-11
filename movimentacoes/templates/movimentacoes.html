@@ -134,10 +134,38 @@
 </div>
 
 <script>
+    let movimentacoes = [
+        {% for m in movimentacoes %}
+            {
+                id: "{{m.pk}}",
+                aluno:"{{m.aluno}}",
+                aluno_id:"m.aluno.pk",
+                origem_input:"{{m.origem_input}}",
+                origem:"{{m.origem}}",
+                destino_input:"{{m.destino_input}}",
+                destino:"{{m.destino}}",
+                tipo:"{{m.tipo}}",
+                data:"{{m.data}}",
+            },
+        {% endfor %}
+    ];
+
+    let turmas = [
+        {% for t in turmas %}
+            {
+                id:"{{t.pk}}",
+                sala:"{{t.sala}}",
+                aluno:"{{t.aluno}}",
+                aluno_id:"{{t.aluno.pk}}",
+                numero_aluno:"{{t.numero_aluno}}",
+                status:"{{t.status}},"
+            },
+        {% endfor %}
+    ];
 
     window.document.addEventListener('DOMContentLoaded', () => {
         verificaTipo();
-    })
+    });
 
     function verificaTipo () {
         let tipo = document.forms['form_movimentacoes']['tipo'].value;
@@ -147,6 +175,22 @@
         let camposDestino = document.querySelectorAll('#destino');
         let parenteOrigem = origem.parentNode;
         let parenteDestino = destino.parentNode;
+        let alunos = document.getElementById('aluno');
+        
+        function criaOption() {
+            const option = document.createElement('option');
+            option.value = '';
+            option.id = 'selecione';
+            option.innerText = 'Selecione um aluno(a)'
+            alunos.appendChild(option);
+            alunos.insertBefore(option, alunos.firstChild);
+            option.selected = true;
+            alunos.required = true;
+        };
+
+        if (document.querySelectorAll('#selecione').length < 1) {
+            criaOption();
+        }
 
         let criaInput = (parent, name) => {
             const input = document.createElement('input');
@@ -158,6 +202,15 @@
         }
 
         if (tipo == 'matricula') {
+            for (let t of turmas) {
+                for (let a of alunos) {
+                    if (a.value == t.aluno_id) {
+                        a.hidden = true;
+                        a.disabled = true;
+                    }
+                }
+            }
+
             for (let campo of camposOrigem) {
                 if (campo.tagName === 'INPUT') {
                     campo.remove();
@@ -172,13 +225,19 @@
 
             criaInput(parenteOrigem, 'origem');
 
-            origem.toggleAttribute('hidden');
-            origem.toggleAttribute('disabled');
+            origem.hidden = true;
+            origem.disabled = true;
             destino.removeAttribute('hidden');
             destino.removeAttribute('disabled')
         }
         
         if (tipo == 'remanejamento') {
+            for (let a of alunos) {
+                if (a.hasAttribute('hidden') || a.hasAttribute('disabled')) {
+                    a.removeAttribute('hidden');
+                    a.removeAttribute('disabled');
+                }
+            }
             for (let campo of camposOrigem) {
                 if(campo.tagName == 'INPUT') {
                     campo.remove()
@@ -197,6 +256,12 @@
         }
 
         if (tipo == 'transferencia') {
+            for (let a of alunos) {
+                if (a.hasAttribute('hidden') || a.hasAttribute('disabled')) {
+                    a.removeAttribute('hidden');
+                    a.removeAttribute('disabled');
+                }
+            }
             for (let campo of camposOrigem) {
                 if(campo.tagName == 'INPUT') {
                     campo.remove()
@@ -205,8 +270,8 @@
 
             criaInput(parenteDestino, 'destino');
             
-            destino.toggleAttribute('disabled');
-            destino.toggleAttribute('hidden');
+            destino.disabled = true;
+            destino.hidden = true
             origem.removeAttribute('disabled');
             origem.removeAttribute('hidden');
         }

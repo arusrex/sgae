@@ -7,6 +7,7 @@ import datetime
 @login_required
 def movimentacoes(request, pk=None):
     user = request.user.get_full_name()
+    turmas = Turma.objects.all()
     alunos = Aluno.objects.all().order_by('nome')
     salas = Sala.objects.filter(ano=datetime.date.today().year)
     movimentacoes = Movimentacoes.objects.all().order_by('-pk')
@@ -15,7 +16,7 @@ def movimentacoes(request, pk=None):
 
         tipo = request.POST.get('tipo')
         aluno = request.POST.get('aluno')
-        data = request.POST.get('data')
+        data = request.POST.get('data') or datetime.date.today()
         origem = request.POST.get('origem')
         destino = request.POST.get('destino')
 
@@ -96,6 +97,7 @@ def movimentacoes(request, pk=None):
         'tipos_movimentacao': Movimentacoes.TIPOS,
         'alunos_movimentacao': alunos,
         'salas_movimentacao': salas,
+        'turmas': turmas,
     }
 
     return render(request, 'movimentacoes.html', context)
