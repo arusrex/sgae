@@ -155,6 +155,7 @@
             {
                 id:"{{t.pk}}",
                 sala:"{{t.sala}}",
+                sala_id: "{{t.sala.pk}}",
                 aluno:"{{t.aluno}}",
                 aluno_id:"{{t.aluno.pk}}",
                 numero_aluno:"{{t.numero_aluno}}",
@@ -170,9 +171,11 @@
     function verificaTipo () {
         let tipo = document.forms['form_movimentacoes']['tipo'].value;
         let origem = document.getElementById('origem');
+        let origem_input = document.getElementById('origem_input');
         let destino = document.getElementById('destino');
-        let camposOrigem = document.querySelectorAll('#origem');
-        let camposDestino = document.querySelectorAll('#destino');
+        let destino_input = document.getElementById('destino_input');
+        let camposOrigem = document.querySelectorAll('#origem_input');
+        let camposDestino = document.querySelectorAll('#destino_input');
         let parenteOrigem = origem.parentNode;
         let parenteDestino = destino.parentNode;
         let alunos = document.getElementById('aluno');
@@ -192,6 +195,8 @@
             criaOption();
         }
 
+        let newOption = document.getElementById('selecione');
+
         let criaInput = (parent, name) => {
             const input = document.createElement('input');
             input.setAttribute('name', name);
@@ -202,9 +207,13 @@
         }
 
         if (tipo == 'matricula') {
+
             for (let t of turmas) {
                 for (let a of alunos) {
-                    if (a.value == t.aluno_id) {
+                    if (a.value != t.aluno_id || a.id == newOption.id) {
+                        a.hidden = false;
+                        a.disabled = false;
+                    } else {
                         a.hidden = true;
                         a.disabled = true;
                     }
@@ -223,59 +232,72 @@
                 }
             }
 
-            criaInput(parenteOrigem, 'origem');
+            criaInput(parenteOrigem, 'origem_input');
 
             origem.hidden = true;
             origem.disabled = true;
-            destino.removeAttribute('hidden');
-            destino.removeAttribute('disabled')
+            destino.hidden = false;
+            destino.disabled = false;
         }
         
         if (tipo == 'remanejamento') {
-            for (let a of alunos) {
-                if (a.hasAttribute('hidden') || a.hasAttribute('disabled')) {
-                    a.removeAttribute('hidden');
-                    a.removeAttribute('disabled');
-                }
-            }
+            origem.hidden = false;
+            origem.disabled = false;
+            destino.disabled = false;
+            destino.hidden = false;
+
             for (let campo of camposOrigem) {
                 if(campo.tagName == 'INPUT') {
                     campo.remove()
                 }
             }
+
             for (let campo of camposDestino) {
                 if(campo.tagName == 'INPUT') {
                     campo.remove()
                 }
             }
-            
-            origem.removeAttribute('hidden');
-            origem.removeAttribute('disabled');
-            destino.removeAttribute('disabled');
-            destino.removeAttribute('hidden');
+
+            for (let t of turmas) {
+                for (let a of alunos) {
+                    if (a.value == t.aluno_id || a.id == newOption.id) {
+                        a.hidden = false;
+                        a.disabled = false;
+                    } else {
+                        a.hidden = true;
+                        a.disabled = true;
+                    }
+                }
+            }
+
         }
 
         if (tipo == 'transferencia') {
-            for (let a of alunos) {
-                if (a.hasAttribute('hidden') || a.hasAttribute('disabled')) {
-                    a.removeAttribute('hidden');
-                    a.removeAttribute('disabled');
+            for (let t of turmas) {
+                for (let a of alunos) {
+                    if (a.value == t.aluno_id || a.id == newOption.id) {
+                        a.hidden = false;
+                        a.disabled = false;
+                    } else {
+                        a.hidden = true;
+                        a.disabled = true;
+                    }
                 }
             }
+
             for (let campo of camposOrigem) {
                 if(campo.tagName == 'INPUT') {
                     campo.remove()
                 }
             }
 
-            criaInput(parenteDestino, 'destino');
+            criaInput(parenteDestino, 'destino_input');
             
             destino.disabled = true;
             destino.hidden = true
-            origem.removeAttribute('disabled');
-            origem.removeAttribute('hidden');
+            origem.disabled = false;
+            origem.hidden = false;
         }
     }
-    
 </script>
 {% endblock %}
