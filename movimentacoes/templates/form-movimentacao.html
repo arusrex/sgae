@@ -15,22 +15,22 @@
                     Matrícula de aluno(a)
                 </div>
                 <div class="card-body">
-                    <a href="{% url "movimentacoes:matricula" %}" class="mb-4 btn btn-primary btn-block">Nova matricula</a>
+                    <a href="{% url "movimentacoes:matricula" %}" class="mb-4 btn btn-primary btn-block">Limpar campos</a>
 
-                    <form name="form_movimentacoes" method="POST">
+                    <form method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
 
                             <div class="col-md-9">
                                 <label for="aluno" class="form-label">Aluno(a)</label>
-                                <input class="form-control" type="text" id="aluno_visual" placeholder="Selecione o aluno" readonly required />
+                                <input class="form-control" type="text" id="aluno_visual" placeholder="Selecione o aluno disponíveis abaixo" readonly required />
                                 <input class="form-control" type="text" id="aluno" name="aluno" hidden required />
                             </div>
 
                             <div class="col-md-3">
                                 <label for="data" class="form-label">Data</label>
                                 <div class="mb-4">
-                                    <input class="form-control" type="date" id="data" name="data" />
+                                    <input class="form-control" type="date" id="data" name="data" value="{% now "Y-m-d" %}" />
                                 </div>
                             </div>
 
@@ -50,8 +50,47 @@
                                 </div>
                             </div>
                         </div>
+                        {% if total_alunos %}
+                        <div class="card">
                         
-                        <div class="mt-4 mb-0">
+                            <div class="card-header">
+                                <i class="fas fa-users me-1"></i>
+                                Alunos sem turma
+                            </div>
+                            
+                            <div class="card-body">
+                                <table id="datatablesSimple">
+                                    <thead>
+                                        <tr>
+                                            <th>Aluno</th>
+                                            <th>R.A.</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Aluno</th>
+                                            <th>R.A.</th>
+                                            <th>Ações</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                        {% for aluno in total_alunos %}
+                                        <tr>
+                                            <td>{{aluno.nome}}</td>
+                                            <td>{{aluno.ra}}</td>
+                                            <td>
+                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}')">Matricular este aluno</a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="mt-2 mb-0">
                             <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
                         </div>
                     </form>
@@ -60,53 +99,6 @@
                     <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <div class="card mb-4">
-        <div class="card-header">
-            <i class="fas fa-table me-1"></i>
-            Alunos sem sala
-        </div>
-        
-        <div class="card-body">
-            {% if alunos_sem_sala %}
-            <div class="card-body">
-                <table id="datatablesSimple">
-                    <thead>
-                        <tr>
-                            <th>RA</th>
-                            <th>Aluno</th>
-                            <th>Nasc.</th>
-                            <th>Responsável</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>RA</th>
-                            <th>Aluno</th>
-                            <th>Nasc.</th>
-                            <th>Responsável</th>
-                            <th>Ações</th>
-                        </tr>
-                    </tfoot>
-                    <tbody>
-                        {% for aluno in alunos_sem_sala %}
-                        <tr>
-                            <td>{{aluno.ra}}</td>
-                            <td>{{aluno.nome}}</td>
-                            <td>{{aluno.nascimento}}</td>
-                            <td>{{aluno.responsavel_1}}</td>
-                            <td>
-                                <button class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}')">Matricular este aluno</button>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% endif %}
         </div>
     </div>
 </div>

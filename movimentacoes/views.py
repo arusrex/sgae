@@ -35,17 +35,48 @@ def excluir_movimentacao(request, pk):
 @login_required
 def matricula(request, pk=None):
     user = request.user.get_full_name()
-    alunos = Aluno.objects.all().order_by('nome')
     salas = Sala.objects.all().order_by('nome')
-    alunos_matriculados = Turma.objects.select_related('aluno').all()
-    alunos_sem_sala = Aluno.objects.exclude(turma__isnull=False)
+    # alunos_matriculados = Turma.objects.select_related('aluno').all()
+    total_alunos = Aluno.objects.exclude(turma__isnull=False)
+    alunos_matriculados = Aluno.objects.select_related('turma').all()
+
+    if request.method == 'POST':
+        aluno = request.POST.get('aluno')
+        data = request.POST.get('data')
+        origem = request.POST.get('origem')
+        destino = request.POST.get('destino')
+
+        turma = Turma(
+            sala=get_object_or_404(Sala, pk=destino),
+            aluno=get_object_or_404(Aluno, pk=aluno),
+            numero_aluno=Turma.objects.filter(sala__pk=destino).count() + 1,
+            status='Ativo',
+        )
+
+        movimentacao = Movimentacoes(
+            aluno=get_object_or_404(Aluno, pk=aluno),
+            origem_input=origem,
+            destino=get_object_or_404(Sala, pk=destino),
+            tipo='Matrícula',
+            data=data
+        )
+
+        auditoria = Auditoria(
+            acao=f'Nova matrícula',
+            criado_por=user,
+            info=f'{get_object_or_404(Aluno,pk=aluno)} matriculado no {get_object_or_404(Sala, pk=destino)}'
+        )
+
+        turma.save()
+        movimentacao.save()
+        auditoria.save()
      
     context = {
-        'alunos_sem_sala': alunos_sem_sala,
+        'total_alunos': total_alunos,
         'salas': salas
     }
     
-    return render(request, 'matricula.html', context)
+    return render(request, 'form-movimentacao.html', context)
 
 @login_required
 def atribuicao_professor(request, pk=None):
