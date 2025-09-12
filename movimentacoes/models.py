@@ -14,8 +14,8 @@ class Turma(ControleDeRegistros):
         ('concluido', 'Concluído'),
     ]
 
-    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
-    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
+    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True, related_name='turma')
+    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True, related_name='turma')
     numero_aluno = models.IntegerField(default=0)
     status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
 
