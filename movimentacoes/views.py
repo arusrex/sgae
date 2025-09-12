@@ -33,12 +33,10 @@ def excluir_movimentacao(request, pk):
     return redirect('movimentacoes:movimentacoes')
 
 @login_required
-def matricula(request, pk=None):
+def matricula(request):
     user = request.user.get_full_name()
     salas = Sala.objects.all().order_by('nome')
-    # alunos_matriculados = Turma.objects.select_related('aluno').all()
     total_alunos = Aluno.objects.exclude(turma__isnull=False)
-    alunos_matriculados = Aluno.objects.select_related('turma').all()
 
     if request.method == 'POST':
         aluno = request.POST.get('aluno')
@@ -77,6 +75,14 @@ def matricula(request, pk=None):
     }
     
     return render(request, 'form-movimentacao.html', context)
+
+@login_required
+def remanejamento(request, pk=None):
+    return render(request, 'form-movimentacao.html')
+
+@login_required
+def transferencia(request, pk=None):
+    return render(request, 'form-movimentacao.html')
 
 @login_required
 def atribuicao_professor(request, pk=None):
