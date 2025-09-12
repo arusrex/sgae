@@ -7,6 +7,7 @@ urlpatterns = [
     path('movimentacoes/', views.movimentacoes, name='movimentacoes'),
 
     path('turmas/', views.turmas, name='turmas'),
+    path('excluir-turma/<str:pk>/', views.excluir_turma, name='excluir-turma'),
 
     path('atribuicao-professor/', views.atribuicao_professor, name='atribuicoes'),
 

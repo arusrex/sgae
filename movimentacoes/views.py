@@ -1,4 +1,5 @@
 from .models import Turma, AtribuicaoProfessor, Movimentacoes
+from core.models import Auditoria
 from cadastros.models import Aluno, Sala
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -18,7 +19,9 @@ def movimentacoes(request, pk=None):
         aluno = request.POST.get('aluno')
         data = request.POST.get('data') or datetime.date.today()
         origem = request.POST.get('origem')
+        origem_input = request.POST.get('origem_input')
         destino = request.POST.get('destino')
+        destino_input = request.POST.get('destino_input')
 
         print(
             'Tipo:', tipo, f'\n',
@@ -35,7 +38,7 @@ def movimentacoes(request, pk=None):
                 tipo=tipo,
                 aluno=get_object_or_404(Aluno, pk=aluno),
                 data=data,
-                origem_input=origem,
+                origem_input=origem_input,
                 destino=get_object_or_404(Sala, pk=destino),
             )
 
@@ -83,7 +86,7 @@ def movimentacoes(request, pk=None):
                 aluno=get_object_or_404(Aluno, pk=aluno),
                 data=data,
                 origem=get_object_or_404(Sala, pk=origem),
-                destino_input=destino,
+                destino_input=destino_input,
             )
 
             if turma_antiga_aluno:
@@ -121,3 +124,19 @@ def turmas(request, pk=None):
     }
 
     return render(request, 'turmas.html', context)
+
+@login_required
+def excluir_turma(request, pk):
+    user = request.user.get_full_name()
+    turma = get_object_or_404(Turma, pk=pk)
+
+    if turma:
+        auditoria = Auditoria(
+            acao='Exclusão de aluno da turma',
+            criado_por=user,
+            info=f'{turma} foi excluído'
+        )
+        auditoria.save()
+        turma.delete()
+    
+    return redirect('movimentacoes:turmas')

@@ -207,18 +207,10 @@
         }
 
         if (tipo == 'matricula') {
-
-            for (let t of turmas) {
-                for (let a of alunos) {
-                    if (a.value != t.aluno_id || a.id == newOption.id) {
-                        a.hidden = false;
-                        a.disabled = false;
-                    } else {
-                        a.hidden = true;
-                        a.disabled = true;
-                    }
-                }
-            }
+            origem.hidden = true;
+            origem.disabled = true;
+            destino.hidden = false;
+            destino.disabled = false;
 
             for (let campo of camposOrigem) {
                 if (campo.tagName === 'INPUT') {
@@ -234,10 +226,26 @@
 
             criaInput(parenteOrigem, 'origem_input');
 
-            origem.hidden = true;
-            origem.disabled = true;
-            destino.hidden = false;
-            destino.disabled = false;
+            let lista_de_alunos = [];
+
+            for (let t of turmas) {
+                for (let a of alunos) {
+                    if (a.value == t.aluno_id) {
+                        if(lista_de_alunos.includes(a.value)) {
+                            console.log('Aluno', a.text, 'já matriculado');
+                        } else {
+                            lista_de_alunos.push(a.value);
+                        }
+                    }
+                    if (!lista_de_alunos.includes(a.value) || a.id == newOption.id) {
+                        a.hidden = false;
+                        a.disabled = false;
+                    } else {
+                        a.hidden = true;
+                        a.disabled = true;
+                    }
+                }
+            }
         }
         
         if (tipo == 'remanejamento') {
@@ -273,6 +281,19 @@
         }
 
         if (tipo == 'transferencia') {
+            destino.disabled = true;
+            destino.hidden = true
+            origem.disabled = false;
+            origem.hidden = false;
+
+            for (let campo of camposOrigem) {
+                if(campo.tagName == 'INPUT') {
+                    campo.remove()
+                }
+            }
+
+            criaInput(parenteDestino, 'destino_input');
+
             for (let t of turmas) {
                 for (let a of alunos) {
                     if (a.value == t.aluno_id || a.id == newOption.id) {
@@ -284,19 +305,6 @@
                     }
                 }
             }
-
-            for (let campo of camposOrigem) {
-                if(campo.tagName == 'INPUT') {
-                    campo.remove()
-                }
-            }
-
-            criaInput(parenteDestino, 'destino_input');
-            
-            destino.disabled = true;
-            destino.hidden = true
-            origem.disabled = false;
-            origem.hidden = false;
         }
     }
 </script>
