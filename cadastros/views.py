@@ -8,6 +8,7 @@ from core.models import Auditoria
 @login_required
 def salas(request, pk=None):
     user = request.user
+    # salas = Sala.objects.filter(ano=date.today().year)
     salas = Sala.objects.all()
     
     if pk:

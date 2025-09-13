@@ -32,7 +32,7 @@
                             <div class="col-md-2">
                                 <label for="ano" class="form-label">Ano</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="ano" name="ano" type="number" value="{{sala.ano}}" required />
+                                    <input class="form-control" id="ano" name="ano" type="number" {% if sala.ano %}value="{{sala.ano}}"{% else %}value="{% now "Y" %}"{% endif %} required />
                                 </div>
                             </div>
                         </div>

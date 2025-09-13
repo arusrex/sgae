@@ -5,7 +5,13 @@
     <h1 class="mt-4">Gestão Escolar</h1>
     <ol class="breadcrumb mb-4">
         <li class="breadcrumb-item active"><a href="{% url "movimentacoes:movimentacoes" %}" class="text-decoration-none">Movimentações</a></li>
-        <li class="breadcrumb-item active"><a href="{% url "movimentacoes:matricula" %}" class="text-decoration-none">Matrícula</a></li>
+        {% if matricula %}
+            <li class="breadcrumb-item active"><a href="{% url "movimentacoes:matricula" %}" class="text-decoration-none">Matrícula</a></li>
+        {% elif remanejamento %}
+            <li class="breadcrumb-item active"><a href="{% url "movimentacoes:remanejamento" %}" class="text-decoration-none">Remanejamento</a></li>
+        {% elif transferencia %}
+            <li class="breadcrumb-item active"><a href="{% url "movimentacoes:transferencia" %}" class="text-decoration-none">Transferência</a></li>
+        {% endif %}
     </ol>
     <div class="row justify-content-center">
         <div class="col-lg-12">
@@ -34,11 +40,19 @@
                                 </div>
                             </div>
 
+                            {% if matricula %}
                             <div class="col-md-6">
                                 <label for="origem" class="form-label">Origem</label>
                                 <input class="form-control" type="text" id="origem" name="origem" required />
                             </div>
-
+                            {% else %}
+                            <div class="col-md-6">
+                                <label for="origem" class="form-label">Origem</label>
+                                <input class="form-control" type="text" id="origem" name="origem" readonly required />
+                            </div>
+                            {% endif %}
+                            
+                            {% if matricula %}
                             <div class="col-md-6">
                                 <label for="destino" class="form-label">Destino</label>
                                 <div class="mb-4">
@@ -49,6 +63,25 @@
                                     </select>
                                 </div>
                             </div>
+                            {% elif remanejamento %}
+                            <div class="col-md-6">
+                                <label for="destino" class="form-label">Destino</label>
+                                <div class="mb-4">
+                                    <select class="form-select" id="destino" name="destino" required>
+                                        <option>Selecione a sala</option>
+                                        {% for sala in salas %}
+                                        <option value="{{sala.pk}}">{{sala}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            {% elif transferencia %}
+                            <div class="col-md-6">
+                                <label for="destino" class="form-label">Destino</label>
+                                <input class="form-control" type="text" id="destino" name="destino" required />
+                            </div>
+                            {% endif %}
+                            
                         </div>
                         {% if total_alunos %}
                         <div class="card">
@@ -80,7 +113,7 @@
                                             <td>{{aluno.nome}}</td>
                                             <td>{{aluno.ra}}</td>
                                             <td>
-                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}')">Matricular este aluno</a>
+                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}'{% if aluno.turmas.first %}, '{{aluno.turmas.first.sala.pk}}', '{{aluno.turmas.first.sala.nome}}'{% endif %})">Matricular este aluno</a>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -103,12 +136,44 @@
     </div>
 </div>
 <script>
-    function alunoEscolhido (id_aluno, aluno_nome) {
+    const matricula = "{{matricula}}";
+    const remanejamento = "{{remanejamento}}";
+    const transferencia = "{{transferencia}}";
+
+    function alunoEscolhido (id_aluno, aluno_nome, id_sala=null, sala_nome=null) {
         let campoAlunoVisual = document.getElementById('aluno_visual');
         let campoAluno = document.getElementById('aluno');
         campoAlunoVisual.value=aluno_nome;
         campoAluno.value=id_aluno;
-        console.log(campoAluno.value);
+        
+        if (id_sala && remanejamento == 'True') {
+            let origem_input = document.getElementById('origem');
+            let destino_select = document.getElementById('destino');
+            if (origem_input) {
+                origem_input.value = sala_nome;
+                origem_input.setAttribute('readonly', true);
+            }
+
+            if (destino_select) {
+                console.log(destino_select);
+                for (let option of destino_select) {
+                    if (option.value == id_sala) {
+                        option.hidden = true;
+                        option.disbled = true;
+                    }
+                }
+            }
+        }
+        
+        if (id_sala && transferencia == 'True') {
+            let origem_input = document.getElementById('origem');
+
+            if (origem_input) {
+                console.log(origem_input);
+                origem_input.value = sala_nome;
+                origem_input.setAttribute('readonly', true);
+            }
+        }
     }
 </script>
 {% endblock %}

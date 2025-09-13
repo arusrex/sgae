@@ -36,7 +36,7 @@ def excluir_movimentacao(request, pk):
 def matricula(request):
     user = request.user.get_full_name()
     salas = Sala.objects.all().order_by('nome')
-    total_alunos = Aluno.objects.exclude(turma__isnull=False)
+    total_alunos = Aluno.objects.exclude(turmas__isnull=False)
 
     if request.method == 'POST':
         aluno = request.POST.get('aluno')
@@ -70,6 +70,7 @@ def matricula(request):
         auditoria.save()
      
     context = {
+        'matricula': True,
         'total_alunos': total_alunos,
         'salas': salas
     }
@@ -78,11 +79,31 @@ def matricula(request):
 
 @login_required
 def remanejamento(request, pk=None):
-    return render(request, 'form-movimentacao.html')
+    user = request.user.get_full_name()
+    salas = Sala.objects.filter(ano=datetime.date.today().year)
+    total_alunos = Aluno.objects.exclude(turmas__isnull=True)
+
+    context = {
+        'remanejamento': True,
+        'total_alunos': total_alunos,
+        'salas': salas,
+    }
+
+    return render(request, 'form-movimentacao.html', context)
 
 @login_required
 def transferencia(request, pk=None):
-    return render(request, 'form-movimentacao.html')
+    user = request.user.get_full_name()
+    salas = Sala.objects.filter(ano=datetime.date.today().year)
+    total_alunos = Aluno.objects.exclude(turmas__isnull=True)
+
+    context = {
+        'transferencia': True,
+        'total_alunos': total_alunos,
+        'salas': salas,
+    }
+
+    return render(request, 'form-movimentacao.html', context)
 
 @login_required
 def atribuicao_professor(request, pk=None):
