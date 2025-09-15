@@ -35,11 +35,6 @@ def dados_graficos(request):
 
     estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno'))
 
-    print(estatisticasAlunos)
-
-    for estatistica in estatisticasAlunos:
-        print(estatistica)
-
     context = {
         'graficos_alunos': estatisticasAlunos,
     }

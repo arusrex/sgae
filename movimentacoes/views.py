@@ -89,8 +89,6 @@ def remanejamento(request, pk=None):
         origem = request.POST.get('origem')
         destino = request.POST.get('destino')
 
-        print(f"{aluno}\n{data}\n{origem}\n{destino}")
-
         movimentacao = Movimentacoes(
             aluno=get_object_or_404(Aluno, pk=aluno),
             origem=get_object_or_404(Sala, pk=origem),
