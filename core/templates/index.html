@@ -133,9 +133,9 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-chart-bar me-1"></i>
-                    Bar Chart Example
+                    Status dos alunos
                 </div>
-                <div class="card-body"><canvas id="myBarChart" width="100%" height="40"></canvas></div>
+                <div class="card-body"><canvas id="graficosStatusAlunos" width="100%" height="40"></canvas></div>
             </div>
         </div>
     </div>
@@ -184,4 +184,14 @@
         {% endif %}
     </div>
 </div>
+
+<script>
+    let graficoStatus = [];
+
+    {% for estatistica in graficos_alunos %}
+        graficoStatus.push({{estatistica|safe}});
+    {% endfor %}
+
+
+</script>
 {% endblock %}

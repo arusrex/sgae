@@ -83,6 +83,36 @@ def remanejamento(request, pk=None):
     salas = Sala.objects.filter(ano=datetime.date.today().year)
     total_alunos = Aluno.objects.exclude(turmas__isnull=True)
 
+    if request.method == 'POST':
+        aluno = request.POST.get('aluno')
+        data = request.POST.get('data')
+        origem = request.POST.get('origem')
+        destino = request.POST.get('destino')
+
+        print(f"{aluno}\n{data}\n{origem}\n{destino}")
+
+        movimentacao = Movimentacoes(
+            aluno=get_object_or_404(Aluno, pk=aluno),
+            origem=get_object_or_404(Sala, pk=origem),
+            destino=get_object_or_404(Sala, pk=destino),
+            tipo='Remanejamento',
+            data=data
+        )
+
+        turma = get_object_or_404(Turma, aluno=aluno)
+        turma.status = 'Remanejado'
+
+        nova_turma = Turma(
+            sala=get_object_or_404(Sala, pk=destino),
+            aluno=get_object_or_404(Aluno, pk=aluno),
+            numero_aluno=Turma.objects.filter(sala=destino).count() + 1,
+            status='Ativo'
+        )
+
+        movimentacao.save()
+        turma.save()
+        nova_turma.save()
+
     context = {
         'remanejamento': True,
         'total_alunos': total_alunos,

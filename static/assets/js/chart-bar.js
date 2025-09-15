@@ -47,3 +47,59 @@ if (ctx) {
   });
 }
 
+
+// Bar Chart Example
+var gsa = document.getElementById("graficosStatusAlunos");
+if (gsa) {
+  let status = [];
+  let qtdAlunos = [];
+
+  if (graficoStatus) {
+    graficoStatus.forEach(element => {
+      status.push(element.status);
+      qtdAlunos.push(Number(element.total));
+    });
+  }
+
+  var myLineChart = new Chart(gsa, {
+
+    type: 'bar',
+    data: {
+      labels: status,
+      datasets: [{
+        label: "Revenue",
+        backgroundColor: "rgba(2,117,216,1)",
+        borderColor: "rgba(2,117,216,1)",
+        data: qtdAlunos,
+      }],
+    },
+    // options: {
+    //   scales: {
+    //     xAxes: [{
+    //       time: {
+    //         unit: 'month'
+    //       },
+    //       gridLines: {
+    //         display: false
+    //       },
+    //       ticks: {
+    //         maxTicksLimit: 6
+    //       }
+    //     }],
+    //     yAxes: [{
+    //       ticks: {
+    //         min: 0,
+    //         max: 15000,
+    //         maxTicksLimit: 5
+    //       },
+    //       gridLines: {
+    //         display: true
+    //       }
+    //     }],
+    //   },
+    //   legend: {
+    //     display: false
+    //   }
+    // }
+  });
+}

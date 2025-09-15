@@ -18,11 +18,16 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-plus me-1"></i>
+                    {% if matricula %}
                     Matrícula de aluno(a)
+                    {% elif remanejamento %}
+                    Remanejamento de aluno(a)
+                    {% elif transferencia %}
+                    Transferência de aluno(a)
+                    {% endif %}
                 </div>
                 <div class="card-body">
-                    <a href="{% url "movimentacoes:matricula" %}" class="mb-4 btn btn-primary btn-block">Limpar campos</a>
-
+                    <a href="{% if matricula %}{% url "movimentacoes:matricula" %}{% elif remanejamento %}{% url "movimentacoes:remanejamento" %}{% elif transferencia %}{% url "movimentacoes:transferencia" %}{% endif %}" class="mb-4 btn btn-primary btn-block">Limpar campos</a>
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
@@ -43,12 +48,13 @@
                             {% if matricula %}
                             <div class="col-md-6">
                                 <label for="origem" class="form-label">Origem</label>
-                                <input class="form-control" type="text" id="origem" name="origem" required />
+                                <input class="form-control" type="text" id="origem" name="origem" />
                             </div>
                             {% else %}
                             <div class="col-md-6">
                                 <label for="origem" class="form-label">Origem</label>
-                                <input class="form-control" type="text" id="origem" name="origem" readonly required />
+                                <input class="form-control" type="text" id="origem" name="origem" hidden required />
+                                <input class="form-control" type="text" id="origem_input" name="origem_input" readonly required />
                             </div>
                             {% endif %}
                             
@@ -135,6 +141,7 @@
         </div>
     </div>
 </div>
+
 <script>
     const matricula = "{{matricula}}";
     const remanejamento = "{{remanejamento}}";
@@ -148,18 +155,24 @@
         
         if (id_sala && remanejamento == 'True') {
             let origem_input = document.getElementById('origem');
+            let origem_input_visual = document.getElementById('origem_input');
             let destino_select = document.getElementById('destino');
-            if (origem_input) {
-                origem_input.value = sala_nome;
-                origem_input.setAttribute('readonly', true);
+
+            if (origem_input && origem_input_visual) {
+                origem_input_visual.value = sala_nome;
+                origem_input.value = id_sala;
+                console.log
             }
 
+
             if (destino_select) {
-                console.log(destino_select);
                 for (let option of destino_select) {
                     if (option.value == id_sala) {
                         option.hidden = true;
-                        option.disbled = true;
+                        option.disabled = true;
+                    } else {
+                        option.hidden = false;
+                        option.disabled = false;
                     }
                 }
             }
@@ -169,7 +182,6 @@
             let origem_input = document.getElementById('origem');
 
             if (origem_input) {
-                console.log(origem_input);
                 origem_input.value = sala_nome;
                 origem_input.setAttribute('readonly', true);
             }
