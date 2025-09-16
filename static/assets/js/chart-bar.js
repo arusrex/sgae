@@ -18,7 +18,7 @@ if (gsa) {
       labels: status,
       datasets: [{
         label: "Quantidade",
-        backgroundColor: "rgba(2,117,216,1)",
+        backgroundColor: ["rgba(2,117,216,1)", "rgba(216, 216, 2, 1)", "rgba(216, 2, 2, 1)"],
         borderColor: "rgba(2,117,216,1)",
         data: qtdAlunos,
       }],
@@ -38,20 +38,19 @@ if (gaa) {
   let classe = [];
   let qtdAlunosClasse = [];
   let cores = []
-  let r = 0;
-  let g = 0;
-  let b = 0;
+
+  function corAleatoria(alpha = 1) {
+    const r = Math.floor(Math.random() * 256); // 0–255
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+  }
 
   graficosAlunosAtivos.forEach(element => {
-    r += 15;
-    g += 15;
-    b += 15;
     classe.push(element.sala__nome);
     qtdAlunosClasse.push(element.total);
-    cores.push(rgba(r,g,b,1));
+    cores.push(corAleatoria());
   });
-
-  console.log(cores);
 
   const grafico = new Chart(gaa, {
     type: 'bar',
@@ -59,7 +58,7 @@ if (gaa) {
       labels: classe,
       datasets: [{
         label: "Quantidade",
-        backgroundColor: "rgba(2,117,216,1)",
+        backgroundColor: cores,
         borderColor: "rgba(2,117,216,1)",
         data: qtdAlunosClasse,
       }],
