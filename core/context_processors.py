@@ -31,12 +31,14 @@ def context_processors(request):
     return context
 
 def dados_graficos(request):
-    alunos = Turma.objects.all()
+    alunos = Turma.objects.filter(status="Ativo")
 
     estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno'))
+    estatisticasAtivos = Turma.objects.values('sala__nome').annotate(total=Count('aluno'))
 
     context = {
         'graficos_alunos': estatisticasAlunos,
+        'graficos_ativos_por_sala': estatisticasAtivos,
     }
 
     return context
