@@ -94,7 +94,11 @@
                         
                             <div class="card-header">
                                 <i class="fas fa-users me-1"></i>
+                                {% if matricula %}
                                 Alunos sem turma
+                                {% else %}
+                                Alunos ativos
+                                {% endif %}
                             </div>
                             
                             <div class="card-body">
@@ -103,6 +107,7 @@
                                         <tr>
                                             <th>Aluno</th>
                                             <th>R.A.</th>
+                                            <th>Sala</th>
                                             <th>Ações</th>
                                         </tr>
                                     </thead>
@@ -110,6 +115,7 @@
                                         <tr>
                                             <th>Aluno</th>
                                             <th>R.A.</th>
+                                            <th>Sala</th>
                                             <th>Ações</th>
                                         </tr>
                                     </tfoot>
@@ -119,7 +125,20 @@
                                             <td>{{aluno.nome}}</td>
                                             <td>{{aluno.ra}}</td>
                                             <td>
-                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}'{% if aluno.turmas.first %}, '{{aluno.turmas.first.sala.pk}}', '{{aluno.turmas.first.sala.nome}}'{% endif %})">Matricular este aluno</a>
+                                                {% if aluno.turmas.all %}
+                                                    {% for turma in aluno.turmas.all %}
+                                                    {% if turma.status == 'Ativo' %}
+                                                    {{turma.sala}}
+                                                    {% endif %}
+                                                    {% endfor %}
+                                                {% else %}
+                                                Sem sala
+                                                {% endif %}
+                                            </td>
+                                            <td>
+                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}'{% if aluno.turmas.first %}, '{{aluno.turmas.first.sala.pk}}', '{{aluno.turmas.first.sala.nome}}'{% endif %})">
+                                                    Selecionar aluno(a)
+                                                </a>
                                             </td>
                                         </tr>
                                         {% endfor %}
@@ -161,7 +180,6 @@
             if (origem_input && origem_input_visual) {
                 origem_input_visual.value = sala_nome;
                 origem_input.value = id_sala;
-                console.log
             }
 
 
@@ -180,10 +198,11 @@
         
         if (id_sala && transferencia == 'True') {
             let origem_input = document.getElementById('origem');
+            let origem_input_visual = document.getElementById('origem_input');
 
-            if (origem_input) {
-                origem_input.value = sala_nome;
-                origem_input.setAttribute('readonly', true);
+            if (origem_input && origem_input_visual) {
+                origem_input_visual.value = sala_nome;
+                origem_input.value = id_sala;
             }
         }
     }

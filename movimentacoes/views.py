@@ -8,7 +8,7 @@ import datetime
 @login_required
 def movimentacoes(request):
     user = request.user.get_full_name()
-    movimentacoes = Movimentacoes.objects.all().order_by('-pk')
+    movimentacoes = Movimentacoes.objects.all().order_by('-data')
 
     context = {
         'movimentacoes': movimentacoes,
@@ -81,7 +81,7 @@ def matricula(request):
 def remanejamento(request, pk=None):
     user = request.user.get_full_name()
     salas = Sala.objects.filter(ano=datetime.date.today().year)
-    total_alunos = Aluno.objects.exclude(turmas__isnull=True)
+    total_alunos = Aluno.objects.filter(turmas__status='Ativo')
 
     if request.method == 'POST':
         aluno = request.POST.get('aluno')
@@ -97,8 +97,10 @@ def remanejamento(request, pk=None):
             data=data
         )
 
-        turma = get_object_or_404(Turma, aluno=aluno)
-        turma.status = 'Remanejado'
+        turma = Turma.objects.filter(aluno=aluno, status='Ativo').first()
+        if turma:
+            turma.status = 'Remanejado'
+            turma.save()
 
         nova_turma = Turma(
             sala=get_object_or_404(Sala, pk=destino),
@@ -107,9 +109,15 @@ def remanejamento(request, pk=None):
             status='Ativo'
         )
 
+        auditoria = Auditoria(
+            acao=f'Remanejamento de aluno(a)',
+            criado_por=f'{user}',
+            info=f'{turma.aluno if turma else 'Sem dados'} remanejado(a) do {movimentacao.origem} para {movimentacao.destino}'
+        )
+
         movimentacao.save()
-        turma.save()
         nova_turma.save()
+        auditoria.save()
 
     context = {
         'remanejamento': True,
@@ -123,7 +131,35 @@ def remanejamento(request, pk=None):
 def transferencia(request, pk=None):
     user = request.user.get_full_name()
     salas = Sala.objects.filter(ano=datetime.date.today().year)
-    total_alunos = Aluno.objects.exclude(turmas__isnull=True)
+    total_alunos = Aluno.objects.filter(turmas__status='Ativo')
+
+    if request.method == 'POST':
+        aluno = request.POST.get('aluno')
+        data = request.POST.get('data')
+        origem = request.POST.get('origem')
+        destino = request.POST.get('destino')
+
+        movimentacao = Movimentacoes(
+            aluno=get_object_or_404(Aluno, pk=aluno),
+            origem=get_object_or_404(Sala, pk=origem),
+            destino_input=destino,
+            tipo='Transferência',
+            data=data
+        )
+
+        turma = Turma.objects.filter(aluno=aluno, status='Ativo').first()
+        if turma:
+            turma.status = 'Transferido'
+            turma.save()
+
+        auditoria = Auditoria(
+            acao=f'Transferência de aluno(a)',
+            criado_por=user,
+            info=f'{turma.aluno if turma else 'Sem dados'} tranferido para {destino}'
+        )
+
+        movimentacao.save()
+        auditoria.save()
 
     context = {
         'transferencia': True,
