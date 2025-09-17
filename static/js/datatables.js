@@ -7,23 +7,64 @@ window.addEventListener('DOMContentLoaded', event => {
     //     new simpleDatatables.DataTable(datatablesSimple);
     // }
 
-    let table = new DataTable('#datatablesSimple', {
-        language: {
-            url:'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
-        },
-        layout: {
-            top2Start: {
-                buttons: ['copy', 'csv', 'excel', 'pdf', 'print'],
-            },
-            topStart: 'pageLength',
-            topEnd: 'search',
-            bottomStart: 'info',
-            bottomEnd: 'paging',
-        },
-    });
 
     const tabelas = document.querySelectorAll('#datatablesSimple');
+    let numero = 1;
+    let buttons = [];
+    let info = null;
+    let pageLength = null;
+    let search = null;
+    let paging = null;
+
     tabelas.forEach(element => {
+        element.id = element.id + numero;
+
+        if (!element.classList.contains('sem-botoes')) {
+            buttons = ['copy', 'csv', 'excel', 'pdf', 'print'];
+        } else {
+            buttons = [];
+        }
+
+        if (!element.classList.contains('sem-info')) {
+            info = 'info';
+        } else {
+            info = null;
+        }
+
+        if (!element.classList.contains('sem-qtd-por-paginas')) {
+            pageLength = 'pageLength';
+        } else {
+            infpageLengtho = null;
+        }
+        
+        if (!element.classList.contains('sem-pesquisa')) {
+            search = 'search';
+        } else {
+            search = null;
+        }
+        
+        if (!element.classList.contains('sem-paginacao')) {
+            paging = 'paging';
+        } else {
+            paging = null;
+        }
+
+
+        let table = new DataTable(`#${element.id}`, {
+            language: {
+                url:'https://cdn.datatables.net/plug-ins/1.12.1/i18n/pt-BR.json'
+            },
+            layout: {
+                top2Start: {
+                    buttons: buttons,
+                },
+                topStart: pageLength,
+                topEnd: search,
+                bottomStart: info,
+                bottomEnd: paging,
+            },
+        });
         element.classList.add('border', 'table', 'table-striped', 'table-hover', 'table-bordered', 'table-sm');
+        numero ++;
     });
 });

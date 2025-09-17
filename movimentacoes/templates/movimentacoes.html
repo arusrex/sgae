@@ -34,30 +34,20 @@
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
+                            <th>Data</th>
                             <th>Tipo</th>
                             <th>Aluno</th>
-                            <th>Data</th>
                             <th>Origem</th>
                             <th>Destino</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Tipo</th>
-                            <th>Aluno</th>
-                            <th>Data</th>
-                            <th>Origem</th>
-                            <th>Destino</th>
-                            <th>Ações</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for movimentacao in movimentacoes %}
                         <tr>
+                            <td>{{movimentacao.data}}</td>
                             <td>{{movimentacao.tipo}}</td>
                             <td>{{movimentacao.aluno}}</td>
-                            <td>{{movimentacao.data}}</td>
                             <td>{% if movimentacao.origem %}{{movimentacao.origem}}{% else %}{{movimentacao.origem_input}}{% endif %}</td>
                             <td>{% if movimentacao.destino %}{{movimentacao.destino}}{% else %}{{movimentacao.destino_input}}{% endif %}</td>
                             <td>

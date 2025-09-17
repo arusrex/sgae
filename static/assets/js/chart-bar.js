@@ -18,7 +18,7 @@ if (gsa) {
       labels: status,
       datasets: [{
         label: "Quantidade",
-        backgroundColor: ["rgba(2,117,216,1)", "rgba(216, 216, 2, 1)", "rgba(216, 2, 2, 1)"],
+        backgroundColor: ["rgba(2,117,216,1)", "rgba(255, 255, 5, 1)", "rgba(216, 2, 2, 1)"],
         borderColor: "rgba(2,117,216,1)",
         data: qtdAlunos,
       }],

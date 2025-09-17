@@ -257,19 +257,17 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
+                            <th>R.A.</th>
+                            <th>Nascimento</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for aluno in alunos %}
                         <tr>
                             <td>{{aluno.nome | default_if_none:""}}</td>
+                            <td>{{aluno.ra | default_if_none:""}}</td>
+                            <td>{{aluno.nascimento | default_if_none:""}}</td>
                             <td>
                                 <a href="{% url "cadastros:editar-aluno" aluno.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
                                 {% if user.is_superuser %}<a href="{% url "cadastros:excluir-aluno" aluno.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
@@ -292,6 +290,7 @@
     function criaBotaoAdicionar () {
         const div = document.createElement('div');
         const botao = document.createElement('a');
+        div.classList.add('mb-2');
         botao.id = 'botao-adicionar-aluno';
         botao.classList.add('btn', 'btn-primary', 'btn-block');
         botao.text = 'Cadastrar aluno(a)'
@@ -301,10 +300,22 @@
     }
 
     cardBody.firstElementChild.before(criaBotaoAdicionar());
+    const botaoAdicionarAluno = document.getElementById('botao-adicionar-aluno');
 
-    let clickBotaoAdicionarAluno = document.addEventListener('click', () => {
-        formCadastroAlunos.toggleAttribute('hidden');
-    });
+    if (botaoAdicionarAluno) {
+        botaoAdicionarAluno.addEventListener('click', () => {
+
+            if (formCadastroAlunos.hasAttribute('hidden')) {
+                botaoAdicionarAluno.text = "Esconder formulário";
+                botaoAdicionarAluno.classList.replace('btn-primary', 'btn-warning');
+            } else {
+                botaoAdicionarAluno.text = "Cadastrar aluno(a)";
+                botaoAdicionarAluno.classList.replace('btn-warning', 'btn-primary');
+            }
+            formCadastroAlunos.toggleAttribute('hidden');
+
+        });
+    }
 
 </script>
 {% endblock %}

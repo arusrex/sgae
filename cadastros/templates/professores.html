@@ -13,8 +13,8 @@
                     <i class="fas fa-plus me-1"></i>
                     Cadastro de professor
                 </div>
-                <div class="card-body">
-                    <form method='POST'>
+                <div class="card-body" id="card-cadastro-professor">
+                    <form method='POST' id="form-cadastro-professor">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -156,7 +156,7 @@
                             <th>Matrícula</th>
                             <th>Nome</th>
                             <th>E-Mail</th>
-                            <th>Nascimento</th>
+                            <th>Telefone</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -165,7 +165,7 @@
                             <th>Matrícula</th>
                             <th>Nome</th>
                             <th>E-Mail</th>
-                            <th>Nascimento</th>
+                            <th>Telefone</th>
                             <th>Ações</th>
                         </tr>
                     </tfoot>
@@ -175,7 +175,7 @@
                             <td>{{professor.matricula | default_if_none:""}}</td>
                             <td>{{professor.user.first_name | default_if_none:""}}</td>
                             <td>{{professor.user.email | default_if_none:""}}</td>
-                            <td>{{professor.nascimento | default_if_none:""}}</td>
+                            <td>{{professor.telefone | default_if_none:""}}</td>
                             <td>
                                 <a href="{% url "cadastros:editar-professor" professor.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
                                 {% if user.is_superuser %}<a href="" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
@@ -189,4 +189,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    const cardBody = document.getElementById('card-cadastro-professor');
+    const formCadastroProfessores = document.getElementById('form-cadastro-professor');
+    formCadastroProfessores.hidden = true;
+
+    function criaBotaoAdicionar () {
+        const div = document.createElement('div');
+        const botao = document.createElement('a');
+        div.classList.add('mb-2');
+        botao.id = 'botao-adicionar-professor';
+        botao.classList.add('btn', 'btn-primary', 'btn-block');
+        botao.text = 'Cadastrar Professor(a)'
+        div.appendChild(botao);
+
+        return div;
+    }
+
+    cardBody.firstElementChild.before(criaBotaoAdicionar());
+    const botaoAdicionarProfessor = document.getElementById('botao-adicionar-professor');
+
+    if (botaoAdicionarProfessor) {
+        botaoAdicionarProfessor.addEventListener('click', () => {
+
+            if (formCadastroProfessores.hasAttribute('hidden')) {
+                botaoAdicionarProfessor.text = "Esconder formulário";
+                botaoAdicionarProfessor.classList.replace('btn-primary', 'btn-warning');
+            } else {
+                botaoAdicionarProfessor.text = "Cadastrar Professor(a)";
+                botaoAdicionarProfessor.classList.replace('btn-warning', 'btn-primary');
+            }
+            formCadastroProfessores.toggleAttribute('hidden');
+
+        });
+    }
+
+</script>
 {% endblock %}

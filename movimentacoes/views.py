@@ -1,6 +1,6 @@
 from .models import Turma, AtribuicaoProfessor, Movimentacoes
 from core.models import Auditoria
-from cadastros.models import Aluno, Sala
+from cadastros.models import Aluno, Sala, Professor
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -9,7 +9,7 @@ import datetime
 @login_required
 def movimentacoes(request):
     user = request.user.get_full_name()
-    movimentacoes = Movimentacoes.objects.all().order_by('-data')
+    movimentacoes = Movimentacoes.objects.all().order_by('data')
 
     context = {
         'movimentacoes': movimentacoes,
@@ -172,8 +172,15 @@ def transferencia(request, pk=None):
 
 @login_required
 def atribuicao_professor(request, pk=None):
+    professores = Professor.objects.all()
+    salas = Sala.objects.all()
 
-    return render(request, 'atribuicao_professor.html')
+    context = {
+        'professores': professores,
+        'salas': salas,
+    }
+
+    return render(request, 'atribuicao_professor.html', context)
 
 @login_required
 def faltas_professor(request, pk=None):
