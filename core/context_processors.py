@@ -34,7 +34,7 @@ def dados_graficos(request):
     alunos = Turma.objects.filter(status="Ativo")
 
     estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno'))
-    estatisticasAtivos = Turma.objects.values('sala__nome').annotate(total=Count('aluno'))
+    estatisticasAtivos = Turma.objects.values('sala__nome').annotate(total=Count('aluno')).filter(status='Ativo')
 
     context = {
         'graficos_alunos': estatisticasAlunos,

@@ -1,6 +1,7 @@
 from .models import Turma, AtribuicaoProfessor, Movimentacoes
 from core.models import Auditoria
 from cadastros.models import Aluno, Sala
+from django.db.models import Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 import datetime
@@ -181,10 +182,20 @@ def faltas_professor(request, pk=None):
 
 @login_required
 def turmas(request, pk=None):
-    turmas = Turma.objects.all().order_by('sala')
+    salas = (
+        Sala.objects.all()
+        .annotate(
+            ativos=Count('turmas', Q(turmas__status="Ativo")),
+            inativos=Count('turmas', Q(turmas__status="Inativo")),
+            remanejados=Count('turmas', Q(turmas__status="Remanejado")),
+            transferidos=Count('turmas', Q(turmas__status="Transferido")),
+            concluidos=Count('turmas', Q(turmas__status="Concluído")),
+            total=Count('turmas'),
+        )
+    )
 
     context = {
-        'turmas': turmas,
+        'turmas': salas,
     }
 
     return render(request, 'turmas.html', context)
