@@ -4,6 +4,7 @@ var gsa = document.getElementById("graficosStatusAlunos");
 if (gsa) {
   let status = [];
   let qtdAlunos = [];
+  let coresGsa = ["rgba(2,117,216,0.5)", "rgba(255, 255, 5, 0.5)", "rgba(216, 2, 2, 0.5)"];
 
   if (graficoStatus) {
     graficoStatus.forEach(element => {
@@ -17,18 +18,38 @@ if (gsa) {
     data: {
       labels: status,
       datasets: [{
-        label: "Quantidade",
-        backgroundColor: ["rgba(2,117,216,1)", "rgba(255, 255, 5, 1)", "rgba(216, 2, 2, 1)"],
+        label: "Quantidades",
+        backgroundColor: coresGsa,
         borderColor: "rgba(2,117,216,1)",
         data: qtdAlunos,
       }],
     },
     options: {
-        scales: {
-           y: {
-            beginAtZero: true,
-           }
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            generateLabels: function (grafico) {
+              let legendasGsa = [];
+              status.forEach((label, i) => {
+                legendasGsa.push({
+                  text: label,
+                  fillStyle: coresGsa[i],
+                  strokesStyle: coresGsa[i],
+                  hidden: false,
+                });
+              });
+              return legendasGsa;
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
         }
+      },
+      responsive: true,
     }
   });
 }
@@ -39,7 +60,7 @@ if (gaa) {
   let qtdAlunosClasse = [];
   let cores = []
 
-  function corAleatoria(alpha = 1) {
+  function corAleatoria(alpha = 0.5) {
     const r = Math.floor(Math.random() * 256); // 0–255
     const g = Math.floor(Math.random() * 256);
     const b = Math.floor(Math.random() * 256);
@@ -57,18 +78,39 @@ if (gaa) {
     data: {
       labels: classe,
       datasets: [{
-        label: "Quantidade",
+        label: "Salas",
         backgroundColor: cores,
         borderColor: "rgba(2,117,216,1)",
         data: qtdAlunosClasse,
       }],
     },
     options: {
-        scales: {
-           y: {
-            beginAtZero: true,
-           }
+      plugins: {
+        legend: {
+          display: true,
+          labels: {
+            generateLabels: function (grafico) {
+              let legendas = [];
+              classe.forEach((label, i) => {
+                legendas.push({
+                  text: label,
+                  fillStyle: cores[i],
+                  strokesStyle: cores[i],
+                  hidden: false,
+                });
+              });
+              return legendas;
+            },
+          },
+        },
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
         }
+      },
+      responsive: true,
     }
   });
+
 }

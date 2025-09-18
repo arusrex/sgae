@@ -69,6 +69,8 @@ def matricula(request):
         turma.save()
         movimentacao.save()
         auditoria.save()
+
+        return redirect('movimentacoes:matricula')
      
     context = {
         'matricula': True,
@@ -120,6 +122,8 @@ def remanejamento(request, pk=None):
         nova_turma.save()
         auditoria.save()
 
+        return redirect('movimentacoes:remanejamento')
+
     context = {
         'remanejamento': True,
         'total_alunos': total_alunos,
@@ -162,6 +166,8 @@ def transferencia(request, pk=None):
         movimentacao.save()
         auditoria.save()
 
+        return redirect('movimentacoes:transferencia')
+
     context = {
         'transferencia': True,
         'total_alunos': total_alunos,
@@ -175,6 +181,7 @@ def atribuicao_professor(request, pk=None):
     user = request.user.get_full_name()
     professores = Professor.objects.all()
     salas = Sala.objects.all()
+    atribuicoes = AtribuicaoProfessor.objects.all()
 
     if request.method == 'POST':
         professor = get_object_or_404(Professor, pk=request.POST.get('professor'))
@@ -194,7 +201,10 @@ def atribuicao_professor(request, pk=None):
         atribuicao.save()
         auditoria.save()
 
+        return redirect('movimentacoes:atribuicoes')
+
     context = {
+        'atribuicoes': atribuicoes,
         'professores': professores,
         'salas': salas,
     }
@@ -203,25 +213,88 @@ def atribuicao_professor(request, pk=None):
 
 @login_required
 def faltas_professor(request, pk=None):
+    TIPOS = [
+        ('abonada', 'Abonada'),
+        ('justificada', 'Remanejamento'),
+        ('injustificada', 'Injustificada'),
+        ('ferias', 'Férias'),
+        ('licenca-remunerada', 'Licença Remunerada'),
+        ('licenca-premio', 'Licença Prêmio'),
+        ('licenca-maternidade', 'Licença Maternidade'),
+        ('licenca-paternidade', 'Licença Paternidade'),
+        ('licenca-saude', 'Licença Saúde'),
+        ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+        ('gala', 'Gala'),
+        ('nojo', 'Nojo'),
+        ('acidente-de-trabalho', 'Acidente de Trabalho'),
+        ('doacao-de-sangue', 'Doação de Sangue'),
+        ('ol', 'Serviço Obrigatório por LEI'),
+        ('recesso-escolar', 'Recesso Escolar'),
+    ]
+
+    PERIODOS = [
+        ('manha', 'Manhã'),
+        ('tarde', 'Tarde'),
+        ('manha-tarde', 'Manhã e Tarde'),
+    ]
+
+    user = request.user.get_full_name()
     professores = Professor.objects.all()
     faltas = FrequenciaProfessores.objects.all().order_by('professor')
 
     if request.method == "POST":
-        professor = request.POST.get('professor')
+        professor = get_object_or_404(Professor, pk=request.POST.get('professor'))
         data_inicial = request.POST.get('data_inicial')
         data_final = request.POST.get('data_final')
         quantidade = request.POST.get('quantidade')
         periodo = request.POST.get('periodo')
         tipo = request.POST.get('tipo')
+
+        falta = FrequenciaProfessores(
+            professor=professor,
+            data_inicial=data_inicial,
+            data_final=data_final,
+            quantidade=quantidade,
+            periodo=periodo,
+            tipo=tipo,
+        )
+
+        auditoria = Auditoria(
+            acao=f'Falta de professor(a)',
+            criado_por=user,
+            info=f'Falta {tipo} para {professor}'
+        )
+
+        falta.save()
+        auditoria.save()
     
-        print(f"{professor}\n{data_inicial}\n{data_final}\n{quantidade}\n{periodo}\n{tipo}")
+        return redirect('movimentacoes:faltas-professor')
 
     context = {
         'professores': professores,
         'faltas': faltas,
+        'tipos': TIPOS,
+        'periodos': PERIODOS
     }
 
     return render(request, 'faltas_professor.html', context)
+
+@login_required
+def excluir_faltas_professor(request, pk):
+    user = request.user.get_full_name()
+    falta = get_object_or_404(FrequenciaProfessores, pk=pk)
+
+    if falta:
+        auditoria = Auditoria(
+            acao=f'Exclusão de falta de professor',
+            criado_por=user,
+            info=f'Falta de {falta.data_inicial} do {falta.professor} excluída'
+        )
+        auditoria.save()
+        falta.delete()
+    
+    return redirect('movimentacoes:faltas-professor')
+
 
 @login_required
 def turmas(request, pk=None):

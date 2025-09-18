@@ -82,34 +82,69 @@
         <div class="col-sm-6">
             <div class="card mb-4">
                 <div class="card-header">
-                <i class="fas fa-table me-1"></i>
-                Salas
-            </div>
+                    <i class="fas fa-table me-1"></i>
+                    Salas
+                </div>
             
-            {% if salas %}
-            <div class="card-body">
-                <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                    <thead>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for sala in salas %}
-                        <tr>
-                            <td>
-                                {{sala | default_if_none:""}}
-                            </td>
-                            <td>
-                                <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala.nome}}')">Selecionar</a>
-                            </td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+                {% if salas %}
+                <div class="card-body">
+                    <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sala in salas %}
+                            <tr>
+                                <td>
+                                    {{sala | default_if_none:""}}
+                                </td>
+                                <td>
+                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala.nome}}')">Selecionar</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
             </div>
-            {% endif %}
+        </div>
+
+        <div class="col-sm-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-table me-1"></i>
+                    Salas
+                </div>
+            
+                {% if atribuicoes %}
+                <div class="card-body">
+                    <table id="datatablesSimple">
+                        <thead>
+                            <tr>
+                                <th>Professor(a)</th>
+                                <th>Sala</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for atribuicao in atribuicoes %}
+                            <tr>
+                                <td>{{atribuicao.professor | default_if_none:""}}</td>
+                                <td>{{atribuicao.sala | default_if_none:""}}</td>
+                                <td>
+                                    <a class="btn btn-sm btn-danger btn-block">Excluir</a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% endif %}
+            </div>
         </div>
     </div>
 </div>

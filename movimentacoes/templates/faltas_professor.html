@@ -65,22 +65,9 @@
                                 <div class="mb-3">
                                     <select class="form-select" id="tipo" name="tipo" required >
                                         <option value="">Selecione o tipo de falta</option>
-                                        <option value="abonada">Abonada</option>
-                                        <option value="justificada">Justificada</option>
-                                        <option value="injustificada">Injustificada</option>
-                                        <option value="ferias">Férias</option>
-                                        <option value="licenca-remunerada">Licença Remunerada</option>
-                                        <option value="licenca-premio">Licença Prêmio</option>
-                                        <option value="licenca-maternidade">Licença Maternidade</option>
-                                        <option value="licenca-paternidade">Licença Paternidade</option>
-                                        <option value="licenca-saude">Licença Saúde</option>
-                                        <option value="licenca-sem-vencimentos">Licença Sem Vencimentos</option>
-                                        <option value="gala">Gala</option>
-                                        <option value="nojo">Nojo</option>
-                                        <option value="acidente-de-trabalho">Acidente de Trabalho</option>
-                                        <option value="doacao-de-sangue">Doação de Sangue</option>
-                                        <option value="ol">Serviço Obrigatório por LEI</option>
-                                        <option value="recesso-escolar">Recesso Escolar</option>
+                                        {% for valor, texto in tipos %}
+                                        <option value="{{valor}}">{{texto}}</option>
+                                        {% endfor %}
                                     </select>
                                 </div>
                             </div>
@@ -134,9 +121,11 @@
                     <thead>
                         <tr>
                             <th>Professor</th>
-                            <th>Data</th>
+                            <th>Tipo</th>
+                            <th>Data inicial</th>
+                            <th>Data final</th>
                             <th>Período</th>
-                            <th>Quantidade</th>
+                            <th>Qtd. aulas</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
@@ -144,11 +133,21 @@
                         {% for falta in faltas %}
                         <tr>
                             <td>{{falta.professor.user.get_full_name | default_if_none:""}}</td>
-                            <td>{{falta.data | default_if_none:""}}</td>
-                            <td>{{falta.periodo | default_if_none:""}}</td>
+                            <td>
+                                {% for valor, texto in tipos %}
+                                    {% if falta.tipo == valor %}{{texto}}{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{falta.data_inicial}}</td>
+                            <td>{{falta.data_final}}</td>
+                            <td>
+                                {% for valor, texto in periodos %}
+                                    {% if falta.periodo == valor %}{{texto}}{% endif %}
+                                {% endfor %}
+                            </td>
                             <td>{{falta.quantidade | default_if_none:""}}</td>
                             <td>
-                                {% if user.is_superuser %}<a href="" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-faltas-professor" falta.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
