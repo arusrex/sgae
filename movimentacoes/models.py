@@ -58,9 +58,11 @@ class Movimentacoes(ControleDeRegistros):
     
 class FrequenciaProfessores(ControleDeRegistros):
     professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
-    data = models.DateField()
-    período = models.CharField(max_length=30, blank=True, null=True)
+    data_inicial = models.DateField(blank=True, null=True)
+    data_final = models.DateField(blank=True, null=True)
+    periodo = models.CharField(max_length=30, blank=True, null=True)
     quantidade = models.IntegerField(default=5)
+    tipo = models.CharField(max_length=50, blank=True, null=True)
 
     def __str__(self):
         professor = self.professor.user.get_full_name() if self.professor else "Sem professor"

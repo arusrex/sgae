@@ -25,21 +25,62 @@
                                 </div>
                             </div>
                             <div class="col-6">
-                                <label for="data" class="form-label">Data</label>
+                                <label for="data_inicial" class="form-label">De</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="data" name="data" type="date" required />
+                                    <input class="form-control" id="data_inicial" name="data_inicial" type="date" required />
                                 </div>
                             </div>
                             <div class="col-6">
+                                <label for="data_final" class="form-label">Até</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="data_final" name="data_final" type="date" required />
+                                </div>
+                            </div>
+                            <div class="col-4">
                                 <label for="quantidade" class="form-label">Quantidade de aulas</label>
                                 <div class="mb-3">
-                                    <select class="form-control" id="quantidade" name="quantidade" required >
+                                    <select class="form-select" id="quantidade" name="quantidade" required >
                                         <option value="">Selecione a quantidade de aulas</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
                                         <option value="5">Todas as aulas do período</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="periodo" class="form-label">Período</label>
+                                <div class="mb-3">
+                                    <select class="form-select" id="periodo" name="periodo" required >
+                                        <option value="">Selecione o período</option>
+                                        <option value="manha">Manhã</option>
+                                        <option value="tarde">Tarde</option>
+                                        <option value="manha-tarde">Manhã e Tarde</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-4">
+                                <label for="tipo" class="form-label">Tipo</label>
+                                <div class="mb-3">
+                                    <select class="form-select" id="tipo" name="tipo" required >
+                                        <option value="">Selecione o tipo de falta</option>
+                                        <option value="abonada">Abonada</option>
+                                        <option value="justificada">Justificada</option>
+                                        <option value="injustificada">Injustificada</option>
+                                        <option value="ferias">Férias</option>
+                                        <option value="licenca-remunerada">Licença Remunerada</option>
+                                        <option value="licenca-premio">Licença Prêmio</option>
+                                        <option value="licenca-maternidade">Licença Maternidade</option>
+                                        <option value="licenca-paternidade">Licença Paternidade</option>
+                                        <option value="licenca-saude">Licença Saúde</option>
+                                        <option value="licenca-sem-vencimentos">Licença Sem Vencimentos</option>
+                                        <option value="gala">Gala</option>
+                                        <option value="nojo">Nojo</option>
+                                        <option value="acidente-de-trabalho">Acidente de Trabalho</option>
+                                        <option value="doacao-de-sangue">Doação de Sangue</option>
+                                        <option value="ol">Serviço Obrigatório por LEI</option>
+                                        <option value="recesso-escolar">Recesso Escolar</option>
                                     </select>
                                 </div>
                             </div>
@@ -87,28 +128,27 @@
         </div>
         
         <div class="card-body">
-            {% if disciplinas %}
+            {% if faltas %}
             <div class="card-body">
                 <table id="datatablesSimple">
                     <thead>
                         <tr>
-                            <th>Nome</th>
+                            <th>Professor</th>
+                            <th>Data</th>
+                            <th>Período</th>
+                            <th>Quantidade</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
-                        {% for disciplina in disciplinas %}
+                        {% for falta in faltas %}
                         <tr>
-                            <td>{{disciplina.nome | default_if_none:""}}</td>
+                            <td>{{falta.professor.user.get_full_name | default_if_none:""}}</td>
+                            <td>{{falta.data | default_if_none:""}}</td>
+                            <td>{{falta.periodo | default_if_none:""}}</td>
+                            <td>{{falta.quantidade | default_if_none:""}}</td>
                             <td>
-                                <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                {% if user.is_superuser %}<a href="" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}

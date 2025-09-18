@@ -1,4 +1,4 @@
-from .models import Turma, AtribuicaoProfessor, Movimentacoes
+from .models import Turma, AtribuicaoProfessor, Movimentacoes, FrequenciaProfessores
 from core.models import Auditoria
 from cadastros.models import Aluno, Sala, Professor
 from django.db.models import Count, Q
@@ -172,8 +172,27 @@ def transferencia(request, pk=None):
 
 @login_required
 def atribuicao_professor(request, pk=None):
+    user = request.user.get_full_name()
     professores = Professor.objects.all()
     salas = Sala.objects.all()
+
+    if request.method == 'POST':
+        professor = get_object_or_404(Professor, pk=request.POST.get('professor'))
+        sala = get_object_or_404(Sala, pk=request.POST.get('sala'))
+
+        atribuicao = AtribuicaoProfessor(
+            professor=professor,
+            sala=sala,
+        )
+
+        auditoria = Auditoria(
+            acao=f'Atribuição de professor(a)',
+            criado_por=user,
+            info=f'{professor} atribuído a sala {sala} com sucesso'
+        )
+
+        atribuicao.save()
+        auditoria.save()
 
     context = {
         'professores': professores,
@@ -185,9 +204,21 @@ def atribuicao_professor(request, pk=None):
 @login_required
 def faltas_professor(request, pk=None):
     professores = Professor.objects.all()
+    faltas = FrequenciaProfessores.objects.all().order_by('professor')
+
+    if request.method == "POST":
+        professor = request.POST.get('professor')
+        data_inicial = request.POST.get('data_inicial')
+        data_final = request.POST.get('data_final')
+        quantidade = request.POST.get('quantidade')
+        periodo = request.POST.get('periodo')
+        tipo = request.POST.get('tipo')
+    
+        print(f"{professor}\n{data_inicial}\n{data_final}\n{quantidade}\n{periodo}\n{tipo}")
 
     context = {
         'professores': professores,
+        'faltas': faltas,
     }
 
     return render(request, 'faltas_professor.html', context)
