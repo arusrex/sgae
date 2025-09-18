@@ -11,18 +11,61 @@
             <div class="card mb-4">
                 <div class="card-header">
                     <i class="fas fa-plus me-1"></i>
-                    Cadastro de disciplina
+                    Registro de faltas
                 </div>
                 <div class="card-body">
                     <form method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-12">
-                                <label for="nome" class="form-label">Nome</label>
+                                <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="nome" name="nome" type="text" value="{{disciplina.nome}}" placeholder="Insira o nome da sala" required />
+                                    <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o professor abaixo" readonly required />
+                                    <input class="form-control" id="professor" name="professor" type="text" hidden readonly required />
                                 </div>
                             </div>
+                            <div class="col-6">
+                                <label for="data" class="form-label">Data</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="data" name="data" type="date" required />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="quantidade" class="form-label">Quantidade de aulas</label>
+                                <div class="mb-3">
+                                    <select class="form-control" id="quantidade" name="quantidade" required >
+                                        <option value="">Selecione a quantidade de aulas</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                        <option value="5">Todas as aulas do período</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>Professor(a)</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for professor in professores %}
+                                    <tr>
+                                        <td>{{professor.user.get_full_name}}</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-warning btn-block" onclick="professorEscolhido('{{professor.pk}}', '{{professor.user.get_full_name}}')">
+                                                Selecionar professor(a)
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                         
                         <div class="mt-4 mb-0">
@@ -40,7 +83,7 @@
     <div class="card mb-4">
         <div class="card-header">
             <i class="fas fa-table me-1"></i>
-            Discilpinas registradas
+            Faltas registradas
         </div>
         
         <div class="card-body">
@@ -76,4 +119,14 @@
         </div>
     </div>
 </div>
+
+<script>
+    function professorEscolhido (professor_id, professor_nome) {
+        const campoVisual = document.getElementById('professor-visual');
+        const campo = document.getElementById('professor');
+
+        campo.value = professor_id;
+        campoVisual.value = professor_nome;
+    }
+</script>
 {% endblock %}

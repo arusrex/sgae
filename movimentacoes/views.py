@@ -184,8 +184,13 @@ def atribuicao_professor(request, pk=None):
 
 @login_required
 def faltas_professor(request, pk=None):
+    professores = Professor.objects.all()
 
-    return render(request, 'faltas_professor.html')
+    context = {
+        'professores': professores,
+    }
+
+    return render(request, 'faltas_professor.html', context)
 
 @login_required
 def turmas(request, pk=None):

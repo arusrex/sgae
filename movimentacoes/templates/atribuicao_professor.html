@@ -22,13 +22,15 @@
                             <div class="col-12">
                                 <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" readonly required />
+                                    <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" hidden readonly required />
+                                    <input class="form-control" id="professor-visual" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" readonly required />
                                 </div>
                             </div>
                             <div class="col-12">
                                 <label for="sala" class="form-label">sala</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" readonly required />
+                                    <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" hidden readonly required />
+                                    <input class="form-control" id="sala-visual" type="text" placeholder="Selecione a sala disponível" readonly required />
                                 </div>
                             </div>
                         </div>
@@ -65,7 +67,7 @@
                                     {{professor.user.get_full_name | default_if_none:""}}
                                 </td>
                                 <td>
-                                    <a class="btn btn-sm btn-warning btn-block">Selecionar</a>
+                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaProfessor('{{professor.pk}}', '{{professor.user.get_full_name}}')">Selecionar</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -100,7 +102,7 @@
                                 {{sala | default_if_none:""}}
                             </td>
                             <td>
-                                <a class="btn btn-sm btn-warning btn-block">Selecionar</a>
+                                <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala.nome}}')">Selecionar</a>
                             </td>
                         </tr>
                         {% endfor %}
@@ -111,4 +113,38 @@
         </div>
     </div>
 </div>
+
+<script>
+    const professores = [];
+    const salas = []
+
+    {% for p in professores %}
+        professores.push({
+            professor_id: "{{p.pk}}",
+            professor_nome: "{{p.user.get_full_name}}"
+        },);
+    {% endfor %}
+
+    {% for s in salas %}
+        salas.push({
+            sala_id: "{{s.pk}}",
+            sala_nome: "{{s.nome}}",
+        },);
+    {% endfor %}
+
+    const professor = document.getElementById('professor');
+    const professorVisual = document.getElementById('professor-visual');
+    const sala = document.getElementById('sala');
+    const salaVisual = document.getElementById('sala-visual');
+
+    function selecionaProfessor (professor_id, professor_nome) {
+        professor.value = professor_id;
+        professorVisual.value = professor_nome;
+    }
+
+    function selecionaSala (sala_id, sala_nome) {
+        sala.value = sala_id;
+        salaVisual.value = sala_nome;
+    }
+</script>
 {% endblock %}
