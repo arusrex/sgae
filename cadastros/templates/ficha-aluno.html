@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Ficha do aluno</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:alunos" %}" class="text-decoration-none">Alunos</a></li>
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:ficha-aluno" aluno.pk %}" class="text-decoration-none">Ficha do {{aluno.nome}}</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card" id="card-principal">
+                <div class="card-header">
+                    <i class="fas fa-user-pen me-1"></i>
+                    Ficha de aluno - {{aluno.nome}} - R.A. {{aluno.ra}} - Nascido em {{aluno.nascimento}}
+                </div>
+                <div><a class="btn btn-secondary btn-block m-2  " href="{% url "cadastros:imprimir-ficha-aluno" aluno.pk %}">Print this page</a></div>
+                <div class="card-body p-4 row">
+                    <div class="col-12"><h3>Dados do pessoais</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-sm-8 p-1"><strong>Nome:</strong> {{aluno.nome}}</div>
+                    <div class="border-bottom col-sm-2 p-1"><strong>R.M.:</strong> {{aluno.rm}}</div>
+                    <div class="border-bottom col-sm-2 p-1"><strong>R.A.:</strong> {{aluno.ra}}</div>
+                    <div class="border-bottom col-sm-3 p-1"><strong>R.G.:</strong> {{aluno.rg}}</div>
+                    <div class="border-bottom col-sm-3 p-1"><strong>C.P.F.:</strong> {{aluno.cpf}}</div>
+                    <div class="border-bottom col-sm-3 p-1"><strong>N.I.S.:</strong> {{aluno.nis}}</div>
+                    <div class="border-bottom col-sm-3 p-1"><strong>Nascimento:</strong> {{aluno.nascimento}}</div>
+                    <div class="border-bottom col-sm-4 p-1"><strong>Cidade:</strong> {{aluno.cidade}}</div>
+                    <div class="border-bottom col p-1"><strong>Estado:</strong> {{aluno.estado}}</div>
+                    <div class="border-bottom col p-1"><strong>Sexo:</strong> {{aluno.sexo}}</div>
+                    <div class="border-bottom col p-1"><strong>Raça/Etnia:</strong> {{aluno.cor_raca}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Localização/Contato</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-12 p-1"><strong>Endereço:</strong> {{aluno.endereco}}</div>
+                    <div class="border-bottom col-sm-8 p-1"><strong>Filiação 1:</strong> {{aluno.responsavel_1}}</div>
+                    <div class="border-bottom col p-1"><strong>Contato:</strong> {{aluno.contato_1}}</div>
+                    <div class="border-bottom col-sm-8 p-1"><strong>Filiação 2:</strong> {{aluno.responsavel_2}}</div>
+                    <div class="border-bottom col p-1"><strong>Contato:</strong> {{aluno.contato_2}}</div>
+                    <div class="border-bottom col-12 p-1"><strong>Outros contatos:</strong> {{aluno.outros_contatos}}</div>
+                    <div class="border-bottom col-2 p-1"><strong>Mora com os Pais?:</strong> {% if aluno.mora_com_os_pais %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-10 p-1"><strong>Porquê não mora com os Pais?:</strong> {{aluno.motivo_mora_com_os_pais}}</div>
+
+                    <div class="border-bottom col-12 p-1"><strong>Autorizados a retirar:</strong> {{aluno.retirada_aluno}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Informações gerais</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-12 p-1"><strong>Necessita Educação Especial?:</strong> {% if aluno.necessita_educacao_especial %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-2 p-1"><strong>Toma medicamento?:</strong> {% if aluno.medicamento %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-10 p-1"><strong>Medicamento:</strong> {{aluno.qual_medicamento}}</div>
+                    <div class="border-bottom col-4 p-1"><strong>Diabete?:</strong> {% if aluno.diabete %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-4 p-1"><strong>Alergia?:</strong> {% if aluno.alergia %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-4 p-1"><strong>Cardíaco?:</strong> {% if aluno.cardiaco %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-2 p-1"><strong>Ja foi em Neurologista?:</strong> {% if aluno.neuro %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-10 p-1"><strong>Motivo:</strong> {{aluno.motivo_neuro}}</div>
+                    <div class="border-bottom col-2 p-1"><strong>Ja foi em Psicólogo?:</strong> {% if aluno.psicologo %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-10 p-1"><strong>Motivo:</strong> {{aluno.motivo_psicologo}}</div>
+                    <div class="border-bottom col-2 p-1"><strong>Ja foi em Fonoaudiólogo?:</strong> {% if aluno.fono %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-10 p-1"><strong>Motivo:</strong> {{aluno.motivo_fono}}</div>
+                    
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-12 p-1"><strong>Interesse no período integral?:</strong> {% if aluno.integral %}Sim{% else %}Não{% endif %}</div>
+                    <div class="border-bottom col-12 p-1"><strong>Tipo de transporte:</strong> {{aluno.transporte}}</div>
+                    <div class="border-bottom col-12 p-1"><strong>Observações:</strong> {{aluno.observacoes}}</div>
+                </div>
+                <div class="card-footer">
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

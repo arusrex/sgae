@@ -14,7 +14,8 @@ urlpatterns = [
     path('excluir-turma/<str:pk>/', views.excluir_turma, name='excluir-turma'),
 
     path('atribuicao-professor/', views.atribuicao_professor, name='atribuicoes'),
+    path('excluir-atribuicao-professor/<str:pk>/', views.excluir_atribuicoes, name='excluir-atribuicao'),
 
     path('faltas-professor/', views.faltas_professor, name='faltas-professor'),
-    path('exclui-faltas-professor/<str:pk>/', views.excluir_faltas_professor, name='excluir-faltas-professor'),
+    path('excluir-faltas-professor/<str:pk>/', views.excluir_faltas_professor, name='excluir-faltas-professor'),
 ]

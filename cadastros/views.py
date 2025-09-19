@@ -58,6 +58,7 @@ def salas(request, pk=None):
 
     return render(request, 'salas.html', context)
 
+@login_required
 def excluir_sala(request, pk):
     user = request.user
     sala = get_object_or_404(Sala, pk=pk)
@@ -391,6 +392,7 @@ def alunos(request, pk=None):
 
     return render(request, 'alunos.html', context)
 
+@login_required
 def excluir_aluno(request, pk):
     user = request.user.get_full_name()
     aluno = get_object_or_404(Aluno, pk=pk)
@@ -405,3 +407,17 @@ def excluir_aluno(request, pk):
         aluno.delete()
 
     return redirect('cadastros:alunos')
+
+def ficha_aluno(request, pk=None):
+    user = request.user.get_full_name()
+
+    if pk:
+        aluno = get_object_or_404(Aluno, pk=pk)
+
+    context = {
+        'aluno': aluno,
+    }
+
+    return render(request, 'ficha-aluno.html', context)
+
+

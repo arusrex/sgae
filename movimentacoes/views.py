@@ -212,6 +212,22 @@ def atribuicao_professor(request, pk=None):
     return render(request, 'atribuicao_professor.html', context)
 
 @login_required
+def excluir_atribuicoes(request, pk):
+    user = request.user.get_full_name()
+    atribuicao = get_object_or_404(AtribuicaoProfessor, pk=pk)
+
+    if atribuicao:
+        auditoria = Auditoria(
+            acao=f'Exclusão de atribuição',
+            criado_por=user,
+            info=f'Atribuição do {atribuicao.professor} da sala {atribuicao.sala} excluída'
+        )
+        auditoria.save()
+        atribuicao.delete()
+
+    return redirect('movimentacoes:atribuicoes')
+
+@login_required
 def faltas_professor(request, pk=None):
     TIPOS = [
         ('abonada', 'Abonada'),

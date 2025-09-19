@@ -136,7 +136,7 @@
                                 <td>{{atribuicao.professor | default_if_none:""}}</td>
                                 <td>{{atribuicao.sala | default_if_none:""}}</td>
                                 <td>
-                                    <a class="btn btn-sm btn-danger btn-block">Excluir</a>
+                                    <a href="{% url "movimentacoes:excluir-atribuicao" atribuicao.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>
                                 </td>
                             </tr>
                             {% endfor %}
