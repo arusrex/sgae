@@ -114,3 +114,15 @@
     transition: none !important;
     color: var(--cs-light) !important;
 }
+
+
+@media print {
+    .no-print {
+        display: none !important;
+    }
+
+    body {
+        font-size: 10px !important;
+        margin: 0;
+    }
+}
