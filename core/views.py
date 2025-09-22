@@ -4,6 +4,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from .models import Auditoria, Sistema
 from usuarios.models import Usuarios
+from core.utils import redimensionar_imagem, tratar_imagens
 
 def entrar(request):
     if request.method == 'POST':
@@ -112,27 +113,44 @@ def sistema(request):
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
         logo = request.FILES.get('logotipo')
-        cabecalho = request.FILES.get('cabecalho')
-        rodape = request.FILES.get('rodape')
+        logo_municipio = request.FILES.get('logo-municipio')
+        logo_educacao = request.FILES.get('logo-educacao')
+
+        logo_novo = tratar_imagens(logo, 85, 150, 150)
+        logo_municipio_novo = tratar_imagens(logo_municipio, 85, 500, 500)
+        logo_educacao_novo = tratar_imagens(logo_educacao, 85, 300, 300)
 
         if dados:
             dados.nome = nome
             dados.descricao = descricao
-            dados.logo = logo
-            dados.cabecalho = cabecalho
-            dados.rodape = rodape
+
+            if logo:
+                dados.logo = logo_novo # type: ignore
+
+            if logo_municipio:
+                dados.logo_municipio = logo_municipio_novo # type: ignore
+
+            if logo_educacao:
+                dados.logo_educacao = logo_educacao_novo # type: ignore
+
+            dados.save()
+
         else:
-            dados = Sistema.objects.create(
+            dados = Sistema(
                 nome=nome,
                 descricao=descricao,
                 logo=logo,
-                cabecalho=cabecalho,
-                rodape=rodape
+                logo_municipio=logo_municipio,
+                logo_educacao=logo_educacao
             )
+
+            dados.save()
         
         Auditoria.objects.create(
             acao="Dados do sistema",
             info="Alteração nos dados do sistema"
         )
+
+        return redirect('core:sistema')
 
     return render(request, 'sistema.html')

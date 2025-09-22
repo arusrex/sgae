@@ -15,7 +15,6 @@
                     Ficha de aluno - {{aluno.nome}} - R.A. {{aluno.ra}} - Nascido em {{aluno.nascimento}}
                 </div>
                 <div><a class="btn btn-secondary btn-block m-2 no-print" href="{% url "cadastros:imprimir-ficha-aluno" aluno.pk %}">Print this page</a></div>
-                <div><a class="btn btn-primary btn-block m-2 no-print" onclick="window.print()">Print this page</a></div>
                 <div class="card-body p-4 row">
                     <div class="col-12"><h3>Dados do pessoais</h3></div>
                     <hr class="mt-4 border border-secondary border-3">

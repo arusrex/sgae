@@ -15,7 +15,7 @@
                      Dados do Sistema
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form method="POST" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-12">
@@ -36,19 +36,19 @@
                         <hr>
                         <div class="row mb-3">
                             <div class="col-md-4 mt-1">
-                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if logo %}{{logo}}{% else %}{{sistema_logo}}{% endif %}" class="img-fluid" alt="Logotipo"></div>
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if logo %}{{logo}}{% else %}{{sistema_logo.url}}{% endif %}" class="img-fluid" alt="Logotipo"></div>
                                 <label for="logotipo" class="form-label">Logotipo</label>
                                 <input class="form-control" id="logotipo" name="logotipo" type="file" />
                             </div>
                             <div class="col-md-4 mt-1">
-                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if cabecalho %}{{cabecalho}}{% else %}{{sistema_cabecalho}}{% endif %}" class="img-fluid" alt="Cabeçalho"></div>
-                                <label for="cabecalho" class="form-label">Cabeçalho</label>
-                                <input class="form-control" id="cabecalho" name="cabecalho" type="file" />
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if logo_municipio %}{{logo_municipio}}{% else %}{{sistema_logo_municipio.url}}{% endif %}" class="img-fluid" alt="Cabeçalho"></div>
+                                <label for="logo-municipio" class="form-label">Logotipo Município</label>
+                                <input class="form-control" id="logo-municipio" name="logo-municipio" type="file" />
                             </div>
                             <div class="col-md-4 mt-1">
-                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if rodape %}{{rodape}}{% else %}{{sistema_rodape}}{% endif %}" class="img-fluid" alt="Rodapé"></div>
-                                <label for="rodape" class="form-label">Rodapé</label>
-                                <input class="form-control" id="rodape" name="rodape" type="file" />
+                                <div class="border rounded d-flex justify-content-center"><img width="150px" src="{% if logo_educacao %}{{logo_educacao}}{% else %}{{sistema_logo_educacao.url}}{% endif %}" class="img-fluid" alt="Rodapé"></div>
+                                <label for="logo-educacao" class="form-label">Logotipo Educação</label>
+                                <input class="form-control" id="logo-educacao" name="logo-educacao" type="file" />
                             </div>
                         </div>
                         <div class="mt-4 mb-0">

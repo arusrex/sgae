@@ -13,8 +13,8 @@ class Sistema(ControleDeRegistros):
     nome = models.CharField(max_length=150, blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
     logo = models.ImageField(upload_to='imagens/', blank=True, null=True)
-    cabecalho = models.ImageField(upload_to='imagens/', blank=True, null=True)
-    rodape = models.ImageField(upload_to='imagens/', blank=True, null=True)
+    logo_municipio = models.ImageField(upload_to='imagens/', blank=True, null=True)
+    logo_educacao = models.ImageField(upload_to='imagens/', blank=True, null=True)
 
     def __str__(self):
         return self.nome if self.nome else "Sistema Administrativo"
