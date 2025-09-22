@@ -181,9 +181,9 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
 
     story.append(t1)
     story.append(t2)
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 10))
     story.append(Paragraph("Localização/Contato", sub_titulo))
-    story.append(Spacer(1, 20))
+    story.append(Spacer(1, 10))
     story.append(t3)
     story.append(t4)
     story.append(t5)
@@ -191,7 +191,18 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
     story.append(t7)
     story.append(t8)
     story.append(t9)
-
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Informações gerais", sub_titulo))
+    story.append(Spacer(1, 10))
+    story.append(t3)
+    story.append(t4)
+    story.append(t5)
+    story.append(t6)
+    story.append(t7)
+    story.append(t8)
+    story.append(t9)
+    story.append(t8)
+    story.append(t9)
 
     # Gera o PDF
     doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)
