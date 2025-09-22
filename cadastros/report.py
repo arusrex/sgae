@@ -68,6 +68,7 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
 
     estilo_simples = TableStyle([
         ("GRID", (0, 0), (-1, -1), 0.1, colors.black),
+        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
     ])
 
     sistema = Sistema.objects.first()
@@ -150,6 +151,7 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
     p7 = [[
         Paragraph(f"<b>Outros contatos:</b> {aluno.outros_contatos}", bodytext),
     ]]
+
     moraComOsPais = "Sim" if aluno.mora_com_os_pais else "Não"
     p8 = [[
         Paragraph(f"<b>Mora com os pais?:</b> {moraComOsPais}", bodytext),
@@ -158,6 +160,55 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
 
     p9 = [[
         Paragraph(f"<b>Autorizados a retirar:</b> {aluno.retirada_aluno}", bodytext),
+    ]]
+
+    necessitaEducacaoEspecial = "Sim" if aluno.necessita_educacao_especial else "Não"
+    diabetes = "Sim" if aluno.diabete else "Não"
+    alergia = "Sim" if aluno.alergia else "Não"
+    cardiaco = "Sim" if aluno.cardiaco else "Não"
+    p10 = [[
+        Paragraph(f"<b>Necessita Educação Especial?:</b> {necessitaEducacaoEspecial}", bodytext),
+        Paragraph(f"<b>Diabetes?:</b> {diabetes}", bodytext),
+        Paragraph(f"<b>Alergia?:</b> {alergia}", bodytext),
+        Paragraph(f"<b>Cardíaco?:</b> {cardiaco}", bodytext),
+    ]]
+
+    tomaMedicamento = "Sim" if aluno.medicamento else "Não"
+    p11 = [[
+        Paragraph(f"<b>Toma medicamento?:</b> {tomaMedicamento}", bodytext),
+        Paragraph(f"<b>Qual:</b> {aluno.qual_medicamento}", bodytext),
+    ]]
+
+    neuro = "Sim" if aluno.neuro else "Não"
+    p12 = [[
+        Paragraph(f"<b>Neurologista?:</b> {neuro}", bodytext),
+        Paragraph(f"<b>Motivo:</b> {aluno.motivo_neuro}", bodytext),
+    ]]
+
+    psicologo = "Sim" if aluno.psicologo else "Não"
+    p13 = [[
+        Paragraph(f"<b>Psicólogo?:</b> {psicologo}", bodytext),
+        Paragraph(f"<b>Motivo:</b> {aluno.motivo_psicologo}", bodytext),
+    ]]
+
+    fono = "Sim" if aluno.fono else "Não"
+    p14 = [[
+        Paragraph(f"<b>Fonoaudiólogo?:</b> {fono}", bodytext),
+        Paragraph(f"<b>Motivo:</b> {aluno.motivo_fono}", bodytext),
+    ]]
+
+    integral = "Sim" if aluno.integral else "Não"
+    p15 = [[
+        Paragraph(f"<b>Interesse no período integral?:</b> {integral}", bodytext),
+    ]]
+
+    p16 = [[
+        Paragraph(f"<b>Tipo de transporte:</b> {aluno.transporte}", bodytext),
+        Paragraph(f"<b>Informações sobre o transporte:</b> {aluno.obs_transporte}", bodytext),
+    ]]
+
+    p17 = [[
+        Paragraph(f"<b>Observações gerais:</b> {aluno.observacoes if aluno.observacoes else ""}", bodytext),
     ]]
 
     t1 = Table(p1, colWidths=[300,100,100])
@@ -178,6 +229,22 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
     t8.setStyle(estilo_simples)
     t9 = Table(p9, colWidths=[500])
     t9.setStyle(estilo_simples)
+    t10 = Table(p10, colWidths=[200,100,100,100])
+    t10.setStyle(estilo_simples)
+    t11 = Table(p11, colWidths=[150,350])
+    t11.setStyle(estilo_simples)
+    t12 = Table(p12, colWidths=[150,350])
+    t12.setStyle(estilo_simples)
+    t13 = Table(p13, colWidths=[150,350])
+    t13.setStyle(estilo_simples)
+    t14 = Table(p14, colWidths=[150,350])
+    t14.setStyle(estilo_simples)
+    t15 = Table(p15, colWidths=[500])
+    t15.setStyle(estilo_simples)
+    t16 = Table(p16, colWidths=[150, 350])
+    t16.setStyle(estilo_simples)
+    t17 = Table(p17, colWidths=[500])
+    t17.setStyle(estilo_simples)
 
     story.append(t1)
     story.append(t2)
@@ -194,15 +261,14 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
     story.append(Spacer(1, 10))
     story.append(Paragraph("Informações gerais", sub_titulo))
     story.append(Spacer(1, 10))
-    story.append(t3)
-    story.append(t4)
-    story.append(t5)
-    story.append(t6)
-    story.append(t7)
-    story.append(t8)
-    story.append(t9)
-    story.append(t8)
-    story.append(t9)
+    story.append(t10)
+    story.append(t11)
+    story.append(t12)
+    story.append(t13)
+    story.append(t14)
+    story.append(t15)
+    story.append(t16)
+    story.append(t17)
 
     # Gera o PDF
     doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)
