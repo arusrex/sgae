@@ -30,19 +30,19 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="ra" class="form-label">RA</label>
+                                <label for="ra" class="form-label">RA<small> (somente números)</small></label>
                                 <div class="mb-3">
                                     <input class="form-control" id="ra" name="ra" type="text" min="9" max="10" value="{% if aluno.ra %}{{aluno.ra}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="rg" class="form-label">RG</label>
+                                <label for="rg" class="form-label">RG<small> (somente números)</small></label>
                                 <div class="mb-3">
                                     <input class="form-control" id="rg" name="rg" type="text" value="{% if aluno.rg %}{{aluno.rg}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="cpf" class="form-label">CPF</label>
+                                <label for="cpf" class="form-label">CPF<small> (somente números)</small></label>
                                 <div class="mb-3">
                                     <input class="form-control" id="cpf" name="cpf" type="text" value="{% if aluno.cpf %}{{aluno.cpf}}{% endif %}" />
                                 </div>
@@ -50,7 +50,7 @@
                             <div class="col-md-3">
                                 <label for="nascimento" class="form-label">Nascimento</label>
                                 <div class="mb-4">
-                                    <input class="form-control" id="nascimento" name="nascimento" type="date" value="{% if aluno.nascimento %}{{aluno.nascimento|date:'Y-m-d'}}{% endif %}" />
+                                    <input class="form-control" id="nascimento" name="nascimento" type="date" value="{% if aluno.nascimento %}{{aluno.nascimento|date:'Y-m-d'}}{% endif %}" required />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -86,7 +86,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label for="nis" class="form-label">NIS</label>
+                                <label for="nis" class="form-label">NIS<small> (somente números)</small></label>
                                 <div class="mb-3">
                                     <input class="form-control" id="nis" name="nis" type="text" value="{% if aluno.nis %}{{aluno.nis}}{% endif %}" />
                                 </div>
@@ -231,11 +231,12 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <div class="mt-4 mb-0">
-                            <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
-                        </div>
                     </form>
+                    <div class="mt-2 mb-0">
+                        <div>
+                            <button id="botao-salvar" type="button" class="btn btn-primary">Salvar</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-footer text-center py-3">
                     <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
@@ -283,6 +284,7 @@
     </div>
 </div>
 
+
 <script>
     const cardBody = document.getElementById('card-cadastro-aluno');
     const formCadastroAlunos = document.getElementById('form-cadastro-aluno');
@@ -318,7 +320,10 @@
         });
     }
 </script>
+
 <script>
+    const botaoSalvar = document.getElementById('botao-salvar');
+
     const form = document.forms['form-aluno'];
 
     let formNome = form['nome'];
@@ -326,37 +331,11 @@
     let formRa = form['ra'];
     let formRg = form['rg'];
     let formCpf = form['cpf'];
-    let formNascimento = form['nascimento'];
-    let formCidade = form['cidade'];
-    let formEstado = form['estado'];
-    let formRaca = form['cor_raca'];
-    let formSexo = form['sexo'];
-    let formNee = form['necessita_educacao_especial'];
     let formNis = form['nis'];
     let formResponsavel1 = form['responsavel_1'];
-    let formContato1 = form['contato_1'];
     let formResponsavel2 = form['responsavel_2'];
+    let formContato1 = form['contato_1'];
     let formContato2 = form['contato_2'];
-    let formOutrosContatos = form['outros_contatos'];
-    let formEndereco = form['endereco'];
-    let formMedicamento = form['medicamento'];
-    let formQualMedicamento = form['qual_medicamento'];
-    let formDiabete = form['diabete'];
-    let formAlergia = form['alergia'];
-    let formCardiaco = form['cardiaco'];
-    let formMoraComPais = form['mora_com_os_pais'];
-    let formMotivoMoraPais = form['motivo_mora_com_os_pais'];
-    let formNeuro = form['neuro'];
-    let formMotivoNeuro = form['motivo_neuro'];
-    let formPsicologo = form['psicologo'];
-    let formMotivoPsicologo = form['motivo_psicologo'];
-    let formFono = form['fono'];
-    let formMotivoFono = form['motivo_fono'];
-    let formIntegral = form['integral'];
-    let formTransporte = form['transporte'];
-    let formObsTransporte = form['obs_transporte'];
-    let formRetirada = form['retirada_aluno'];
-    let formObservacoes = form['observacoes'];
 
     formRa.addEventListener("input", () => {
         formRa.value = formRa.value.replace(/[^0-9]/g, "");
@@ -365,41 +344,117 @@
         }
     });
 
+    formRg.addEventListener("input", () => {
+        formRg.value = formRg.value.replace(/[^0-9]/g, "");
+        if (formRg.value.length > 9) {
+            formRg.value = formRg.value.slice(0, 9);
+        }
+    });
+
+    formCpf.addEventListener("input", () => {
+        formCpf.value = formCpf.value.replace(/[^0-9]/g, "");
+        if (formCpf.value.length > 11) {
+            formCpf.value = formCpf.value.slice(0, 11);
+        }
+    });
+
+    formNis.addEventListener("input", () => {
+        formNis.value = formNis.value.replace(/[^0-9]/g, "");
+        if (formNis.value.length > 11) {
+            formNis.value = formNis.value.slice(0, 11);
+        }
+    });
+
+    formContato1.addEventListener("input", () => {
+        formContato1.value = formContato1.value.replace(/[^0-9]/g, "");
+        if (formContato1.value.length > 11) {
+            formContato1.value = formContato1.value.slice(0, 11);
+        }
+    });
+
+    formContato2.addEventListener("input", () => {
+        formContato2.value = formContato2.value.replace(/[^0-9]/g, "");
+        if (formContato2.value.length > 11) {
+            formContato2.value = formContato2.value.slice(0, 11);
+        }
+    });
+
     formNome.addEventListener("input", () => {
         formNome.value = formNome.value.replace(/[^A-Za-z\s]/g, "");
     });
 
+    formResponsavel1.addEventListener("input", () => {
+        formResponsavel1.value = formResponsavel1.value.replace(/[^A-Za-z\s]/g, "");
+    });
+
+    formResponsavel2.addEventListener("input", () => {
+        formResponsavel2.value = formResponsavel2.value.replace(/[^A-Za-z\s]/g, "");
+    });
+
     form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const erros = document.querySelectorAll('.erro');
+        let temErro = false;
+        let erros = document.querySelectorAll('.erro');
 
         if (erros.length > 0) {
             erros.forEach((e) => e.remove());
-        } else {
-            if (formNome.value.length <= 2) {
-                let novoErro = document.createElement('p');
-                novoErro.classList.add('text-danger', 'erro', 'mt-1');
-                novoErro.innerText = "Nome muito curto";
-                formNome.parentNode.appendChild(novoErro);
-                formNome.focus();
-            }
-
-            if (formRa.value.length < 9) {
-                let novoErro = document.createElement('p');
-                novoErro.classList.add('text-danger', 'erro', 'mt-1');
-                novoErro.innerText = "O mínimo permitido é 9 dígitos";
-                formRa.parentNode.appendChild(novoErro);
-                formRa.focus();
-            } else if (formRa.value.length > 10) {
-                let novoErro = document.createElement('p');
-                novoErro.classList.add('text-danger', 'erro', 'mt-1');
-                novoErro.innerText = "O máximo permitido é 10 dígitos";
-                formRa.parentNode.appendChild(novoErro);
-                formRa.focus();
-            }
+        }
+        
+        if (formNome.value.length <= 2) {
+            paragrafoErro(formNome, "Nome muito curto ");
+            temErro = true;
         }
 
-    });  
+        if (formRa.value.length < 9) {
+            paragrafoErro(formRa, "O mínimo permitido é 9 dígitos");
+            temErro = true;
+        }
+        
+        if (formRg.value.length >= 1 && formRg.value.length < 8) {
+            paragrafoErro(formRg, "O mínimo pertmitido é 8 dígitos");
+            temErro = true;
+        }
+
+        if (formCpf.value.length >= 1 && formCpf.value.length < 11) {
+            paragrafoErro(formCpf, "O C.P.F. é composto por 11 dígitos");
+            temErro = true;
+        }
+
+        if (formNis.value.length >= 1 && formNis.value.length < 11) {
+            paragrafoErro(formNis, "O N.I.S. é composto por 11 dígitos");
+            temErro = true;
+        }
+
+        if (formContato1.value.length >= 1 && formContato1.value.length < 10) {
+            paragrafoErro(formContato1, "Telefone inválido");
+            temErro = true;
+        }
+
+        if (formContato2.value.length >= 1 && formContato2.value.length < 10) {
+            paragrafoErro(formContato2, "Telefone inválido");
+            temErro = true;
+        }
+
+        if (temErro) {
+            e.preventDefault();
+            return;
+        } else {
+            botaoSalvar.addEventListener('click', () => {
+                const myModal = new bootstrap.Modal('#modalConfirmacao', {
+                    keyboard: false,
+                    backdrop: true
+                })
+            });
+        }
+    });
+
+    function paragrafoErro (elemento, mensagem) {
+        let novoErro = document.createElement('p');
+        novoErro.classList.add('text-danger', 'erro', 'mt-1');
+        novoErro.innerText = mensagem;
+        elemento.parentNode.appendChild(novoErro);
+        elemento.focus();
+    }
+
 </script>
 
 {% endblock %}
