@@ -14,7 +14,7 @@
                     Cadastro de aluno(a)
                 </div>
                 <div class="card-body"  id="card-cadastro-aluno">
-                    <form method="POST" id="form-cadastro-aluno">
+                    <form name="form-aluno" method="POST" id="form-cadastro-aluno" onsubmit="return validador()">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-9">
@@ -317,6 +317,55 @@
 
         });
     }
-
 </script>
+<script>
+    const form = document.forms['form-aluno'];
+    let erros = [];
+
+    if (form) {
+        let formNome = form['nome'].value;
+        let formRm = form['rm'].value;
+        let formRa = form['ra'].value;
+        let formRg = form['rg'].value;
+        let formCpf = form['cpf'].value;
+        let formNascimento = form['nascimento'].value;
+        let formCidade = form['cidade'].value;
+        let formEstado = form['estado'].value;
+        let formRaca = form['cor_raca'].value;
+        let formSexo = form['sexo'].value;
+        let formNee = form['necessita_educacao_especial'].value;
+        let formNis = form['nis'].value;
+        let formResponsavel1 = form['responsavel_1'].value;
+        let formContato1 = form['contato_1'].value;
+        let formResponsavel2 = form['responsavel_2'].value;
+        let formContato2 = form['contato_2'].value;
+        let formOutrosContatos = form['outros_contatos'].value;
+        let formEndereco = form['endereco'].value;
+        let formMedicamento = form['medicamento'].value;
+        let formQualMedicamento = form['qual_medicamento'].value;
+        let formDiabete = form['diabete'].value;
+        let formAlergia = form['alergia'].value;
+        let formCardiaco = form['cardiaco'].value;
+        let formMoraComPais = form['mora_com_os_pais'].value;
+        let formMotivoMoraPais = form['motivo_mora_com_os_pais'].value;
+        let formNeuro = form['neuro'].value;
+        let formMotivoNeuro = form['motivo_neuro'].value;
+        let formPsicologo = form['psicologo'].value;
+        let formMotivoPsicologo = form['motivo_psicologo'].value;
+        let formFono = form['fono'].value;
+        let formMotivoFono = form['motivo_fono'].value;
+        let formIntegral = form['integral'].value;
+        let formTransporte = form['transporte'].value;
+        let formObsTransporte = form['obs_transporte'].value;
+        let formRetirada = form['retirada_aluno'].value;
+        let formObservacoes = form['observacoes'].value;
+
+        if (/\d/.test(formNome)) {
+            erros.append('Nome conté números');
+        }
+        console.log(erros);
+
+    }
+</script>
+
 {% endblock %}
