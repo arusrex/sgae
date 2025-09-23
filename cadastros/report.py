@@ -49,7 +49,7 @@ def cabecalho_rodape(canvas, doc):
     canvas.setFont("Times-Roman", 8)
     canvas.drawString(500, 20, texto)
 
-    texto_data = datetime.now().strftime(f"%d/%m/%Y %H:%M Usuário: {usuario_sistema}")
+    texto_data = datetime.now().strftime(f"%d/%m/%Y %H:%M - Usuário: {usuario_sistema}")
     canvas.drawString(40, 20, texto_data)
 
     canvas.restoreState()

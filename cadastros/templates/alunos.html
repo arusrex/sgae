@@ -14,7 +14,7 @@
                     Cadastro de aluno(a)
                 </div>
                 <div class="card-body"  id="card-cadastro-aluno">
-                    <form name="form-aluno" method="POST" id="form-cadastro-aluno" onsubmit="return validador()">
+                    <form name="form-aluno" method="POST" id="form-cadastro-aluno">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-9">
@@ -32,7 +32,7 @@
                             <div class="col-md-4">
                                 <label for="ra" class="form-label">RA</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="ra" name="ra" type="text" value="{% if aluno.ra %}{{aluno.ra}}{% endif %}" />
+                                    <input class="form-control" id="ra" name="ra" type="text" min="9" max="10" value="{% if aluno.ra %}{{aluno.ra}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-4">
@@ -320,52 +320,86 @@
 </script>
 <script>
     const form = document.forms['form-aluno'];
-    let erros = [];
 
-    if (form) {
-        let formNome = form['nome'].value;
-        let formRm = form['rm'].value;
-        let formRa = form['ra'].value;
-        let formRg = form['rg'].value;
-        let formCpf = form['cpf'].value;
-        let formNascimento = form['nascimento'].value;
-        let formCidade = form['cidade'].value;
-        let formEstado = form['estado'].value;
-        let formRaca = form['cor_raca'].value;
-        let formSexo = form['sexo'].value;
-        let formNee = form['necessita_educacao_especial'].value;
-        let formNis = form['nis'].value;
-        let formResponsavel1 = form['responsavel_1'].value;
-        let formContato1 = form['contato_1'].value;
-        let formResponsavel2 = form['responsavel_2'].value;
-        let formContato2 = form['contato_2'].value;
-        let formOutrosContatos = form['outros_contatos'].value;
-        let formEndereco = form['endereco'].value;
-        let formMedicamento = form['medicamento'].value;
-        let formQualMedicamento = form['qual_medicamento'].value;
-        let formDiabete = form['diabete'].value;
-        let formAlergia = form['alergia'].value;
-        let formCardiaco = form['cardiaco'].value;
-        let formMoraComPais = form['mora_com_os_pais'].value;
-        let formMotivoMoraPais = form['motivo_mora_com_os_pais'].value;
-        let formNeuro = form['neuro'].value;
-        let formMotivoNeuro = form['motivo_neuro'].value;
-        let formPsicologo = form['psicologo'].value;
-        let formMotivoPsicologo = form['motivo_psicologo'].value;
-        let formFono = form['fono'].value;
-        let formMotivoFono = form['motivo_fono'].value;
-        let formIntegral = form['integral'].value;
-        let formTransporte = form['transporte'].value;
-        let formObsTransporte = form['obs_transporte'].value;
-        let formRetirada = form['retirada_aluno'].value;
-        let formObservacoes = form['observacoes'].value;
+    let formNome = form['nome'];
+    let formRm = form['rm'];
+    let formRa = form['ra'];
+    let formRg = form['rg'];
+    let formCpf = form['cpf'];
+    let formNascimento = form['nascimento'];
+    let formCidade = form['cidade'];
+    let formEstado = form['estado'];
+    let formRaca = form['cor_raca'];
+    let formSexo = form['sexo'];
+    let formNee = form['necessita_educacao_especial'];
+    let formNis = form['nis'];
+    let formResponsavel1 = form['responsavel_1'];
+    let formContato1 = form['contato_1'];
+    let formResponsavel2 = form['responsavel_2'];
+    let formContato2 = form['contato_2'];
+    let formOutrosContatos = form['outros_contatos'];
+    let formEndereco = form['endereco'];
+    let formMedicamento = form['medicamento'];
+    let formQualMedicamento = form['qual_medicamento'];
+    let formDiabete = form['diabete'];
+    let formAlergia = form['alergia'];
+    let formCardiaco = form['cardiaco'];
+    let formMoraComPais = form['mora_com_os_pais'];
+    let formMotivoMoraPais = form['motivo_mora_com_os_pais'];
+    let formNeuro = form['neuro'];
+    let formMotivoNeuro = form['motivo_neuro'];
+    let formPsicologo = form['psicologo'];
+    let formMotivoPsicologo = form['motivo_psicologo'];
+    let formFono = form['fono'];
+    let formMotivoFono = form['motivo_fono'];
+    let formIntegral = form['integral'];
+    let formTransporte = form['transporte'];
+    let formObsTransporte = form['obs_transporte'];
+    let formRetirada = form['retirada_aluno'];
+    let formObservacoes = form['observacoes'];
 
-        if (/\d/.test(formNome)) {
-            erros.append('Nome conté números');
+    formRa.addEventListener("input", () => {
+        formRa.value = formRa.value.replace(/[^0-9]/g, "");
+        if (formRa.value.length > 10) {
+            formRa.value = formRa.value.slice(0, 10);
         }
-        console.log(erros);
+    });
 
-    }
+    formNome.addEventListener("input", () => {
+        formNome.value = formNome.value.replace(/[^A-Za-z\s]/g, "");
+    });
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const erros = document.querySelectorAll('.erro');
+
+        if (erros.length > 0) {
+            erros.forEach((e) => e.remove());
+        } else {
+            if (formNome.value.length <= 2) {
+                let novoErro = document.createElement('p');
+                novoErro.classList.add('text-danger', 'erro', 'mt-1');
+                novoErro.innerText = "Nome muito curto";
+                formNome.parentNode.appendChild(novoErro);
+                formNome.focus();
+            }
+
+            if (formRa.value.length < 9) {
+                let novoErro = document.createElement('p');
+                novoErro.classList.add('text-danger', 'erro', 'mt-1');
+                novoErro.innerText = "O mínimo permitido é 9 dígitos";
+                formRa.parentNode.appendChild(novoErro);
+                formRa.focus();
+            } else if (formRa.value.length > 10) {
+                let novoErro = document.createElement('p');
+                novoErro.classList.add('text-danger', 'erro', 'mt-1');
+                novoErro.innerText = "O máximo permitido é 10 dígitos";
+                formRa.parentNode.appendChild(novoErro);
+                formRa.focus();
+            }
+        }
+
+    });  
 </script>
 
 {% endblock %}
