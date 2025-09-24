@@ -251,9 +251,12 @@ def alunos(request, pk=None):
     user = request.user
     alunos = Aluno.objects.all()
 
+
     if pk:
         aluno = get_object_or_404(Aluno, pk=pk)
+        form_action = 'form-editar-aluno'
     else:
+        form_action = 'form-cadastro-aluno'
         aluno = None
     
     if request.method == 'POST':
@@ -295,6 +298,7 @@ def alunos(request, pk=None):
         observacoes = request.POST.get('observacoes')
 
         if aluno is not None:
+
             aluno.nome = nome
             aluno.rm = rm
             aluno.ra = ra
@@ -338,6 +342,7 @@ def alunos(request, pk=None):
             return redirect('cadastros:alunos')
         
         else:
+
             aluno = Aluno(
             nome = nome,
             rm = rm,
@@ -387,24 +392,26 @@ def alunos(request, pk=None):
         'generos': Aluno.SEXO,
         'estados': Aluno.ESTADOS,
         'alunos': alunos,
-        'aluno': aluno
+        'aluno': aluno,
+        'form_action': form_action
     }
 
     return render(request, 'alunos.html', context)
 
 @login_required
-def excluir_aluno(request, pk):
+def excluir_aluno(request, pk=None):
     user = request.user.get_full_name()
-    aluno = get_object_or_404(Aluno, pk=pk)
+    if pk:
+        aluno = get_object_or_404(Aluno, pk=pk)
 
-    if aluno:
-        auditoria = Auditoria(
-            acao = "Exclusão de aluno",
-            criado_por = user,
-            info = f"Aluno(a) {aluno.nome} excluído"
-        )
-        auditoria.save()
-        aluno.delete()
+        if aluno:
+            auditoria = Auditoria(
+                acao = "Exclusão de aluno",
+                criado_por = user,
+                info = f"Aluno(a) {aluno.nome} excluído"
+            )
+            auditoria.save()
+            aluno.delete()
 
     return redirect('cadastros:alunos')
 
