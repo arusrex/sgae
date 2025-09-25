@@ -146,20 +146,20 @@ def professores(request, pk=None):
         form_action = "form-cadastro-professor"
 
     if request.method == 'POST':
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        email = request.POST['email']
-        senha1 = request.POST['senha']
-        senha2 = request.POST['confirmar-senha']
-        matricula = request.POST['matricula']
-        cpf = request.POST['cpf']
-        rg = request.POST['rg']
+        nome = request.POST.get('nome')
+        sobrenome = request.POST.get('sobrenome')
+        email = request.POST.get('email')
+        senha1 = request.POST.get('senha')
+        senha2 = request.POST.get('confirmar-senha')
+        matricula = request.POST.get('matricula')
+        cpf = request.POST.get('cpf')
+        rg = request.POST.get('rg')
         nascimento = request.POST.get('nascimento')
-        funcao = request.POST['funcao']
+        funcao = request.POST.get('funcao')
         disciplina = get_object_or_404(Disciplina, pk=request.POST.get('disciplina')) or None
-        telefone = request.POST['telefone']
-        endereco = request.POST['endereco']
-        observacoes = request.POST['observacoes']
+        telefone = request.POST.get('telefone')
+        endereco = request.POST.get('endereco')
+        observacoes = request.POST.get('observacoes')
 
         email_exists = Usuarios.objects.filter(email=email).exists()
 
@@ -175,8 +175,6 @@ def professores(request, pk=None):
 
             if senha1 is not None and senha1 == senha2:
                 usuario.set_password(senha1)
-
-            usuario.cpf = cpf
 
             usuario.save()
 
@@ -252,8 +250,10 @@ def excluir_professor(request, pk):
 @login_required
 def verificar_cpf_professor(request):
     cpf = request.GET.get('cpf')
-    professor_existe = Professor.objects.filter(cpf=cpf).exists()
-    return JsonResponse({"professor_existe": professor_existe})
+    print(cpf)
+    professor_existe = Usuarios.objects.filter(cpf=cpf).exists()
+    print(professor_existe)
+    return JsonResponse({"existe": professor_existe})
 
 
 

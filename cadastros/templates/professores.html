@@ -184,7 +184,11 @@
 <script>
     const cardBody = document.getElementById('card-cadastro-professor');
     const formCadastroProfessores = document.getElementById('form-cadastro-professor');
-    formCadastroProfessores.hidden = true;
+    const formEdicaoProfessores = document.getElementById('form-editar-professor');
+    
+    if (formCadastroProfessores) {
+        formCadastroProfessores.hidden = true;
+    }
 
     function criaBotaoAdicionar () {
         const div = document.createElement('div');
@@ -232,6 +236,10 @@
         let cpf = form['cpf'];
         let telefone = form['telefone'];
 
+        if (formEdicaoProfessores) {
+            cpf.disabled = true;
+        }
+
         nome.addEventListener('input', () => {
             nome.value = nome.value.replace(/[0-9]/g, '');
         });
@@ -261,7 +269,7 @@
             }
         });
 
-        botaoSalvar.addEventListener('click', () => {
+        botaoSalvar.addEventListener('click', async () => {
             let temErro = false;
             let erros = document.querySelectorAll('.erro');
             
@@ -316,26 +324,29 @@
                 cpf.focus();
             }
 
-            if (cpf.value) {
-                fetch(`/cadastros/verificar-cpf-professor/?cpf=${encodeURIComponent(cpf.value)}`)
-                    .then(response => response.jason)
-                    .then(data => {
-                        if (data) {
-                            paragrafoErro(cpf, "C.P.F. já existente");
-                            temErro = true;
-                            cpf.focus();
-                        }
-                    })
-                    .catch(error => console.error(error));
+            async function verificaCpf (cpf) {
+                const response = await fetch(`/cadastros/verificar-cpf-professor/?cpf=${encodeURIComponent(cpf)}`);
+                const data = await response.json();
+                return data.existe;
             }
 
+            if (cpf.value) {
+                let result = await verificaCpf(cpf.value);
+
+                if (result) {
+                    paragrafoErro(cpf, "CPF já existe");
+                    temErro = true;
+                    cpf.focus();
+                }
+            }
+            
             if (telefone.value.length > 0 && telefone.value.length < 10) {
                 paragrafoErro(telefone, "O mínimo permitido é 10 dígitos");
                 temErro = true;
                 telefone.focus();
             }
 
-            if (senha.value.length < 6) {
+            if (senha.value.length > 1 && senha.value.length < 6) {
                 paragrafoErro(senha, "Mínimo 6 caractéres");
                 temErro = true;
                 senha.focus();
