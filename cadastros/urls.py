@@ -26,5 +26,6 @@ urlpatterns = [
     path('excluir-aluno/<str:pk>/', views.excluir_aluno, name='excluir-aluno'),
     path('ficha-do-aluno/<str:pk>/', views.ficha_aluno, name='ficha-aluno'),
     path('imprimir/ficha-do-aluno/<str:pk>/', report.ficha_aluno, name='imprimir-ficha-aluno'),
+    path('verificar-cpf-professor/', views.verificar_cpf_professor, name='verificar-cpf-professor'),
 ]
 

@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% include 'partials/modal-confirmation.html' %}
 <div class="container-fluid px-4">
     <h1 class="mt-4">Cadastros</h1>
     <ol class="breadcrumb mb-4">
@@ -14,7 +15,7 @@
                     Cadastro de professor
                 </div>
                 <div class="card-body" id="card-cadastro-professor">
-                    <form method='POST' id="form-cadastro-professor">
+                    <form method='POST' id="{{form_action}}" name="form-professor">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-md-6">
@@ -22,15 +23,14 @@
                                 <div class="mb-3">
                                     <input class="form-control" id="nome" name="nome" type="text"
                                     value="{% if usuario.first_name %}{{usuario.first_name}}{% endif %}" 
-                                    required />
+                                     />
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <label for="sobrenome" class="form-label">Sobrenome</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="sobrenome" name="sobrenome" type="text" 
-                                    value="{% if usuario.last_name %}{{usuario.last_name}}{% endif %}" 
-                                    required />
+                                    value="{% if usuario.last_name %}{{usuario.last_name}}{% endif %}" />
                                 </div>
                             </div>
                             <div class="col-md-12">
@@ -38,7 +38,7 @@
                                 <div class="mb-3">
                                     <input class="form-control" id="email" name="email" type="text"
                                     value="{% if usuario.email %}{{usuario.email}}{% endif %}"
-                                    required />
+                                    autocomplete="true" />
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -130,7 +130,7 @@
                         </div>
                         
                         <div class="mt-4 mb-0">
-                            <div><button class="btn btn-primary btn-block" type="submit">Salvar dados</button></div>
+                            <div><a class="btn btn-primary btn-block" id="botao-salvar">Salvar dados</a></div>
                         </div>
                     </form>
                 </div>
@@ -160,15 +160,6 @@
                             <th>Ações</th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Matrícula</th>
-                            <th>Nome</th>
-                            <th>E-Mail</th>
-                            <th>Telefone</th>
-                            <th>Ações</th>
-                        </tr>
-                    </tfoot>
                     <tbody>
                         {% for professor in professores %}
                         <tr>
@@ -228,12 +219,154 @@
 </script>
 
 <script>
-    const form = document.getElementById('form-cadastro-professor');
+    const form = document.forms['form-professor'];
+    const botaoSalvar = document.getElementById('botao-salvar');
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
+    if (form) {
+        let nome = form['nome'];
+        let sobrenome = form['sobrenome'];
+        let email = form['email'];
+        let senha = form['senha'];
+        let confirmarSenha = form['confirmar-senha'];
+        let rg = form['rg'];
+        let cpf = form['cpf'];
+        let telefone = form['telefone'];
 
-        
-    });
+        nome.addEventListener('input', () => {
+            nome.value = nome.value.replace(/[0-9]/g, '');
+        });
+
+        sobrenome.addEventListener('input', () => {
+            sobrenome.value = sobrenome.value.replace(/[0-9]/g, '');
+        });
+
+        rg.addEventListener('input', () => {
+            rg.value = rg.value.replace(/[A-Za-z]/g, '');
+            if (rg.value > 9) {
+                rg.value = rg.value.slice(0, 9);
+            }
+        });
+
+        cpf.addEventListener('input', () => {
+            cpf.value = cpf.value.replace(/[A-Za-z]/g, '');
+            if (cpf.value > 11) {
+                cpf.value = cpf.value.slice(0, 11);
+            }
+        });
+
+        telefone.addEventListener('input', () => {
+            telefone.value = telefone.value.replace(/[A-Za-z]/g, '');
+            if (telefone.value.length > 11) {
+                telefone.value = telefone.value.slice(0, 11);
+            }
+        });
+
+        botaoSalvar.addEventListener('click', () => {
+            let temErro = false;
+            let erros = document.querySelectorAll('.erro');
+            
+            if (erros) {
+                erros.forEach((e) => e.remove());
+            }
+
+            if (nome.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(nome, mensagem);
+                temErro = true;
+                nome.focus();
+            };
+
+            if (nome.value.length > 0 && nome.value.length < 2) {
+                let mensagem = "Nome muito curto";
+                paragrafoErro(nome, mensagem);
+                temErro = true;
+                nome.focus();
+            };
+
+            if (sobrenome.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(sobrenome, mensagem);
+                temErro = true;
+                sobrenome.focus();
+            };
+
+            if (sobrenome.value.length > 0 && sobrenome.value.length < 2) {
+                let mensagem = "Sobrenome muito curto";
+                paragrafoErro(sobrenome, mensagem);
+                temErro = true;
+                sobrenome.focus();
+            };
+
+            if (email.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(email, mensagem);
+                temErro = true;
+                email.focus();
+            };
+
+            if (rg.value.length > 0 && rg.value.length < 8) {
+                paragrafoErro(rg, "O mínimo permitido é 8 dígitos");
+                temErro = true;
+                rg.focus();
+            }
+
+            if (cpf.value.length < 11) {
+                paragrafoErro(cpf, "O mínimo permitido é 11 dígitos");
+                temErro = true;
+                cpf.focus();
+            }
+
+            if (cpf.value) {
+                fetch(`/cadastros/verificar-cpf-professor/?cpf=${encodeURIComponent(cpf.value)}`)
+                    .then(response => response.jason)
+                    .then(data => {
+                        if (data) {
+                            paragrafoErro(cpf, "C.P.F. já existente");
+                            temErro = true;
+                            cpf.focus();
+                        }
+                    })
+                    .catch(error => console.error(error));
+            }
+
+            if (telefone.value.length > 0 && telefone.value.length < 10) {
+                paragrafoErro(telefone, "O mínimo permitido é 10 dígitos");
+                temErro = true;
+                telefone.focus();
+            }
+
+            if (senha.value.length < 6) {
+                paragrafoErro(senha, "Mínimo 6 caractéres");
+                temErro = true;
+                senha.focus();
+            }
+
+            if (senha.value !== confirmarSenha.value) {
+                paragrafoErro(confirmarSenha, "Senhas diferentes");
+                temErro = true;
+                confirmarSenha.focus();
+            }
+
+            if(!temErro) {
+                const modalDiv = document.getElementById('modalConfirmacao');
+                const modalConfirmacao = new bootstrap.Modal(modalDiv, {
+                    keyboard: true,
+                    backdrop: true
+                });
+                modalConfirmacao.show();
+                const botaoConfirmacao = document.getElementById('confirmarSalvar');
+                botaoConfirmacao.onclick = () => form.submit();
+            }
+        });
+
+
+        function paragrafoErro (campo, mensagem) {
+            const p = document.createElement('p');
+            p.classList.add('text-danger', 'mt-1', 'erro');
+            p.innerText = mensagem;
+            campo.insertAdjacentElement('afterend', p);
+        }
+    }
+
 </script>
 {% endblock %}

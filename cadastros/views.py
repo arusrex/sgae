@@ -4,6 +4,7 @@ from datetime import date, datetime
 from .models import Sala, Disciplina, Professor, Aluno
 from usuarios.models import Usuarios
 from core.models import Auditoria
+from django.http import JsonResponse
 
 @login_required
 def salas(request, pk=None):
@@ -138,10 +139,11 @@ def professores(request, pk=None):
     if pk:
         professor = get_object_or_404(Professor, pk=pk)
         usuario = professor.user
-
+        form_action = "form-editar-professor"
     else:
         professor = None
         usuario = None
+        form_action = "form-cadastro-professor"
 
     if request.method == 'POST':
         nome = request.POST['nome']
@@ -180,7 +182,7 @@ def professores(request, pk=None):
 
             professor.matricula = matricula
             professor.rg = rg
-            professor.nascimento = nascimento
+            professor.nascimento = nascimento if nascimento else None
             professor.funcao = funcao
             professor.disciplina = disciplina
             professor.telefone = telefone
@@ -209,7 +211,7 @@ def professores(request, pk=None):
                     user=usuario_criado,
                     matricula=matricula,
                     rg=rg,
-                    nascimento=nascimento,
+                    nascimento=nascimento if nascimento else None,
                     funcao=funcao,
                     disciplina=disciplina,
                     telefone=telefone,
@@ -225,7 +227,8 @@ def professores(request, pk=None):
         'professores': professores,
         'professor': professor,
         'usuario': usuario,
-        'disciplinas': disciplinas
+        'disciplinas': disciplinas,
+        'form_action': form_action
     }
 
     return render(request, 'professores.html', context)
@@ -245,6 +248,14 @@ def excluir_professor(request, pk):
         auditoria.save()
     
     return redirect('cadastros:professores')
+
+@login_required
+def verificar_cpf_professor(request):
+    cpf = request.GET.get('cpf')
+    professor_existe = Professor.objects.filter(cpf=cpf).exists()
+    return JsonResponse({"professor_existe": professor_existe})
+
+
 
 @login_required
 def alunos(request, pk=None):
@@ -304,7 +315,7 @@ def alunos(request, pk=None):
             aluno.ra = ra
             aluno.rg = rg
             aluno.cpf = cpf
-            aluno.nascimento = nascimento
+            aluno.nascimento = nascimento if nascimento else None
             aluno.cidade = cidade
             aluno.estado = estado
             aluno.cor_raca = cor_raca
@@ -349,7 +360,7 @@ def alunos(request, pk=None):
             ra = ra,
             rg = rg,
             cpf = cpf,
-            nascimento = nascimento,
+            nascimento = nascimento if nascimento else None,
             cidade = cidade,
             estado = estado,
             cor_raca = cor_raca,
