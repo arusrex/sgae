@@ -12,6 +12,8 @@ class ControleDeRegistros(models.Model):
 class Sistema(ControleDeRegistros):
     nome = models.CharField(max_length=150, blank=True, null=True)
     descricao = models.TextField(blank=True, null=True)
+    redefinir_senha = models.BooleanField(default=False)
+    nova_conta = models.BooleanField(default=False)
     logo = models.ImageField(upload_to='imagens/', blank=True, null=True)
     logo_municipio = models.ImageField(upload_to='imagens/', blank=True, null=True)
     logo_educacao = models.ImageField(upload_to='imagens/', blank=True, null=True)

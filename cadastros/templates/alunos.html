@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% include 'partials/modal-confirmation.html' %}
 
 <div class="container-fluid px-4">
     <h1 class="mt-4">Cadastros</h1>
@@ -191,7 +190,13 @@
                                     <input class="form-control" id="outros_contatos" name="outros_contatos" type="text" value="{% if aluno.outros_contatos %}{{aluno.outros_contatos}}{% endif %}" />
                                 </div>
                             </div>
-                            <div class="col-12">
+                            <div class="col-2">
+                                <label for="cep" class="form-label">Buscar por CEP</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="cep" name="cep" type="number" />
+                                </div>
+                            </div>
+                            <div class="col-10">
                                 <label for="endereco" class="form-label">Endereço</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="endereco" name="endereco" type="text" value="{% if aluno.endereco %}{{aluno.endereco}}{% endif %}" />
@@ -306,9 +311,10 @@
         botaoCondirmarExclusao.href = url;
     };
 
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const cardBody = document.getElementById('card-cadastro-aluno');
         const formCadastroAlunos = document.getElementById('form-cadastro-aluno');
+        const formEditarAlunos = document.getElementById('form-editar-aluno');
 
         if (formCadastroAlunos) {
             formCadastroAlunos.hidden = true;
@@ -356,6 +362,13 @@
         let formResponsavel2 = form['responsavel_2'];
         let formContato1 = form['contato_1'];
         let formContato2 = form['contato_2'];
+        let cep = form['cep'];
+        let endereco = form['endereco'];
+
+        
+        if (formEditarAlunos) {
+            formRa.disabled = true;
+        }
 
         formRa.addEventListener("input", () => {
             formRa.value = formRa.value.replace(/[^0-9]/g, "");
@@ -411,6 +424,27 @@
             formResponsavel2.value = formResponsavel2.value.replace(/[^A-Za-z\s]/g, "");
         });
 
+        async function buscaCep (cep) {
+            let response = await fetch(`https://viacep.com.br/ws/${cep}/json/`)
+            let data = response.json();
+
+            return data;
+        }
+
+        cep.addEventListener('input', async () => {
+            cep.value = cep.value.replace([/[^0-9]/g, '']);
+            if (cep.value.length >= 8) {
+                cep.value = cep.value.slice(0, 8);
+                let enderecoRecebido = await buscaCep(cep.value);
+
+                if (enderecoRecebido) {
+                    endereco.value = `${enderecoRecebido.logradouro}, Bairro: ${enderecoRecebido.bairro}, Cidade: ${enderecoRecebido.localidade}/${enderecoRecebido.uf}`;
+                } else {
+                    endereco.value = '';
+                }
+            }
+        });
+
         const botaoSalvar = document.getElementById('botao-salvar');
         const botaoSubmit = document.getElementById('confirmarSalvar');
         const modal = document.getElementById('modalConfirmacao');
@@ -421,7 +455,7 @@
             backdrop: 'static'
         });
 
-        botaoSalvar.addEventListener('click', () => {
+        botaoSalvar.addEventListener('click', async () => {
             
             function paragrafoErro (elemento, mensagem) {
                 let novoErro = document.createElement('p');
@@ -430,6 +464,12 @@
                 elemento.parentNode.appendChild(novoErro);
                 elemento.focus();
             }
+
+            async function verificaRa (ra) {
+                const response = await fetch(`/cadastros/verifica-ra-aluno/?ra=${encodeURIComponent(ra)}`);
+                const data = await response.json();
+                return data.ra_existe;
+            };
 
             let temErro = false;
             let erros = document.querySelectorAll('.erro');
@@ -441,42 +481,54 @@
             if (formNome.value.length <= 2) {
                 paragrafoErro(formNome, "Nome muito curto ");
                 temErro = true;
+                formNome.focus();
+            }
+
+            if (formRa.value && formCadastroAlunos) {
+                let resultado = await verificaRa(formRa.value);
+
+                if (resultado) {
+                    paragrafoErro(formRa, "RA já cadastrado");
+                    temErro = true;
+                    formRa.focus();
+                }
             }
 
             if (formRa.value.length < 9) {
                 paragrafoErro(formRa, "O mínimo permitido é 9 dígitos");
                 temErro = true;
+                formRa.focus();
             }
             
             if (formRg.value.length >= 1 && formRg.value.length < 8) {
                 paragrafoErro(formRg, "O mínimo pertmitido é 8 dígitos");
                 temErro = true;
+                formRg.focus()
             }
 
             if (formCpf.value.length >= 1 && formCpf.value.length < 11) {
                 paragrafoErro(formCpf, "O C.P.F. é composto por 11 dígitos");
                 temErro = true;
+                formCpf.focus()
             }
 
             if (formNis.value.length >= 1 && formNis.value.length < 11) {
                 paragrafoErro(formNis, "O N.I.S. é composto por 11 dígitos");
                 temErro = true;
+                formNis.focus()
             }
 
             if (formContato1.value.length >= 1 && formContato1.value.length < 10) {
                 paragrafoErro(formContato1, "Telefone inválido");
                 temErro = true;
+                formContato1.focus()
             }
 
             if (formContato2.value.length >= 1 && formContato2.value.length < 10) {
                 paragrafoErro(formContato2, "Telefone inválido");
                 temErro = true;
+                formContato2.focus()
             }
-            
-            // if (formNascimento.value == "") {
-            //     paragrafoErro(formNascimento, "Data de nascimento obrigatório");
-            //     temErro = true;
-            // }
 
             if (!temErro) {
                 myModal.toggle();

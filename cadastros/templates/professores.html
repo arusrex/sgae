@@ -1,7 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% include 'partials/modal-confirmation.html' %}
 <div class="container-fluid px-4">
     <h1 class="mt-4">Cadastros</h1>
     <ol class="breadcrumb mb-4">
@@ -33,7 +32,7 @@
                                     value="{% if usuario.last_name %}{{usuario.last_name}}{% endif %}" />
                                 </div>
                             </div>
-                            <div class="col-md-12">
+                            <div class="col-md-12 remover">
                                 <label for="email" class="form-label">Endereço de E-mail</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="email" name="email" type="text"
@@ -41,12 +40,12 @@
                                     autocomplete="true" />
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6 remover">
                                 <label for="senha" class="form-label">Senha</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="senha" name="senha" type="password" placeholder="Insira a senha" />
                                 </div>
-                            </div><div class="col-md-6">
+                            </div><div class="col-md-6 remover">
                                 <label for="confirmar-senha" class="form-label">Confirme a senha</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="confirmar-senha" name="confirmar-senha" type="password" placeholder="Confirme a senha do professor" />
@@ -60,7 +59,7 @@
                                     />
                                 </div>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-3 remover">
                                 <label for="cpf" class="form-label">CPF</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="cpf" name="cpf" name="cpf" type="number"
@@ -169,7 +168,7 @@
                             <td>{{professor.telefone | default_if_none:""}}</td>
                             <td>
                                 <a href="{% url "cadastros:editar-professor" professor.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                {% if user.is_superuser %}<a id="{{professor.pk}}" class="btn btn-sm btn-danger btn-block botao-excluir-professor">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -187,42 +186,40 @@
     const formEdicaoProfessores = document.getElementById('form-editar-professor');
     
     if (formCadastroProfessores) {
+        
+        function criaBotaoAdicionar () {
+            const div = document.createElement('div');
+            const botao = document.createElement('a');
+            div.classList.add('mb-2');
+            botao.id = 'botao-adicionar-professor';
+            botao.classList.add('btn', 'btn-primary', 'btn-block');
+            botao.text = 'Cadastrar Professor(a)'
+            div.appendChild(botao);
+
+            return div;
+        }
+
         formCadastroProfessores.hidden = true;
+        
+        cardBody.firstElementChild.before(criaBotaoAdicionar());
+        const botaoAdicionarProfessor = document.getElementById('botao-adicionar-professor');
+
+        if (botaoAdicionarProfessor) {
+            botaoAdicionarProfessor.addEventListener('click', () => {
+
+                if (formCadastroProfessores.hasAttribute('hidden')) {
+                    botaoAdicionarProfessor.text = "Esconder formulário";
+                    botaoAdicionarProfessor.classList.replace('btn-primary', 'btn-warning');
+                } else {
+                    botaoAdicionarProfessor.text = "Cadastrar Professor(a)";
+                    botaoAdicionarProfessor.classList.replace('btn-warning', 'btn-primary');
+                }
+                formCadastroProfessores.toggleAttribute('hidden');
+
+            });
+        }
     }
 
-    function criaBotaoAdicionar () {
-        const div = document.createElement('div');
-        const botao = document.createElement('a');
-        div.classList.add('mb-2');
-        botao.id = 'botao-adicionar-professor';
-        botao.classList.add('btn', 'btn-primary', 'btn-block');
-        botao.text = 'Cadastrar Professor(a)'
-        div.appendChild(botao);
-
-        return div;
-    }
-
-    cardBody.firstElementChild.before(criaBotaoAdicionar());
-    const botaoAdicionarProfessor = document.getElementById('botao-adicionar-professor');
-
-    if (botaoAdicionarProfessor) {
-        botaoAdicionarProfessor.addEventListener('click', () => {
-
-            if (formCadastroProfessores.hasAttribute('hidden')) {
-                botaoAdicionarProfessor.text = "Esconder formulário";
-                botaoAdicionarProfessor.classList.replace('btn-primary', 'btn-warning');
-            } else {
-                botaoAdicionarProfessor.text = "Cadastrar Professor(a)";
-                botaoAdicionarProfessor.classList.replace('btn-warning', 'btn-primary');
-            }
-            formCadastroProfessores.toggleAttribute('hidden');
-
-        });
-    }
-
-</script>
-
-<script>
     const form = document.forms['form-professor'];
     const botaoSalvar = document.getElementById('botao-salvar');
 
@@ -235,10 +232,6 @@
         let rg = form['rg'];
         let cpf = form['cpf'];
         let telefone = form['telefone'];
-
-        if (formEdicaoProfessores) {
-            cpf.disabled = true;
-        }
 
         nome.addEventListener('input', () => {
             nome.value = nome.value.replace(/[0-9]/g, '');
@@ -268,6 +261,14 @@
                 telefone.value = telefone.value.slice(0, 11);
             }
         });
+
+        if (formEdicaoProfessores) {
+            const senhas = document.querySelectorAll('.remover');
+            senhas.forEach((e) => {
+                e.disabled = true;
+                e.hidden = true;
+            });
+        }
 
         botaoSalvar.addEventListener('click', async () => {
             let temErro = false;
@@ -312,6 +313,14 @@
                 email.focus();
             };
 
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/g.test(email.value) && formCadastroProfessores) {
+                console.log("Entrou");
+                let mensagem = "Email inválido";
+                paragrafoErro(email, mensagem);
+                temErro = true;
+                email.focus();
+            };
+
             if (rg.value.length > 0 && rg.value.length < 8) {
                 paragrafoErro(rg, "O mínimo permitido é 8 dígitos");
                 temErro = true;
@@ -330,13 +339,29 @@
                 return data.existe;
             }
 
-            if (cpf.value) {
+            if (cpf.value && formCadastroProfessores) {
                 let result = await verificaCpf(cpf.value);
 
                 if (result) {
                     paragrafoErro(cpf, "CPF já existe");
                     temErro = true;
                     cpf.focus();
+                }
+            }
+
+            async function verificaEmail (email) {
+                const response = await fetch(`/cadastros/verificar-email-professor/?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                return data.email_existe;
+            }
+
+            if (email.value && formCadastroProfessores) {
+                let result = await verificaEmail(email.value);
+
+                if (result) {
+                    paragrafoErro(email, "Endereço de e-mail existente");
+                    temErro = true;
+                    email.focus();
                 }
             }
             
@@ -361,7 +386,7 @@
             if(!temErro) {
                 const modalDiv = document.getElementById('modalConfirmacao');
                 const modalConfirmacao = new bootstrap.Modal(modalDiv, {
-                    keyboard: true,
+                    keyboard: false,
                     backdrop: true
                 });
                 modalConfirmacao.show();
@@ -370,7 +395,21 @@
             }
         });
 
+        const botaoExcluirProfessor = document.querySelectorAll('.botao-excluir-professor');
 
+        botaoExcluirProfessor.forEach((botao) => {
+            botao.addEventListener('click', () => {
+                const modalDiv = document.getElementById('modalExclusao');
+                const modalExclusao = new bootstrap.Modal(modalDiv, {
+                    keyboard: false,
+                    backdrop: true
+                });
+                modalExclusao.show();
+                const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+                botaoConfirmarExclusao.href = `/cadastros/excluir-professor/${botao.id}/`;
+            });
+        });
+        
         function paragrafoErro (campo, mensagem) {
             const p = document.createElement('p');
             p.classList.add('text-danger', 'mt-1', 'erro');

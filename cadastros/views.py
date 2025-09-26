@@ -5,6 +5,7 @@ from .models import Sala, Disciplina, Professor, Aluno
 from usuarios.models import Usuarios
 from core.models import Auditoria
 from django.http import JsonResponse
+from django.contrib import messages
 
 @login_required
 def salas(request, pk=None):
@@ -18,20 +19,28 @@ def salas(request, pk=None):
         sala = None
 
     if sala and request.method == 'POST':
+        try:
+            sala.numero = request.POST.get('numero')
+            sala.nome = request.POST.get('nome')
+            sala.ano = request.POST.get('ano')
 
-        sala.numero = request.POST['numero']
-        sala.nome = request.POST['nome']
-        sala.ano = request.POST['ano']
+            Auditoria.objects.create(
+                acao="Edição de sala",
+                atualizado_por=user.get_full_name(),
+                info=f"{sala.nome} - {sala.ano} editada"
+            )
 
-        Auditoria.objects.create(
-            acao="Edição de sala",
-            atualizado_por=user.get_full_name(),
-            info=f"{sala.nome} - {sala.ano} editada"
-        )
+            sala.save()
 
-        sala.save()
+            messages.success(request, "Sala cadastrada com sucesso!")
+            return redirect('cadastros:salas')
+        
+        except Exception as e:
+            print(f'Erro: {e}')
 
-        return redirect('cadastros:salas')
+            messages.error(request, "Erro ao cadastrar sala")
+            return redirect('cadastros:salas')
+
     
     if not sala and request.method == 'POST':
         numero = request.POST['numero']
@@ -192,7 +201,7 @@ def professores(request, pk=None):
             
             return redirect('cadastros:professores')
         else:
-            if senha1 == '' or senha1 != senha2 or email_exists:
+            if senha1 != senha2 or email_exists:
                 return redirect('cadastros:professores')
             
             usuario_criado = Usuarios(
@@ -201,7 +210,10 @@ def professores(request, pk=None):
                 email=email,
                 cpf=cpf
             )
-            usuario_criado.set_password(senha1)
+
+            if senha1:
+                usuario_criado.set_password(senha1)
+
             usuario_criado.save()
 
             if usuario_criado:
@@ -242,7 +254,11 @@ def excluir_professor(request, pk):
             criado_por=user.get_full_name(),
             info=f'Professor(a) {professor} excluído'
         )
+        usuario = professor.user
+
         professor.delete()
+        usuario.delete()
+
         auditoria.save()
     
     return redirect('cadastros:professores')
@@ -250,18 +266,20 @@ def excluir_professor(request, pk):
 @login_required
 def verificar_cpf_professor(request):
     cpf = request.GET.get('cpf')
-    print(cpf)
     professor_existe = Usuarios.objects.filter(cpf=cpf).exists()
-    print(professor_existe)
     return JsonResponse({"existe": professor_existe})
 
+@login_required
+def verificar_email_professor(request):
+    email = request.GET.get('email')
+    email_existe = Usuarios.objects.filter(email=email).exists()
+    return JsonResponse({'email_existe': email_existe})
 
 
 @login_required
 def alunos(request, pk=None):
     user = request.user
     alunos = Aluno.objects.all()
-
 
     if pk:
         aluno = get_object_or_404(Aluno, pk=pk)
@@ -309,7 +327,6 @@ def alunos(request, pk=None):
         observacoes = request.POST.get('observacoes')
 
         if aluno is not None:
-
             aluno.nome = nome
             aluno.rm = rm
             aluno.ra = ra
@@ -426,6 +443,13 @@ def excluir_aluno(request, pk=None):
 
     return redirect('cadastros:alunos')
 
+@login_required
+def verifica_ra_aluno (request):
+    ra = request.GET.get('ra')
+    ra_existe = Aluno.objects.filter(ra=ra).exists()
+    return JsonResponse({'ra_existe': ra_existe})
+
+@login_required
 def ficha_aluno(request, pk=None):
     user = request.user.get_full_name()
 

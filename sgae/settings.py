@@ -154,11 +154,11 @@ from django.contrib import messages
 from django.contrib.messages import constants
 
 MESSAGE_TAGS = {
-    messages.constants.DEBUG: 'alert-info',
-    messages.constants.INFO: 'alert-info',
-    messages.constants.SUCCESS: 'alert-success',
-    messages.constants.WARNING: 'alert-warning',
-    messages.constants.ERROR: 'alert-danger',
+    messages.constants.DEBUG: '-info',
+    messages.constants.INFO: '-info',
+    messages.constants.SUCCESS: '-success',
+    messages.constants.WARNING: '-warning',
+    messages.constants.ERROR: '-danger',
 }
 
 USE_X_FORWARDED_HOST = True

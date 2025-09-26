@@ -1,7 +1,7 @@
 <!-- MODAL DE CONFIRMAÇÃO -->
 
-<div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="false" aria-modal="false">
-    <div class="modal-dialog">
+<div class="modal fade" id="modalConfirmacao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Confirmação</h5>
@@ -20,8 +20,8 @@
 
 <!-- MODAL DE EXCLUSÃO -->
 
-<div class="modal fade" id="modalExclusao" tabindex="-1" aria-hidden="false" aria-modal="false">
-    <div class="modal-dialog">
+<div class="modal fade" id="modalExclusao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">Exclusão</h5>
@@ -37,3 +37,25 @@
         </div>
     </div>
 </div>
+
+<!-- MODAL DE MESSAGES -->
+
+{% if messages %}
+{% for message in messages %}
+<div class="modal fade" id="modalMensagens" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg{{message.tags}}">
+                <h5 class="modal-title text{{message.tags}}"></h5>
+            </div>
+            <div class="modal-body text{{message.tags}}">
+                {{message}}
+            </div>
+            <div class="modal-footer bg{{message.tags}}">
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endif %}

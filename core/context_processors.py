@@ -10,6 +10,8 @@ def context_processors(request):
         nome = dados.nome
         descricao = dados.descricao if dados.descricao else 'Administração e Gestão - by ARUS DIGITAL TECH'
         logo = dados.logo if dados.logo else '/static/assets/img/arus_logo.png'
+        redefinir_senha = dados.redefinir_senha
+        nova_conta = dados.nova_conta
         logo_educacao = dados.logo_educacao if dados.logo_educacao else '/static/assets/img/arus_logo.png'
         logo_municipio = dados.logo_municipio if dados.logo_municipio else '/static/assets/img/arus_logo.png'
     else:
@@ -23,6 +25,8 @@ def context_processors(request):
         'usuario_sistema': usuario,
         'sistema_nome': nome,
         'sistema_descricao': descricao,
+        'sistema_redefinir_senha': redefinir_senha,
+        'sistema_nova_conta': nova_conta,
         'sistema_logo': logo,
         'sistema_logo_municipio': logo_municipio,
         'sistema_logo_educacao': logo_educacao

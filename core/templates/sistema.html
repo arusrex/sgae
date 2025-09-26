@@ -24,12 +24,25 @@
                                     <input class="form-control" id="nome" name="nome" type="text" value="{{sistema_nome}}" placeholder="Insira o nome do sistema" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="row mb-3">
+
                             <div class="col-md-12">
                                 <label for="descricao" class="form-label">Descrição</label>
                                 <div class=" mb-3">
                                     <textarea class="form-control" rows="5" id="descricao" name="descricao" value="{{sistema_descricao}}" placeholder="Insira aqui a descrição do sistema"></textarea>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="redefinir-senha" class="form-check-label">Redefinir senha</label>
+                                <div class="mb-3">
+                                    <input class="form-check-input" id="redefinir-senha" name="redefinir-senha" type="checkbox" {% if sistema_redefinir_senha %}checked{% endif %} placeholder="Insira o nome do sistema" />
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="nova-conta" class="form-check-label">Nova conta</label>
+                                <div class="mb-3">
+                                    <input class="form-check-input" id="nova-conta" name="nova-conta" type="checkbox"  {% if sistema_nova_conta %}checked{% endif %}  placeholder="Insira o nome do sistema" />
                                 </div>
                             </div>
                         </div>

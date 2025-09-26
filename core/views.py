@@ -112,6 +112,8 @@ def sistema(request):
     if request.method == 'POST':
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
+        redefinir_senha = bool(request.POST.get('redefinir-senha'))
+        nova_conta = bool(request.POST.get('nova-conta'))
         logo = request.FILES.get('logotipo')
         logo_municipio = request.FILES.get('logo-municipio')
         logo_educacao = request.FILES.get('logo-educacao')
@@ -123,6 +125,8 @@ def sistema(request):
         if dados:
             dados.nome = nome
             dados.descricao = descricao
+            dados.redefinir_senha = redefinir_senha
+            dados.nova_conta = nova_conta
 
             if logo:
                 dados.logo = logo_novo # type: ignore
@@ -140,6 +144,8 @@ def sistema(request):
                 nome=nome,
                 descricao=descricao,
                 logo=logo,
+                redefinir_senha=redefinir_senha,
+                nova_conta=nova_conta,
                 logo_municipio=logo_municipio,
                 logo_educacao=logo_educacao
             )

@@ -19,6 +19,8 @@ urlpatterns = [
     path('professores/', views.professores, name='professores'),
     path('editar-professor/<str:pk>/', views.professores, name='editar-professor'),
     path('excluir-professor/<str:pk>/', views.excluir_professor, name='excluir-professor'),
+    path('verificar-cpf-professor/', views.verificar_cpf_professor, name='verificar-cpf-professor'),
+    path('verificar-email-professor/', views.verificar_email_professor, name='verificar-email-professor'),
 
     #ALUNOS
     path('alunos/', views.alunos, name='alunos'),
@@ -26,6 +28,7 @@ urlpatterns = [
     path('excluir-aluno/<str:pk>/', views.excluir_aluno, name='excluir-aluno'),
     path('ficha-do-aluno/<str:pk>/', views.ficha_aluno, name='ficha-aluno'),
     path('imprimir/ficha-do-aluno/<str:pk>/', report.ficha_aluno, name='imprimir-ficha-aluno'),
-    path('verificar-cpf-professor/', views.verificar_cpf_professor, name='verificar-cpf-professor'),
+    path('verifica-ra-aluno/', views.verifica_ra_aluno, name='verifica-ra-aluno'),
+
 ]
 

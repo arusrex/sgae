@@ -14,7 +14,7 @@
                     Cadastro de disciplina
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form name="form-disciplina" method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-12">
@@ -65,7 +65,7 @@
                             <td>{{disciplina.nome | default_if_none:""}}</td>
                             <td>
                                 <a href="{% url "cadastros:editar-disciplina" disciplina.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                {% if user.is_superuser %}<a href="{% url "cadastros:excluir-disciplina" disciplina.pk %}" class="btn btn-sm btn-danger btn-block botao-exclusao">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -76,4 +76,41 @@
         </div>
     </div>
 </div>
+
+<script>
+    const form = document.forms['form-disciplina'];
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const modalDiv = document.getElementById('modalConfirmacao');
+        const modalConfirmacao = new bootstrap.Modal(modalDiv, {
+            keyboard: true,
+            backdrop: true
+        });
+
+        modalConfirmacao.show();
+        const botaoConfirmacao = document.getElementById('confirmarSalvar');
+        if (botaoConfirmacao) {
+            botaoConfirmacao.onclick = () => form.submit();
+        }
+    });
+
+    const botaoExclusao = document.querySelectorAll('.botao-exclusao');
+    botaoExclusao.forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            e.preventDefault();
+            
+            const modalDiv = document.getElementById('modalExclusao');
+            const modalExclusao = new bootstrap.Modal(modalDiv);
+            modalExclusao.show();
+            const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+            if (botaoConfirmarExclusao) {
+                botaoConfirmarExclusao.onclick = () => {
+                    window.location.href = e.target.href;
+                };
+            }
+        });
+    });
+</script>
 {% endblock %}
