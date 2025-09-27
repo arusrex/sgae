@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from .models import Auditoria, Sistema
 from usuarios.models import Usuarios
 from core.utils import redimensionar_imagem, tratar_imagens
+from django.contrib import messages
 
 def entrar(request):
     if request.method == 'POST':
@@ -14,58 +15,84 @@ def entrar(request):
         usuario = authenticate(request, username=email, password=senha)
 
         if usuario:
-            login(request, usuario)
-            return redirect('index')
-        else:
-            print('Usuario ou senha inválido')
+            try:
+                login(request, usuario)
+
+                messages.success(request, f'Bem vindo e bom trabalho {usuario.first_name} !')
+
+                return redirect('index')
+            
+            except Exception as e:
+        
+                print(f'Erro ao entrar: {e}')
+
+                messages.error(request, 'Email ou senha inválido')
 
     return render(request, "login.html", {})
 
 @login_required
 def sair(request):
-    logout(request)
+    try:
+        logout(request)
+
+        messages.success(request, 'Você saiu do sistema !')
+    
+    except Exception as e:
+        print(f'Erro ao sair do sistema: {e}')
+
+        messages.error(request, 'Erro ao sair do sistema, consulte o administrador')
 
     return redirect('core:entrar')
 
 def registro(request):
     if request.method == 'POST':
-        nome = request.POST['nome']
-        sobrenome = request.POST['sobrenome']
-        email = request.POST['email']
-        senha1 = request.POST['senha']
-        senha2 = request.POST['confirmar-senha']
+        try:
+            nome = request.POST['nome']
+            sobrenome = request.POST['sobrenome']
+            email = request.POST['email']
+            senha1 = request.POST['senha']
+            senha2 = request.POST['confirmar-senha']
 
-        if senha1 == '' or senha1 != senha2:
-            return render(request, 'registro.html', {
-                'nome': nome,
-                'sobrenome': sobrenome,
-                'email':email
-            })
+            if senha1 == '' or senha1 != senha2:
+                return render(request, 'registro.html', {
+                    'nome': nome,
+                    'sobrenome': sobrenome,
+                    'email':email
+                })
 
-        email_exists = Usuarios.objects.filter(email=email).exists()
+            email_exists = Usuarios.objects.filter(email=email).exists()
 
-        if email_exists:
-            print('Email já registrado!')
-            return render(request, 'registro.html', {
-                'nome': nome,
-                'sobrenome': sobrenome,
-            })
-        
-        usuario = Usuarios.objects.create(
-                first_name=nome,
-                last_name=sobrenome,
-                email=email,
-                is_active=False,
-                password=make_password(senha1)
+            if email_exists:
+                print('Email já registrado!')
+                return render(request, 'registro.html', {
+                    'nome': nome,
+                    'sobrenome': sobrenome,
+                })
+            
+            usuario = Usuarios.objects.create(
+                    first_name=nome,
+                    last_name=sobrenome,
+                    email=email,
+                    is_active=False,
+                    password=make_password(senha1)
+                )
+            
+            Auditoria.objects.create(
+                acao='Registro externo de usuário',
+                criado_por=usuario.get_full_name(),
+                info='Novo registro de usuário aguardando ativação no painel'
             )
-        
-        Auditoria.objects.create(
-            acao='Registro externo de usuário',
-            criado_por=usuario.get_full_name(),
-            info='Novo registro de usuário aguardando ativação no painel'
-        )
 
-        return redirect('core:entrar')
+            messages.success(request, 'Registro realizado com sucesso, aguarde a ativação pelo administrador')
+
+            return redirect('core:entrar')
+        
+        except Exception as e:
+            print(f'Erro ao se registrar no sistema: {e}')
+
+            messages.error(request, 'Erro ao realizar o seu cadastro, consulte o administrador')
+
+            return redirect('core:registro')
 
     return render(request, "registro.html")
 
@@ -81,14 +108,16 @@ def redefinir_senha(request):
 
             if usuario:
                 mensagem = 'Um e-mail foi enviado com instruções para a redefinir sua senha!'
+
+                messages.success(request, mensagem)
+                
+                return redirect('core:redefinir-senha')
             else:
                 mensagem = 'Usuário não encontrado'
 
-        context = {
-            'mensagem': mensagem,
-        }
-        return render(request, "redefinir_senha.html", context)
-    
+                messages.error(request, mensagem)
+
+                return redirect(request, mensagem)
 
     return render(request, "redefinir_senha.html")
 
@@ -110,6 +139,7 @@ def sistema(request):
     dados = Sistema.objects.first()
 
     if request.method == 'POST':
+        
         nome = request.POST.get('nome')
         descricao = request.POST.get('descricao')
         redefinir_senha = bool(request.POST.get('redefinir-senha'))
@@ -123,40 +153,63 @@ def sistema(request):
         logo_educacao_novo = tratar_imagens(logo_educacao, 85, 300, 300)
 
         if dados:
-            dados.nome = nome
-            dados.descricao = descricao
-            dados.redefinir_senha = redefinir_senha
-            dados.nova_conta = nova_conta
+            try:
+                dados.nome = nome
+                dados.descricao = descricao
+                dados.redefinir_senha = redefinir_senha
+                dados.nova_conta = nova_conta
 
-            if logo:
-                dados.logo = logo_novo # type: ignore
+                if logo:
+                    dados.logo = logo_novo # type: ignore
 
-            if logo_municipio:
-                dados.logo_municipio = logo_municipio_novo # type: ignore
+                if logo_municipio:
+                    dados.logo_municipio = logo_municipio_novo # type: ignore
 
-            if logo_educacao:
-                dados.logo_educacao = logo_educacao_novo # type: ignore
+                if logo_educacao:
+                    dados.logo_educacao = logo_educacao_novo # type: ignore
 
-            dados.save()
+                dados.save()
+
+                messages.success(request, 'Dados do sistema atualizados com sucesso')
+
+                return redirect('core:sistema')
+
+            except Exception as e:
+                print(f'Erro ao atualizar dados do sistema')
+
+                messages.error(request, 'Erro ao atualizar os dados do sistema')
+
+                return redirect('core:sistema')
 
         else:
-            dados = Sistema(
-                nome=nome,
-                descricao=descricao,
-                logo=logo,
-                redefinir_senha=redefinir_senha,
-                nova_conta=nova_conta,
-                logo_municipio=logo_municipio,
-                logo_educacao=logo_educacao
-            )
+            try:
+                dados = Sistema(
+                    nome=nome,
+                    descricao=descricao,
+                    logo=logo,
+                    redefinir_senha=redefinir_senha,
+                    nova_conta=nova_conta,
+                    logo_municipio=logo_municipio,
+                    logo_educacao=logo_educacao
+                )
 
-            dados.save()
+                dados.save()
         
-        Auditoria.objects.create(
-            acao="Dados do sistema",
-            info="Alteração nos dados do sistema"
-        )
+                Auditoria.objects.create(
+                    acao="Dados do sistema",
+                    info="Alteração nos dados do sistema"
+                )
 
-        return redirect('core:sistema')
+                messages.success(request, 'Dados do sistema cadastrados com sucesso')
+
+                return redirect('core:sistema')
+            
+            except Exception as e:
+                print(f'Erro ao cadastrar dados do sistema: {e}')
+
+                messages.error(request, 'Erro ao cadastrar os dados do sistema, consulte o administrador')
+
+                return redirect('core:sistema')
+
 
     return render(request, 'sistema.html')
