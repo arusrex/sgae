@@ -32,7 +32,7 @@ def salas(request, pk=None):
 
             sala.save()
 
-            messages.success(request, "Sala cadastrada com sucesso!")
+            messages.success(request, "Sala atualizada com sucesso!")
             return redirect('cadastros:salas')
         
         except Exception as e:
