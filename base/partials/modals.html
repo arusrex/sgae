@@ -45,10 +45,21 @@
 <div class="modal fade" id="modalMensagens" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="d-flex gap-3 flex-column justify-content-evenly align-items-center modal-body bg{{message.tags}}">
-                <div class="fs-3 text-light">{{message}}</div>
-                <div class="bg{{message.tags}}">
-                    <button type="button" class="btn btn{{message.tags}} shadow-lg border border-sm" data-bs-dismiss="modal">FECHAR</button>
+            <div class="d-flex gap-5 flex-column justify-content-evenly align-items-center modal-body bg-{{message.tags}} position-relative">
+                <div class="text-light">
+                    {% if message.tags == 'success' %}
+                        <i class="icone-modal fa-solid fa-circle-check"></i>
+                    {% elif message.tags == 'warning' %}
+                        <i class="icone-modal fa-solid fa-circle-exclamation"></i>
+                    {% elif message.tags == 'danger' %}
+                        <i class="icone-modal fa-solid fa-triangle-exclamation"></i>
+                    {% else %}
+                        <i class="icone-modal fa-solid fa-circle-info"></i>
+                    {% endif %}
+                </div>
+                <div class="fs-3 text-light text-center">{{message}}</div>
+                <div class="bg-{{message.tags}}">
+                    <button type="button" class="btn btn-{{message.tags}} position-absolute top-0 end-0" data-bs-dismiss="modal"><i class="fs-3 fa-solid fa-square-xmark"></i></button>
                 </div>
             </div>
             

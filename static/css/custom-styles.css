@@ -115,6 +115,24 @@
     color: var(--cs-light) !important;
 }
 
+table thead tr th {
+    font-size: 12px !important;
+}
+
+table tbody tr td {
+    font-size: 12px !important;
+}
+
+@keyframes pulsar {
+    from {transform: scale(1, 1);}
+    to {transform: scale(1.5, 1.5);}
+}
+
+.icone-modal {
+    margin-top: 20px !important;
+    font-size: 60px !important;
+    animation: pulsar 1.2s ease-in-out infinite alternate !important;
+}
 
 @media print {
     .no-print {
