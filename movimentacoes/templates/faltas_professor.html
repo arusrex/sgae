@@ -14,32 +14,32 @@
                     Registro de faltas
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form name="form-falta-professor" method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
                                     <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o professor abaixo" readonly required />
-                                    <input class="form-control" id="professor" name="professor" type="text" hidden readonly required />
+                                    <input class="form-control" id="professor" name="professor" type="text" hidden />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <label for="data_inicial" class="form-label">De</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="data_inicial" name="data_inicial" type="date" required />
+                                    <input class="form-control" id="data_inicial" name="data_inicial" type="date" />
                                 </div>
                             </div>
                             <div class="col-6">
                                 <label for="data_final" class="form-label">Até</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="data_final" name="data_final" type="date" required />
+                                    <input class="form-control" id="data_final" name="data_final" type="date" />
                                 </div>
                             </div>
                             <div class="col-4">
                                 <label for="quantidade" class="form-label">Quantidade de aulas</label>
                                 <div class="mb-3">
-                                    <select class="form-select" id="quantidade" name="quantidade" required >
+                                    <select class="form-select" id="quantidade" name="quantidade" >
                                         <option value="">Selecione a quantidade de aulas</option>
                                         <option value="1">1</option>
                                         <option value="2">2</option>
@@ -52,7 +52,7 @@
                             <div class="col-4">
                                 <label for="periodo" class="form-label">Período</label>
                                 <div class="mb-3">
-                                    <select class="form-select" id="periodo" name="periodo" required >
+                                    <select class="form-select" id="periodo" name="periodo"  >
                                         <option value="">Selecione o período</option>
                                         <option value="manha">Manhã</option>
                                         <option value="tarde">Tarde</option>
@@ -63,7 +63,7 @@
                             <div class="col-4">
                                 <label for="tipo" class="form-label">Tipo</label>
                                 <div class="mb-3">
-                                    <select class="form-select" id="tipo" name="tipo" required >
+                                    <select class="form-select" id="tipo" name="tipo"  >
                                         <option value="">Selecione o tipo de falta</option>
                                         {% for valor, texto in tipos %}
                                         <option value="{{valor}}">{{texto}}</option>
@@ -147,7 +147,7 @@
                             </td>
                             <td>{{falta.quantidade | default_if_none:""}}</td>
                             <td>
-                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-faltas-professor" falta.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-faltas-professor" falta.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>{% endif %}
                             </td>
                         </tr>
                         {% endfor %}
@@ -167,5 +167,88 @@
         campo.value = professor_id;
         campoVisual.value = professor_nome;
     }
+
+    const form = document.forms['form-falta-professor'];
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const erros = document.querySelectorAll('.erro').forEach((e) => e.remove());
+        temErro = false;
+
+        const professor = form['professor'];
+        const dataInicial = form['data_inicial'];
+        const dataFinal = form['data_final'];
+        const quantidade = form['quantidade'];
+        const periodo = form['periodo'];
+        const tipo = form['tipo'];
+
+        if (professor.value == '') {
+            paragrafoErro(professor, 'Selecione um professor abaixo');
+            temErro = true;
+            professor.focus();
+        }
+
+        if (dataInicial.value == '') {
+            paragrafoErro(dataInicial, 'Escolha a data de início da falta');
+            temErro = true;
+            dataInicial.focus();
+        }
+
+        if (dataFinal.value == '') {
+            paragrafoErro(dataFinal, 'Escolha a data final da falta');
+            temErro = true;
+            dataFinal.focus();
+        }
+
+        if (quantidade.value == '') {
+            paragrafoErro(quantidade, 'Selecione a quantidade');
+            temErro = true;
+            quantidade.focus();
+        }
+
+        if (periodo.value == '') {
+            paragrafoErro(periodo, 'Selecione o período');
+            temErro = true;
+            periodo.focus();
+        }
+
+        if (tipo.value == '') {
+            paragrafoErro(tipo, 'Selecione o tipo de falta');
+            temErro = true;
+            tipo.focus();
+        }
+
+        function paragrafoErro (campo, mensagem) {
+            const p = document.createElement('p');
+            p.classList.add('text-danger', 'mt-1', 'erro');
+            p.innerText = mensagem;
+            campo.insertAdjacentElement('afterend', p);
+        };
+
+        if (!temErro) {
+            const modalDivConfirmacaoFalta = document.getElementById('modalConfirmacao');
+            const modalConfirmacaoFalta = new bootstrap.Modal(modalDivConfirmacaoFalta);
+            modalConfirmacaoFalta.show();
+            if (modalConfirmacaoFalta) {
+                const botaoConfirmacaoModal = document.getElementById('confirmarSalvar');
+                botaoConfirmacaoModal.onclick = () => form.submit();
+            }
+        }
+    });
+
+    const botoesExcluir = document.querySelectorAll('.btn-excluir').forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const modalExcluir = document.getElementById('modalExclusao');
+            const modalConfirmarExclusao = new bootstrap.Modal(modalExcluir);
+            modalConfirmarExclusao.show();
+
+            const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+            if (botaoConfirmarExclusao) {
+                botaoConfirmarExclusao.onclick = () => window.location.href = e.target.href;
+            }
+        });
+    });
 </script>
 {% endblock %}

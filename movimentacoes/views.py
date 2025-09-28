@@ -292,7 +292,7 @@ def excluir_atribuicoes(request, pk):
 def faltas_professor(request, pk=None):
     TIPOS = [
         ('abonada', 'Abonada'),
-        ('justificada', 'Remanejamento'),
+        ('justificada', 'Justificada'),
         ('injustificada', 'Injustificada'),
         ('ferias', 'Férias'),
         ('licenca-remunerada', 'Licença Remunerada'),
