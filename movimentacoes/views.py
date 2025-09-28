@@ -277,7 +277,7 @@ def excluir_atribuicoes(request, pk):
             auditoria.save()
             atribuicao.delete()
 
-            messages.success(request, 'Atribuição realizada com sucesso')
+            messages.warning(request, 'Atribuição excluída com sucesso')
 
             return redirect('movimentacoes:atribuicoes')
 

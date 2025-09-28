@@ -16,21 +16,21 @@
                     Atribuição de Professores(as)
                 </div>
                 <div class="card-body">
-                    <form method="POST">
+                    <form name="form-atribuicao" method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
                             <div class="col-12">
                                 <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" hidden required />
-                                    <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o Professor(a) abaixo" readonly required />
+                                    <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" hidden />
+                                    <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o Professor(a) abaixo" readonly />
                                 </div>
                             </div>
                             <div class="col-12">
                                 <label for="sala" class="form-label">Sala</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" hidden required />
-                                    <input class="form-control" id="sala-visual" type="text" placeholder="Selecione a sala disponível" readonly required />
+                                    <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" hidden />
+                                    <input class="form-control" id="sala-visual" type="text" placeholder="Selecione a sala disponível" readonly />
                                 </div>
                             </div>
                         </div>
@@ -136,7 +136,7 @@
                                 <td>{{atribuicao.professor | default_if_none:""}}</td>
                                 <td>{{atribuicao.sala | default_if_none:""}}</td>
                                 <td>
-                                    <a href="{% url "movimentacoes:excluir-atribuicao" atribuicao.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>
+                                    <a href="{% url "movimentacoes:excluir-atribuicao" atribuicao.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
                                 </td>
                             </tr>
                             {% endfor %}
@@ -181,5 +181,64 @@
         sala.value = sala_id;
         salaVisual.value = sala_nome;
     }
+
+    const form = document.forms['form-atribuicao'];
+
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const erros = document.querySelectorAll('.erro').forEach((e) => e.remove());
+
+            let temErro = false;
+
+            if (professor.value == '') {
+                console.log('professor');
+                paragrafoErro(professorVisual, "É necessário selecionar um professor");
+                temErro = true;
+                professorVisual.focus();
+            }
+
+            if (sala.value == '') {
+                paragrafoErro(salaVisual, "É necessário selecionar uma sala");
+                temErro = true;
+                salaVisual.focus();
+            }
+
+            if (!temErro) {
+                const modalConfirmacaoAtribuicao = document.getElementById('modalConfirmacao');
+                const modalAtribuicao = new bootstrap.Modal(modalConfirmacaoAtribuicao);
+
+                modalAtribuicao.show();
+                const botaoConfirmacaoAtribuicao = document.getElementById('confirmarSalvar');
+                if (botaoConfirmacaoAtribuicao) {
+                    botaoConfirmacaoAtribuicao.onclick = () => form.submit();
+                }
+            };
+        });
+    };
+
+    function paragrafoErro (campo, mensagem) {
+        let p = document.createElement('p');
+        p.classList.add('text-danger', 'mt-1', 'erro');
+        p.innerText = mensagem;
+        campo.insertAdjacentElement('afterend', p);
+    }
+
+    const botoesExclusao = document.querySelectorAll('.btn-excluir').forEach((botao) => {
+        botao.addEventListener('click', (event) => {
+            event.preventDefault();
+
+            const modalExclusao = document.getElementById('modalExclusao');
+            const modalConfirmarExclusao = new bootstrap.Modal(modalExclusao);
+            modalConfirmarExclusao.show();
+
+            const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+            if (botaoConfirmarExclusao) {
+                botaoConfirmarExclusao.onclick = () => {
+                    window.location.href = event.target.href;
+                };
+            }
+        });
+    });
 </script>
 {% endblock %}

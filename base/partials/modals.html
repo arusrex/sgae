@@ -46,7 +46,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="d-flex gap-5 flex-column justify-content-evenly align-items-center modal-body bg-{{message.tags}} position-relative">
-                <div class="text-light">
+                <div>
                     {% if message.tags == 'success' %}
                         <i class="icone-modal fa-solid fa-circle-check"></i>
                     {% elif message.tags == 'warning' %}
@@ -59,7 +59,7 @@
                 </div>
                 <div class="fs-3 text-light text-center">{{message}}</div>
                 <div class="bg-{{message.tags}}">
-                    <button type="button" class="btn btn-{{message.tags}} position-absolute top-0 end-0" data-bs-dismiss="modal"><i class="fs-3 fa-solid fa-square-xmark"></i></button>
+                    <button type="button" class="btn btn-{{message.tags}} text-light position-absolute top-0 end-0" data-bs-dismiss="modal"><i class="fs-3 fa-solid fa-square-xmark"></i></button>
                 </div>
             </div>
             
