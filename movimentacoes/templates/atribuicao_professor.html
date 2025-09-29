@@ -24,6 +24,30 @@
                                 <div class="mb-3">
                                     <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" hidden />
                                     <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o Professor(a) abaixo" readonly />
+                                    {% if professores %}
+                                    <div class="card-body">
+                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for professor in professores %}
+                                                <tr>
+                                                    <td>
+                                                        {{professor.user.get_full_name | default_if_none:""}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning btn-block" onclick="selecionaProfessor('{{professor.pk}}', '{{professor.user.get_full_name}}')">Selecionar</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                             <div class="col-12">
@@ -31,6 +55,30 @@
                                 <div class="mb-3">
                                     <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" hidden />
                                     <input class="form-control" id="sala-visual" type="text" placeholder="Selecione a sala disponível" readonly />
+                                    {% if salas %}
+                                    <div class="card-body">
+                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nome</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for sala in salas %}
+                                                <tr>
+                                                    <td>
+                                                        {{sala | default_if_none:""}} - {{sala.ano | default_if_none:""}}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala.nome}}')">Selecionar</a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -40,76 +88,6 @@
                         </div>
                     </form>
                 </div>
-            </div>
-        </div>
-
-        <div class="col-sm-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    Professores(as)
-                </div>
-            
-            
-                {% if professores %}
-                <div class="card-body">
-                    <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for professor in professores %}
-                            <tr>
-                                <td>
-                                    {{professor.user.get_full_name | default_if_none:""}}
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaProfessor('{{professor.pk}}', '{{professor.user.get_full_name}}')">Selecionar</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-
-
-        <div class="col-sm-6">
-            <div class="card mb-4">
-                <div class="card-header">
-                    <i class="fas fa-table me-1"></i>
-                    Salas
-                </div>
-            
-                {% if salas %}
-                <div class="card-body">
-                    <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                        <thead>
-                            <tr>
-                                <th>Nome</th>
-                                <th>Ações</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for sala in salas %}
-                            <tr>
-                                <td>
-                                    {{sala | default_if_none:""}}
-                                </td>
-                                <td>
-                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala.nome}}')">Selecionar</a>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-                {% endif %}
             </div>
         </div>
 
@@ -126,7 +104,7 @@
                         <thead>
                             <tr>
                                 <th>Professor(a)</th>
-                                <th>Sala</th>
+                                <th>Sala/Ano</th>
                                 <th>Ações</th>
                             </tr>
                         </thead>
@@ -134,7 +112,7 @@
                             {% for atribuicao in atribuicoes %}
                             <tr>
                                 <td>{{atribuicao.professor | default_if_none:""}}</td>
-                                <td>{{atribuicao.sala | default_if_none:""}}</td>
+                                <td>{{atribuicao.sala | default_if_none:""}} - {{atribuicao.sala.ano | default_if_none:""}}</td>
                                 <td>
                                     <a href="{% url "movimentacoes:excluir-atribuicao" atribuicao.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
                                 </td>

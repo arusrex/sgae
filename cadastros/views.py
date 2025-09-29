@@ -314,6 +314,16 @@ def professores(request, pk=None):
     return render(request, 'professores.html', context)
 
 @login_required
+def ficha_professor(request, pk):
+    professor = get_object_or_404(Professor, pk=pk)
+
+    context = {
+        'professor': professor,
+    }
+
+    return render(request, 'ficha-professor.html', context)
+
+@login_required
 def excluir_professor(request, pk):
     user = request.user
     professor = get_object_or_404(Professor, pk=pk)

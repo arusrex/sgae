@@ -28,14 +28,14 @@
                 </div>
                 <div class="card-body">
                     <a href="{% if matricula %}{% url "movimentacoes:matricula" %}{% elif remanejamento %}{% url "movimentacoes:remanejamento" %}{% elif transferencia %}{% url "movimentacoes:transferencia" %}{% endif %}" class="mb-4 btn btn-primary btn-block">Limpar campos</a>
-                    <form method="POST">
+                    <form name="form-movimentacao" method="POST">
                         {% csrf_token %}
                         <div class="row mb-3">
 
                             <div class="col-md-9">
                                 <label for="aluno" class="form-label">Aluno(a)</label>
                                 <input class="form-control" type="text" id="aluno_visual" placeholder="Selecione o aluno disponíveis abaixo" readonly required />
-                                <input class="form-control" type="text" id="aluno" name="aluno" hidden required />
+                                <input class="form-control" type="text" id="aluno" name="aluno" hidden />
                             </div>
 
                             <div class="col-md-3">
@@ -53,8 +53,8 @@
                             {% else %}
                             <div class="col-md-6">
                                 <label for="origem" class="form-label">Origem</label>
-                                <input class="form-control" type="text" id="origem" name="origem" hidden required />
-                                <input class="form-control" type="text" id="origem_input" name="origem_input" readonly required />
+                                <input class="form-control" type="text" id="origem_input" name="origem_input" readonly />
+                                <input class="form-control" type="text" id="origem" name="origem" hidden />
                             </div>
                             {% endif %}
                             
@@ -73,7 +73,7 @@
                             <div class="col-md-6">
                                 <label for="destino" class="form-label">Destino</label>
                                 <div class="mb-4">
-                                    <select class="form-select" id="destino" name="destino" required>
+                                    <select class="form-select" id="destino" name="destino" >
                                         <option>Selecione a sala</option>
                                         {% for sala in salas %}
                                         <option value="{{sala.pk}}">{{sala}}</option>
@@ -84,7 +84,7 @@
                             {% elif transferencia %}
                             <div class="col-md-6">
                                 <label for="destino" class="form-label">Destino</label>
-                                <input class="form-control" type="text" id="destino" name="destino" required />
+                                <input class="form-control" type="text" id="destino" name="destino" />
                             </div>
                             {% endif %}
                             
@@ -196,6 +196,62 @@
                 origem_input_visual.value = sala_nome;
                 origem_input.value = id_sala;
             }
+        }
+    }
+
+    const form = document.forms['form-movimentacao'];
+    const aluno = form['aluno'];
+    const data = form['data'];
+    const origem = form['origem'];
+    const destino = form['destino'];
+
+    if (form) {
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            let erros = document.querySelectorAll('.erro').forEach((e) => e.remove());
+            let temErro = false;
+
+            if (aluno.value == '') {
+                paragrafoErro(aluno, 'Selecione o aluno na tabela abaixo');
+                temErro = true;
+                aluno.focus();
+            }
+
+            if (data.value == '') {
+                paragrafoErro(data, 'Escolha a data');
+                temErro = true;
+                data.focus();
+            }
+
+            if (origem.value == '') {
+                paragrafoErro(origem, 'Origem obrigatória');
+                temErro = true;
+                origem.focus();
+            }
+
+            if (destino.value == '') {
+                paragrafoErro(destino, 'Destino obrigatório');
+                temErro = true;
+                destino.focus();
+            }
+
+            if (!temErro) {
+                const modalDiv = document.getElementById('modalConfirmacao');
+                const modalConfirmacao = new bootstrap.Modal(modalDiv);
+                modalConfirmacao.show();
+
+                const botaoConfirmacao = document.getElementById('confirmarSalvar');
+                if (botaoConfirmacao) {
+                    botaoConfirmacao.onclick = () => form.submit();
+                }
+            }
+        });
+
+        function paragrafoErro (campo, mensagem) {
+            const p = document.createElement('p');
+            p.classList.add('text-danger', 'mt-1', 'erro');
+            p.innerText = mensagem;
+            campo.insertAdjacentElement('afterend', p);
         }
     }
 </script>

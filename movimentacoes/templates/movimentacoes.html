@@ -39,7 +39,7 @@
                             <th>Aluno</th>
                             <th>Origem</th>
                             <th>Destino</th>
-                            <th>Ações</th>
+                            {% if user.is_superuser %}<th>Ações</th>{% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -50,10 +50,11 @@
                             <td>{{movimentacao.aluno}}</td>
                             <td>{% if movimentacao.origem %}{{movimentacao.origem}}{% else %}{{movimentacao.origem_input}}{% endif %}</td>
                             <td>{% if movimentacao.destino %}{{movimentacao.destino}}{% else %}{{movimentacao.destino_input}}{% endif %}</td>
+                            {% if user.is_superuser %}
                             <td>
-                                <a href="" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
+                                <a href="{% url "movimentacoes:excluir-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
                             </td>
+                            {% endif %}
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -63,4 +64,21 @@
         </div>
     </div>
 </div>
+
+<script>
+    const botaoExcluir = document.querySelectorAll('.btn-excluir').forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const modalDiv = document.getElementById('modalExclusao');
+            const modalExclusao = new bootstrap.Modal(modalDiv);
+            modalExclusao.show();
+
+            const botaoExclusao = document.getElementById('confirmarExclusao');
+            if (botaoExclusao) {
+                botaoExclusao.onclick = () => window.location.href = e.target.href;
+            }
+        });
+    });
+</script>
 {% endblock %}

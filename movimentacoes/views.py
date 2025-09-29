@@ -294,6 +294,7 @@ def faltas_professor(request, pk=None):
         ('abonada', 'Abonada'),
         ('justificada', 'Justificada'),
         ('injustificada', 'Injustificada'),
+        ('falta-aula', 'Falta-Aula'),
         ('ferias', 'Férias'),
         ('licenca-remunerada', 'Licença Remunerada'),
         ('licenca-premio', 'Licença Prêmio'),

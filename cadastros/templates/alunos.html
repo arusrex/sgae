@@ -278,7 +278,7 @@
                             <td>{{aluno.ra | default_if_none:""}}</td>
                             <td>{{aluno.nascimento | default_if_none:""}}</td>
                             <td>
-                                <a href="{% url "cadastros:ficha-aluno" aluno.pk %}" class="btn btn-sm btn-success btn-block">Ver detalhes</a>
+                                <a href="{% url "cadastros:ficha-aluno" aluno.pk %}" class="btn btn-sm btn-success btn-block">Ficha do aluno(a)</a>
                                 <a href="{% url "cadastros:editar-aluno" aluno.pk %}" class="btn btn-sm btn-warning btn-block btn-editar">Editar</a>
                                 {% if user.is_superuser %}<a class="btn btn-sm btn-danger btn-block btn-excluir" onclick="excluirAluno('{{aluno.pk}}')">Excluir</a>{% endif %}
                             </td>

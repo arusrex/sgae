@@ -18,7 +18,9 @@ urlpatterns = [
     #PROFESSORES
     path('professores/', views.professores, name='professores'),
     path('editar-professor/<str:pk>/', views.professores, name='editar-professor'),
+    path('ficha-professor/<str:pk>/', views.ficha_professor, name='ficha-professor'),
     path('excluir-professor/<str:pk>/', views.excluir_professor, name='excluir-professor'),
+    path('imprimir/ficha-do-professor/<str:pk>/', report.ficha_professor, name='imprimir-ficha-professor'),
     path('verificar-cpf-professor/', views.verificar_cpf_professor, name='verificar-cpf-professor'),
     path('verificar-email-professor/', views.verificar_email_professor, name='verificar-email-professor'),
 
