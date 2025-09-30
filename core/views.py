@@ -6,6 +6,7 @@ from .models import Auditoria, Sistema
 from usuarios.models import Usuarios
 from core.utils import redimensionar_imagem, tratar_imagens
 from django.contrib import messages
+from django.http import JsonResponse
 
 def entrar(request):
     if request.method == 'POST':
@@ -212,3 +213,19 @@ def sistema(request):
                 return redirect('core:sistema')
 
     return render(request, 'sistema.html')
+
+@login_required
+def dados_sistema_json(request):
+    dados = Sistema.objects.first()
+    user = request.user.get_full_name()
+
+    if dados:
+        context = {
+            'sistema_nome': dados.nome,
+            'sistema_user': user,
+        }
+    else:
+        context = {}
+
+    return JsonResponse(context)
+

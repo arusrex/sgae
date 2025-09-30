@@ -9,5 +9,6 @@ urlpatterns = [
     path('logout/', views.sair, name='sair'),
     path('registro/', views.registro, name="registro"),
     path('redefinir_senha/', views.redefinir_senha, name="redefinir-senha"),
+    path('dados_sistema_json/', views.dados_sistema_json, name="dados-sistema-json"),
 ]
 

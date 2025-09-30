@@ -35,17 +35,44 @@ window.addEventListener('DOMContentLoaded', event => {
                     }
                 },
                 {
-                    extend: 'pdf',
-                    text: 'Gerar PDF',
-                    exportOptions: {
-                        columns: ':not(.no-print)'
-                    }
-                },
-                {
                     extend: 'print',
                     text: 'Imprimir',
+                    title: 'Relatório',
                     exportOptions: {
                         columns: ':not(.no-print)'
+                    },
+                    
+                    customize: async function (window) {
+                        const agora = new Date();
+                        const dataHora = agora.toLocaleDateString('pt-BR');
+
+                        const response = await fetch(`/sistema/dados_sistema_json/`);
+                        const dados = await response.json();
+
+                        const nomeSistema = dados.sistema_nome;
+                        const userSitema = dados.sistema_user;
+                        const logoEscola = "/static/assets/img/carimbo.png";
+                        const logoJahu = "/static/assets/img/jahu.png";
+                        const logoEducacao = "/static/assets/img/educacao.png";
+
+                        window.document.querySelector('title').innerText = "Relatório";
+
+                        window.document.body.insertAdjacentHTML(
+                            "afterbegin",
+                            `<div class="d-flex flex-row gap-3 align-items-center mb-2">
+                                <img src="${logoEscola}" width="60" height="60" class="img-fluid mb-10"><br>
+                                <h3>${nomeSistema}</h3>
+                            </div>`
+                        );
+
+                        window.document.body.insertAdjacentHTML(
+                            "beforeend",
+                            `<div class="d-flex gap-4 align-items-center mt-3">
+                                <img src="${logoJahu}" width="30" height="30" class="img-fluid"><br>
+                                <img src="${logoEducacao}" width="30" height="30" class="img-fluid"><br>
+                                <div><small>Gerado em ${dataHora} por ${userSitema}</small></div>
+                            </div>`
+                        );
                     }
                 },
             ];
@@ -76,8 +103,6 @@ window.addEventListener('DOMContentLoaded', event => {
         } else {
             paging = null;
         }
-
-
 
         let table = new DataTable(`#${element.id}`, {
             responsive: true,
