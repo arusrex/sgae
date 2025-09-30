@@ -11,6 +11,7 @@ urlpatterns = [
     path('transferencia/', views.transferencia, name='transferencia'),
 
     path('turmas/', views.turmas, name='turmas'),
+    path('turma/<str:pk>/', views.ficha_turma, name='ficha-turma'),
     path('excluir-turma/<str:pk>/', views.excluir_turma, name='excluir-turma'),
 
     path('atribuicao-professor/', views.atribuicao_professor, name='atribuicoes'),

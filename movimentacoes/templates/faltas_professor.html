@@ -126,7 +126,7 @@
                             <th>Data final</th>
                             <th>Período</th>
                             <th>Qtd. aulas</th>
-                            <th>Ações</th>
+                            <th class="no-print">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -146,7 +146,7 @@
                                 {% endfor %}
                             </td>
                             <td>{{falta.quantidade | default_if_none:""}}</td>
-                            <td>
+                            <td class="no-print">
                                 {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-faltas-professor" falta.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>{% endif %}
                             </td>
                         </tr>

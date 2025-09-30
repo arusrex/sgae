@@ -18,7 +18,7 @@ def entrar(request):
             try:
                 login(request, usuario)
 
-                messages.success(request, f'Bem vindo e bom trabalho {usuario.first_name} !')
+                messages.success(request, f'Olá, {usuario.first_name}, bom trabalho !')
 
                 return redirect('index')
             
@@ -210,6 +210,5 @@ def sistema(request):
                 messages.error(request, 'Erro ao cadastrar os dados do sistema, consulte o administrador')
 
                 return redirect('core:sistema')
-
 
     return render(request, 'sistema.html')

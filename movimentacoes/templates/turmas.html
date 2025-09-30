@@ -32,7 +32,10 @@
                     <tbody>
                         {% for turma in turmas %}
                         <tr>
-                            <td>{{turma}}</td>
+                            <td class="d-flex justify-content-between">
+                                {{turma}} - {{turma.ano}}
+                                <a href="{% url "movimentacoes:ficha-turma" turma.pk %}" class="btn btn-sm btn-success btn-block"><small>Ver turma</small></a>
+                            </td>
                             <td>{{turma.ativos}}</td>
                             <td>{{turma.remanejados}}</td>
                             <td>{{turma.transferidos}}</td>

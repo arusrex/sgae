@@ -3,7 +3,7 @@ from core.models import Sistema
 from usuarios.models import Usuarios
 from .models import Aluno, Professor
 from movimentacoes.views import faltas_professor
-from movimentacoes.models import AtribuicaoProfessor, FrequenciaProfessores
+from movimentacoes.models import AtribuicaoProfessor, FrequenciaProfessores, Movimentacoes
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
@@ -273,6 +273,45 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
     story.append(t16)
     story.append(t17)
 
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Movimentações", sub_titulo))
+    story.append(Spacer(1, 10))
+
+    movimentacoes = Movimentacoes.objects.filter(aluno=aluno).order_by('data')
+
+    atrbHead = [[
+            Paragraph(f"<b>Origem</b>", bodytext), # type: ignore
+            Paragraph(f"<b>Destino</b>", bodytext), # type: ignore
+            Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
+            Paragraph(f"<b>Data</b>", bodytext), # type: ignore
+        ]]
+
+    linhaHead = Table(atrbHead, colWidths=[125,125,125,125])
+    linhaHead.setStyle(estilo_titulo)
+    story.append(linhaHead)
+
+    for movimentacao in movimentacoes:
+        if movimentacao.origem:
+            origem = Paragraph(f"{movimentacao.origem}", bodytext),
+        else:
+            origem = Paragraph(f"{movimentacao.origem_input}", bodytext),
+        
+        if movimentacao.destino:
+            destino = Paragraph(f"{movimentacao.destino}", bodytext),
+        else:
+            destino = Paragraph(f"{movimentacao.destino_input}", bodytext),
+        
+        mov = [[
+            origem,
+            destino,
+            Paragraph(f'{movimentacao.tipo if movimentacao.tipo else ""}', bodytext), # type: ignore
+            Paragraph(f'{movimentacao.data.strftime("%d/%m/%Y") if movimentacao.data else ""}', bodytext), # type: ignore
+        ]]
+
+        linha = Table(mov, colWidths=[125,125,125,125])
+        linha.setStyle(estilo_simples)
+        story.append(linha)
+
     # Gera o PDF
     doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)
     return response
@@ -280,8 +319,6 @@ def ficha_aluno(request, pk=None, tipo_pagina=None):
 def ficha_professor(request, pk=None, tipo_pagina=None):
     global usuario_sistema
     usuario_sistema = request.user
-
-
 
     estilo_titulo = TableStyle([
         ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
@@ -331,7 +368,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     bodytext = styles["BodyText"]
 
     # Adiciona título
-    story.append(Paragraph("Ficha do Professor(a)", titulo))
+    story.append(Paragraph("Ficha de Professor(a)", titulo))
     story.append(Spacer(1, 10))  # espaço entre blocos
     story.append(Paragraph("Dados pessoais", sub_titulo))
     story.append(Spacer(1, 10))  # espaço entre blocos
@@ -413,7 +450,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
         ]]
 
     linhaHead = Table(atrbHead, colWidths=[250, 100])
-    linhaHead.setStyle(estilo_simples)
+    linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
     for atribuicao in atribuicoes:
@@ -462,11 +499,11 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
         Paragraph(f"<b>Data</b>", bodytext), # type: ignore
         Paragraph(f"<b>Período</b>", bodytext), # type: ignore
-        Paragraph(f"<b>Qtd.:</b>", bodytext), # type: ignore
+        Paragraph(f"<b>Qtd.</b>", bodytext), # type: ignore
     ]]
 
     linhaHead = Table(faltaHead, colWidths=[125,200,125,50])
-    linhaHead.setStyle(estilo_simples)
+    linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
     for falta in faltas:
@@ -489,7 +526,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
         story.append(linha)
 
     story.append(Spacer(1, 10))
-    story.append(Paragraph(f"Estatíticas das Faltas", sub_titulo))
+    story.append(Paragraph(f"Total das Faltas", sub_titulo))
     story.append(Spacer(1, 10))
 
     tipos = FrequenciaProfessores.objects.filter(professor=professor).annotate(total=Count("tipo"))
@@ -500,7 +537,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     ]]
 
     linhaHead = Table(tiposHead, colWidths=[200,100])
-    linhaHead.setStyle(estilo_simples)
+    linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
 

@@ -407,6 +407,7 @@ def turmas(request, pk=None):
             concluidos=Count('turmas', Q(turmas__status="Concluído")),
             total=Count('turmas'),
         )
+        .order_by('-ano')
     )
 
     context = {
@@ -414,6 +415,16 @@ def turmas(request, pk=None):
     }
 
     return render(request, 'turmas.html', context)
+
+@login_required
+def ficha_turma(request, pk):
+    alunos_turma = Sala.objects.get(pk=pk).turmas.all() # type: ignore
+
+    context = {
+        'alunos_turma': alunos_turma,
+    }
+
+    return render(request, 'ficha_turma.html', context)
 
 @login_required
 def excluir_turma(request, pk):

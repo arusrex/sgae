@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Gestão Escolar</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "movimentacoes:turmas" %}" class="text-decoration-none">Turmas</a></li>
+    </ol>
+    
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            {{alunos_turma.first.sala}}
+        </div>
+        
+        <div class="card-body">
+            {% if alunos_turma %}
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Número</th>
+                            <th>Nome</th>
+                            <th>Nascimento</th>
+                            <th>Situação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for aluno in alunos_turma %}
+                        <tr {% if aluno.status != 'Ativo' %}class="bg-danger text-light"{% endif %}>
+                            <td>{{aluno.numero_aluno}}</td>
+                            <td>{{aluno.aluno}}</td>
+                            <td>{{aluno.aluno.nascimento}}</td>
+                            <td>{{aluno.status}}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}
