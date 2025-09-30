@@ -26,26 +26,22 @@
                             <th>Inativos</th>
                             <th>Concluídos</th>
                             <th>Total Geral</th>
-                            {% comment %} <th>Ações</th>
-                        </tr> {% endcomment %}
+                            <th class="no-print">Ações</th>
+                        </tr>
                     </thead>
                     <tbody>
                         {% for turma in turmas %}
                         <tr>
-                            <td class="d-flex justify-content-between">
-                                {{turma}} - {{turma.ano}}
-                                <a href="{% url "movimentacoes:ficha-turma" turma.pk %}" class="btn btn-sm btn-success btn-block"><small>Ver turma</small></a>
-                            </td>
+                            <td>{{turma}} - {{turma.ano}}</td>
                             <td>{{turma.ativos}}</td>
                             <td>{{turma.remanejados}}</td>
                             <td>{{turma.transferidos}}</td>
                             <td>{{turma.inativos}}</td>
                             <td>{{turma.concluidos}}</td>
                             <td>{{turma.total}}</td>
-                            {% comment %} <td>
-                                <a href="" class="btn btn-sm btn-warning btn-block">Editar</a>
-                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-turma" turma.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
-                            </td> {% endcomment %}
+                            <td class="no-print">
+                                <a href="{% url "movimentacoes:ficha-turma" turma.pk %}" class="btn btn-sm btn-success btn-block no-print"><small>Ver turma</small></a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

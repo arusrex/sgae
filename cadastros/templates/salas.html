@@ -72,7 +72,7 @@
                             <th>Número</th>
                             <th>Nome</th>
                             <th>Ano</th>
-                            <th>Ações</th>
+                            <th class="no-print">Ações</th>
                         </tr>
                     </tfoot>
                     <tbody>
@@ -81,7 +81,7 @@
                             <td>{{sala.numero | default_if_none:""}}</td>
                             <td>{{sala.nome | default_if_none:""}}</td>
                             <td>{{sala.ano | default_if_none:""}}</td>
-                            <td>
+                            <td class="no-print">
                                 <a href="{% url "cadastros:editar-sala" sala.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
                                 {% if user.is_superuser %}<a href="{% url "cadastros:excluir-sala" sala.pk %}" class="btn btn-sm btn-danger btn-block botao-exclusao">Excluir</a>{% endif %}
                             </td>

@@ -40,7 +40,7 @@
                         <th>Nome</th>
                         <th>Sobrenome</th>
                         <th>Email</th>
-                        <th>Ações</th>
+                        <th class="no-print">Ações</th>
                     </tr>
                 </tfoot>
                 <tbody>
@@ -49,7 +49,7 @@
                         <td>{{usuario.first_name}}</td>
                         <td>{{usuario.last_name}}</td>
                         <td>{{usuario.email}}</td>
-                        <td>
+                        <td class="no-print">
                             <a href="{% url "usuarios:editar-usuario" usuario.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
                             {% if user.is_superuser %}<a href="{% url "usuarios:excluir-usuario" usuario.pk %}" class="btn btn-sm btn-danger btn-block">Excluir</a>{% endif %}
                             {% if user.pk != usuario.pk %}

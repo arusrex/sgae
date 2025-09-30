@@ -39,7 +39,7 @@
                             <th>Aluno</th>
                             <th>Origem</th>
                             <th>Destino</th>
-                            {% if user.is_superuser %}<th>Ações</th>{% endif %}
+                            {% if user.is_superuser %}<th class="no-print">Ações</th>{% endif %}
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +51,7 @@
                             <td>{% if movimentacao.origem %}{{movimentacao.origem}}{% else %}{{movimentacao.origem_input}}{% endif %}</td>
                             <td>{% if movimentacao.destino %}{{movimentacao.destino}}{% else %}{{movimentacao.destino_input}}{% endif %}</td>
                             {% if user.is_superuser %}
-                            <td>
+                            <td class="no-print">
                                 <a href="{% url "movimentacoes:excluir-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
                             </td>
                             {% endif %}

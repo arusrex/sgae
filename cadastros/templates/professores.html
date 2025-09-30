@@ -156,7 +156,7 @@
                             <th>Nome</th>
                             <th>E-Mail</th>
                             <th>Telefone</th>
-                            <th>Ações</th>
+                            <th class="no-print">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -166,7 +166,7 @@
                             <td>{{professor.user.first_name | default_if_none:""}}</td>
                             <td>{{professor.user.email | default_if_none:""}}</td>
                             <td>{{professor.telefone | default_if_none:""}}</td>
-                            <td>
+                            <td class="no-print">
                                 <a href="{% url "cadastros:ficha-professor" professor.pk %}" class="btn btn-sm btn-success btn-block">Ficha do professor</a>
                                 <a href="{% url "cadastros:editar-professor" professor.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
                                 {% if user.is_superuser %}<a id="{{professor.pk}}" class="btn btn-sm btn-danger btn-block botao-excluir-professor">Excluir</a>{% endif %}
