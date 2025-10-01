@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
-    {% include "partials/head.html" %}
+    <head>
+        <title>{% block title %}{% endblock  %}</title>
+        {% include "partials/head.html" %}
+    </head>
     <body class="sb-nav-fixed">
         {% include "partials/nav.html" %}
         <div id="layoutSidenav">

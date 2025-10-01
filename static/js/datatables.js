@@ -37,11 +37,10 @@ window.addEventListener('DOMContentLoaded', event => {
                 {
                     extend: 'print',
                     text: 'Imprimir',
-                    title: 'Relatório',
                     exportOptions: {
                         columns: ':not(.no-print)'
                     },
-                    
+
                     customize: async function (window) {
                         const agora = new Date();
                         const dataHora = agora.toLocaleDateString('pt-BR');
@@ -55,23 +54,45 @@ window.addEventListener('DOMContentLoaded', event => {
                         const logoJahu = "/static/assets/img/jahu.png";
                         const logoEducacao = "/static/assets/img/educacao.png";
 
-                        window.document.querySelector('title').innerText = "Relatório";
+                        let style = window.document.createElement('style');
+                        style.type = 'text/css';
+                        style.innerHTML = `
+                            @media print {
+                                header {
+                                    width: 100%;
+                                }
+                                footer {
+                                    width: 100%;
+                                    padding: 5px;
+                                }
 
-                        window.document.body.insertAdjacentHTML(
-                            "afterbegin",
-                            `<div class="d-flex flex-row gap-3 align-items-center mb-2">
-                                <img src="${logoEscola}" width="60" height="60" class="img-fluid mb-10"><br>
-                                <h3>${nomeSistema}</h3>
-                            </div>`
+                                footer small {
+                                    font-size: 10px;
+                                }
+                            }
+                        `;
+                        window.document.head.appendChild(style);
+
+                        const body = window.document.body;
+
+                        const top = document.createElement('header');
+                        top.innerHTML = `<div class="d-flex flex-row gap-3 align-items-center">
+                                            <img src="${logoEscola}" width="60" height="60" class="img-fluid"><br>
+                                            <h3>${nomeSistema}</h3>
+                                        </div>`
+
+                        body.insertBefore(
+                            top,
+                            body.firstChild
                         );
-
-                        window.document.body.insertAdjacentHTML(
-                            "beforeend",
-                            `<div class="d-flex gap-4 align-items-center mt-3">
-                                <img src="${logoJahu}" width="30" height="30" class="img-fluid"><br>
-                                <img src="${logoEducacao}" width="30" height="30" class="img-fluid"><br>
-                                <div><small>Gerado em ${dataHora} por ${userSitema}</small></div>
-                            </div>`
+                        const bottom = document.createElement('footer')
+                        bottom.innerHTML = `<div class="d-flex gap-2 align-items-center">
+                                                <img src="${logoJahu}" width="30" height="30" class="img-fluid"><br>
+                                                <img src="${logoEducacao}" width="30" height="30" class="img-fluid"><br>
+                                                <div><small>Gerado em ${dataHora} por ${userSitema} - SGAE / Sistema de Gestão Administrativo Escolar por JEF Nº 12435</small></div>
+                                            </div>`
+                        body.appendChild(
+                            bottom
                         );
                     }
                 },
@@ -91,13 +112,13 @@ window.addEventListener('DOMContentLoaded', event => {
         } else {
             infpageLengtho = null;
         }
-        
+
         if (!element.classList.contains('sem-pesquisa')) {
             search = 'search';
         } else {
             search = null;
         }
-        
+
         if (!element.classList.contains('sem-paginacao')) {
             paging = 'paging';
         } else {
@@ -123,6 +144,6 @@ window.addEventListener('DOMContentLoaded', event => {
 
         element.classList.add('border', 'table', 'table-striped', 'table-hover', 'table-bordered', 'table-sm');
         numero ++;
-        
+
     });
 });

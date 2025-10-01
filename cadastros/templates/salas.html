@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Salas{% endblock title %}
 
 {% block content %}
 <div class="container-fluid px-4">
@@ -64,17 +65,9 @@
                             <th>Número</th>
                             <th>Nome</th>
                             <th>Ano</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Número</th>
-                            <th>Nome</th>
-                            <th>Ano</th>
                             <th class="no-print">Ações</th>
                         </tr>
-                    </tfoot>
+                    </thead>
                     <tbody>
                         {% for sala in salas %}
                         <tr>

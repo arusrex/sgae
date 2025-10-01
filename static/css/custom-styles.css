@@ -135,13 +135,4 @@ table tbody tr td {
     animation: pulsar 1.2s ease-in-out infinite alternate !important;
 }
 
-@media print {
-    .no-print {
-        display: none !important;
-    }
 
-    body {
-        font-size: 10px !important;
-        margin: 0;
-    }
-}

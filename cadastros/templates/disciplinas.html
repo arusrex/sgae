@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% block title %}Disciplinas{% endblock title %}
 
 {% block content %}
 <div class="container-fluid px-4">
@@ -50,15 +51,9 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
-                            <th>Ações</th>
-                        </tr>
-                    </thead>
-                    <tfoot>
-                        <tr>
-                            <th>Nome</th>
                             <th class="no-print">Ações</th>
                         </tr>
-                    </tfoot>
+                    </thead>
                     <tbody>
                         {% for disciplina in disciplinas %}
                         <tr>
