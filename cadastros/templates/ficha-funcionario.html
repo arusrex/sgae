@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Ficha de Funcionário{% endblock title %}
+
+{% block content %}
+
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Ficha de funcionário(a)</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:funcionarios" %}" class="text-decoration-none">Funcionários</a></li>
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:ficha-funcionario" funcionario.pk %}" class="text-decoration-none">Ficha de {{funcionario.user.get_full_name}}</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card" id="card-principal">
+                <div class="card-header">
+                    <i class="fas fa-user-pen me-1"></i>
+                    Ficha de - {{funcionario.user.get_full_name}} - Matrícula {{funcionario.matricula}} - Nascido em {{funcionario.nascimento|date:"d/m/Y"}}
+                </div>
+                <div><a class="btn btn-primary btn-block m-2 no-print" href="{% url "cadastros:imprimir-ficha-funcionario" funcionario.pk %}" target="_blank">Imprimir</a></div>
+                <div class="card-body p-4 row">
+                    <div class="col-12"><h3>Dados pessoais</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-sm-8 p-1"><strong>Nome:</strong> {{funcionario.user.get_full_name}}</div>
+                    <div class="border-bottom col-sm-4 p-1"><strong>Matrícula:</strong> {{funcionario.matricula}}</div>
+                    <div class="border-bottom col-sm-4 p-1"><strong>R.G.:</strong> {{funcionario.rg}}</div>
+                    <div class="border-bottom col-sm-4 p-1"><strong>C.P.F.:</strong> {{funcionario.cpf}}</div>
+                    <div class="border-bottom col-sm-4 p-1"><strong>Nascimento:</strong> {{funcionario.nascimento|date:"d/m/Y"}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Localização/Contato</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-6 p-1"><strong>E-mail:</strong> {{funcionario.user.email}}</div>
+                    <div class="border-bottom col-6 p-1"><strong>Telefone:</strong> {{funcionario.telefone}}</div>
+                    <div class="border-bottom col-12 p-1"><strong>Endereço:</strong> {{funcionario.endereco}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Informações gerais</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="border-bottom col-6 p-1"><strong>Função:</strong> {{funcionario.funcao}}</div>
+                    <div class="border-bottom col-6 p-1"><strong>Disciplina:</strong> {{funcionario.disciplina}}</div>
+                    
+                    <div class="border-bottom col-12 p-1"><strong>Observações:</strong> {{funcionario.observacoes}}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

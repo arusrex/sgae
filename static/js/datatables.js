@@ -50,9 +50,10 @@ window.addEventListener('DOMContentLoaded', event => {
 
                         const nomeSistema = dados.sistema_nome;
                         const userSitema = dados.sistema_user;
-                        const logoEscola = "/static/assets/img/carimbo.png";
-                        const logoJahu = "/static/assets/img/jahu.png";
-                        const logoEducacao = "/static/assets/img/educacao.png";
+
+                        let logoEscola = (dados.sistema_logo) ? dados.sistema_logo : "/static/assets/img/carimbo.png";
+                        let logoJahu = (dados.sistema_jahu) ? dados.sistema_jahu : "/static/assets/img/jahu.png";
+                        let logoEducacao = (dados.sistema_educacao ) ? dados.sistema_educacao : "/static/assets/img/educacao.png";
 
                         let style = window.document.createElement('style');
                         style.type = 'text/css';

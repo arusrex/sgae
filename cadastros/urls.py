@@ -24,6 +24,15 @@ urlpatterns = [
     path('verificar-cpf-professor/', views.verificar_cpf_professor, name='verificar-cpf-professor'),
     path('verificar-email-professor/', views.verificar_email_professor, name='verificar-email-professor'),
 
+    #FUNCIONÁRIOS
+    path('funcionarios/', views.funcionarios, name='funcionarios'),
+    path('editar-funcionario/<str:pk>/', views.funcionarios, name='editar-funcionario'),
+    path('ficha-funcionario/<str:pk>/', views.ficha_funcionario, name='ficha-funcionario'),
+    path('excluir-funcionario/<str:pk>/', views.excluir_funcionario, name='excluir-funcionario'),
+    path('imprimir/ficha-do-funcionario/<str:pk>/', report.ficha_funcionario, name='imprimir-ficha-funcionario'),
+    path('verificar-cpf-funcionario/', views.verificar_cpf_funcionario, name='verificar-cpf-funcionario'),
+    path('verificar-email-funcionario/', views.verificar_email_funcionario, name='verificar-email-funcionario'),
+
     #ALUNOS
     path('alunos/', views.alunos, name='alunos'),
     path('editar-aluno/<str:pk>/', views.alunos, name='editar-aluno'),

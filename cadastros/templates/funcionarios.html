@@ -1,0 +1,412 @@
+{% extends "base.html" %}
+{% block title %}Funcionários{% endblock title %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Cadastros</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "cadastros:funcionarios" %}" class="text-decoration-none">Funcionários</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-plus me-1"></i>
+                    Cadastro de Funcionário
+                </div>
+                <div class="card-body" id="card-cadastro-funcionario">
+                    <form method='POST' id="{{form_action}}" name="form-funcionario">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="nome" class="form-label">Nome</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="nome" name="nome" type="text"
+                                    value="{% if usuario.first_name %}{{usuario.first_name}}{% endif %}" 
+                                     />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="sobrenome" class="form-label">Sobrenome</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="sobrenome" name="sobrenome" type="text" 
+                                    value="{% if usuario.last_name %}{{usuario.last_name}}{% endif %}" />
+                                </div>
+                            </div>
+                            <div class="col-md-12 remover">
+                                <label for="email" class="form-label">Endereço de E-mail</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="email" name="email" type="text"
+                                    value="{% if usuario.email %}{{usuario.email}}{% endif %}"
+                                    autocomplete="true" />
+                                </div>
+                            </div>
+                            <div class="col-md-6 remover">
+                                <label for="senha" class="form-label">Senha</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="senha" name="senha" type="password" placeholder="Insira a senha" />
+                                </div>
+                            </div><div class="col-md-6 remover">
+                                <label for="confirmar-senha" class="form-label">Confirme a senha</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="confirmar-senha" name="confirmar-senha" type="password" placeholder="Confirme a senha do funcionário" />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="matricula" class="form-label">Matrícula</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="matricula" name="matricula" type="number"
+                                    value="{% if funcionario.matricula %}{{funcionario.matricula}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-3 remover">
+                                <label for="cpf" class="form-label">CPF</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="cpf" name="cpf" name="cpf" type="number"
+                                    value="{% if usuario.cpf %}{{usuario.cpf}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="rg" class="form-label">RG</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="rg" name="rg" name="rg" type="number"
+                                    value="{% if funcionario.rg %}{{funcionario.rg}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="nascimento" class="form-label">Nascimento</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="nascimento" name="nascimento" type="date"
+                                    value="{{funcionario.nascimento|date:"Y-m-d"}}" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="funcao" class="form-label">Função</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="funcao" name="funcao" type="text" 
+                                    value="{% if funcionario.funcao %}{{funcionario.funcao}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="telefone" class="form-label">Telefone/Contato</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="telefone" name="telefone" type="text"
+                                    value="{% if funcionario.telefone %}{{funcionario.telefone}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="endereco" class="form-label">Endereço completo</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="endereco" name="endereco" type="text"
+                                    value="{% if funcionario.endereco %}{{funcionario.endereco}}{% endif %}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <label for="observacoes" class="form-label">Observações</label>
+                                <div class="mb-3">
+                                    <textarea class="form-control" id="observacoes" name="observacoes" rows="3" 
+                                    value=""
+                                    >{% if funcionario.observacoes %}{{funcionario.observacoes}}{% endif %}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-4 mb-0">
+                            <div><a class="btn btn-primary btn-block" id="botao-salvar">Salvar dados</a></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Funcionarios registrados
+        </div>
+        
+        <div class="card-body">
+            {% if funcionarios %}
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Matrícula</th>
+                            <th>Nome</th>
+                            <th>E-Mail</th>
+                            <th>Telefone</th>
+                            <th class="no-print">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for funcionario in funcionarios %}
+                        <tr>
+                            <td>{{funcionario.matricula | default_if_none:""}}</td>
+                            <td>{{funcionario.user.first_name | default_if_none:""}}</td>
+                            <td>{{funcionario.user.email | default_if_none:""}}</td>
+                            <td>{{funcionario.telefone | default_if_none:""}}</td>
+                            <td class="no-print">
+                                <a href="{% url "cadastros:ficha-funcionario" funcionario.pk %}" class="btn btn-sm btn-success btn-block">Ficha do funcionário(a)</a>
+                                <a href="{% url "cadastros:editar-funcionario" funcionario.pk %}" class="btn btn-sm btn-warning btn-block">Editar</a>
+                                {% if user.is_superuser %}<a id="{{funcionario.pk}}" class="btn btn-sm btn-danger btn-block botao-excluir-funcionario">Excluir</a>{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    const cardBody = document.getElementById('card-cadastro-funcionario');
+    const formCadastroFuncionarios = document.getElementById('form-cadastro-funcionario');
+    const formEdicaoFuncionarios = document.getElementById('form-editar-funcionario');
+    
+    if (formCadastroFuncionarios) {
+        
+        function criaBotaoAdicionar () {
+            const div = document.createElement('div');
+            const botao = document.createElement('a');
+            div.classList.add('mb-2');
+            botao.id = 'botao-adicionar-funcionario';
+            botao.classList.add('btn', 'btn-primary', 'btn-block');
+            botao.text = 'Cadastrar Funcionário(a)'
+            div.appendChild(botao);
+
+            return div;
+        }
+
+        formCadastroFuncionarios.hidden = true;
+        
+        cardBody.firstElementChild.before(criaBotaoAdicionar());
+        const botaoAdicionarFuncionario = document.getElementById('botao-adicionar-funcionario');
+
+        if (botaoAdicionarFuncionario) {
+            botaoAdicionarFuncionario.addEventListener('click', () => {
+
+                if (formCadastroFuncionarios.hasAttribute('hidden')) {
+                    botaoAdicionarFuncionario.text = "Esconder formulário";
+                    botaoAdicionarFuncionario.classList.replace('btn-primary', 'btn-warning');
+                } else {
+                    botaoAdicionarFuncionario.text = "Cadastrar Funcionário(a)";
+                    botaoAdicionarFuncionario.classList.replace('btn-warning', 'btn-primary');
+                }
+                formCadastroFuncionarios.toggleAttribute('hidden');
+
+            });
+        }
+    }
+
+    const form = document.forms['form-funcionario'];
+    const botaoSalvar = document.getElementById('botao-salvar');
+
+    if (form) {
+        let nome = form['nome'];
+        let sobrenome = form['sobrenome'];
+        let email = form['email'];
+        let senha = form['senha'];
+        let confirmarSenha = form['confirmar-senha'];
+        let rg = form['rg'];
+        let cpf = form['cpf'];
+        let telefone = form['telefone'];
+
+        nome.addEventListener('input', () => {
+            nome.value = nome.value.replace(/[0-9]/g, '');
+        });
+
+        sobrenome.addEventListener('input', () => {
+            sobrenome.value = sobrenome.value.replace(/[0-9]/g, '');
+        });
+
+        rg.addEventListener('input', () => {
+            rg.value = rg.value.replace(/[A-Za-z]/g, '');
+            if (rg.value > 9) {
+                rg.value = rg.value.slice(0, 9);
+            }
+        });
+
+        cpf.addEventListener('input', () => {
+            cpf.value = cpf.value.replace(/[A-Za-z]/g, '');
+            if (cpf.value > 11) {
+                cpf.value = cpf.value.slice(0, 11);
+            }
+        });
+
+        telefone.addEventListener('input', () => {
+            telefone.value = telefone.value.replace(/[A-Za-z]/g, '');
+            if (telefone.value.length > 11) {
+                telefone.value = telefone.value.slice(0, 11);
+            }
+        });
+
+        if (formEdicaoFuncionarios) {
+            const senhas = document.querySelectorAll('.remover');
+            senhas.forEach((e) => {
+                e.disabled = true;
+                e.hidden = true;
+            });
+        }
+
+        botaoSalvar.addEventListener('click', async () => {
+            let temErro = false;
+            let erros = document.querySelectorAll('.erro');
+            
+            if (erros) {
+                erros.forEach((e) => e.remove());
+            }
+
+            if (nome.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(nome, mensagem);
+                temErro = true;
+                nome.focus();
+            };
+
+            if (nome.value.length > 0 && nome.value.length < 2) {
+                let mensagem = "Nome muito curto";
+                paragrafoErro(nome, mensagem);
+                temErro = true;
+                nome.focus();
+            };
+
+            if (sobrenome.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(sobrenome, mensagem);
+                temErro = true;
+                sobrenome.focus();
+            };
+
+            if (sobrenome.value.length > 0 && sobrenome.value.length < 2) {
+                let mensagem = "Sobrenome muito curto";
+                paragrafoErro(sobrenome, mensagem);
+                temErro = true;
+                sobrenome.focus();
+            };
+
+            if (email.value == '') {
+                let mensagem = "Campo obrigatório";
+                paragrafoErro(email, mensagem);
+                temErro = true;
+                email.focus();
+            };
+
+            if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/g.test(email.value) && formCadastroFuncionarios) {
+                console.log("Entrou");
+                let mensagem = "Email inválido";
+                paragrafoErro(email, mensagem);
+                temErro = true;
+                email.focus();
+            };
+
+            if (rg.value.length > 0 && rg.value.length < 8) {
+                paragrafoErro(rg, "O mínimo permitido é 8 dígitos");
+                temErro = true;
+                rg.focus();
+            }
+
+            if (cpf.value.length < 11) {
+                paragrafoErro(cpf, "O mínimo permitido é 11 dígitos");
+                temErro = true;
+                cpf.focus();
+            }
+
+            async function verificaCpf (cpf) {
+                const response = await fetch(`/cadastros/verificar-cpf-funcionario/?cpf=${encodeURIComponent(cpf)}`);
+                const data = await response.json();
+                return data.existe;
+            }
+
+            if (cpf.value && formCadastroFuncionarios) {
+                let result = await verificaCpf(cpf.value);
+
+                if (result) {
+                    paragrafoErro(cpf, "CPF já existe");
+                    temErro = true;
+                    cpf.focus();
+                }
+            }
+
+            async function verificaEmail (email) {
+                const response = await fetch(`/cadastros/verificar-email-funcionario/?email=${encodeURIComponent(email)}`);
+                const data = await response.json();
+                return data.email_existe;
+            }
+
+            if (email.value && formCadastroFuncionarios) {
+                let result = await verificaEmail(email.value);
+
+                if (result) {
+                    paragrafoErro(email, "Endereço de e-mail existente");
+                    temErro = true;
+                    email.focus();
+                }
+            }
+            
+            if (telefone.value.length > 0 && telefone.value.length < 10) {
+                paragrafoErro(telefone, "O mínimo permitido é 10 dígitos");
+                temErro = true;
+                telefone.focus();
+            }
+
+            if (senha.value.length > 1 && senha.value.length < 6) {
+                paragrafoErro(senha, "Mínimo 6 caractéres");
+                temErro = true;
+                senha.focus();
+            }
+
+            if (senha.value !== confirmarSenha.value) {
+                paragrafoErro(confirmarSenha, "Senhas diferentes");
+                temErro = true;
+                confirmarSenha.focus();
+            }
+
+            if(!temErro) {
+                const modalDiv = document.getElementById('modalConfirmacao');
+                const modalConfirmacao = new bootstrap.Modal(modalDiv, {
+                    keyboard: false,
+                    backdrop: true
+                });
+                modalConfirmacao.show();
+                const botaoConfirmacao = document.getElementById('confirmarSalvar');
+                botaoConfirmacao.onclick = () => form.submit();
+            }
+        });
+
+        const botaoExcluirFuncionario = document.querySelectorAll('.botao-excluir-funcionario');
+
+        botaoExcluirFuncionario.forEach((botao) => {
+            botao.addEventListener('click', () => {
+                const modalDiv = document.getElementById('modalExclusao');
+                const modalExclusao = new bootstrap.Modal(modalDiv, {
+                    keyboard: false,
+                    backdrop: true
+                });
+                modalExclusao.show();
+                const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+                botaoConfirmarExclusao.href = `/cadastros/excluir-funcionario/${botao.id}/`;
+            });
+        });
+        
+        function paragrafoErro (campo, mensagem) {
+            const p = document.createElement('p');
+            p.classList.add('text-danger', 'mt-1', 'erro');
+            p.innerText = mensagem;
+            campo.insertAdjacentElement('afterend', p);
+        }
+    }
+
+</script>
+{% endblock %}

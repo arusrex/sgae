@@ -223,6 +223,9 @@ def dados_sistema_json(request):
         context = {
             'sistema_nome': dados.nome,
             'sistema_user': user,
+            'sistema_logo': dados.logo.url,
+            'sistema_jahu': dados.logo_municipio.url,
+            'sistema_educacao': dados.logo_educacao.url
         }
     else:
         context = {}

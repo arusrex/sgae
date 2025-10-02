@@ -115,3 +115,16 @@ class Aluno(ControleDeRegistros):
 
     def __str__(self):
         return self.nome
+
+class Funcionario(ControleDeRegistros):
+    user = models.OneToOneField(Usuarios, on_delete=models.CASCADE, related_name='funcionario')
+    matricula = models.CharField(max_length=30, blank=True, null=True)
+    rg = models.CharField(max_length=20, blank=True, null=True)
+    nascimento = models.DateField(blank=True, null=True)
+    telefone = models.CharField(max_length=30, blank=True, null=True)
+    funcao = models.CharField(max_length=150, blank=True, null=True)
+    endereco = models.CharField(max_length=200, blank=True, null=True)
+    observacoes = models.TextField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.get_full_name()

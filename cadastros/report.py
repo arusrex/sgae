@@ -1,7 +1,7 @@
 import os
 from core.models import Sistema
 from usuarios.models import Usuarios
-from .models import Aluno, Professor
+from .models import Aluno, Professor, Funcionario
 from movimentacoes.views import faltas_professor
 from movimentacoes.models import AtribuicaoProfessor, FrequenciaProfessores, Movimentacoes
 from django.conf import settings
@@ -553,6 +553,220 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
                 linha = Table(colunaX, colWidths=[200,100])
                 linha.setStyle(estilo_simples)
                 story.append(linha)
+
+    # Gera o PDF
+    doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)
+    return response
+
+def ficha_funcionario(request, pk=None, tipo_pagina=None):
+    global usuario_sistema
+    usuario_sistema = request.user
+
+    estilo_titulo = TableStyle([
+        ("BACKGROUND", (0, 0), (-1, 0), colors.lightgrey),
+        ("GRID", (0, 0), (-1, -1), 1, colors.black),
+        ("FONTNAME", (0, 0), (-1, 0), "Helvetica-Bold"),
+        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+    ])
+
+    estilo_simples = TableStyle([
+        ("GRID", (0, 0), (-1, -1), 0.1, colors.black),
+        ("ALIGN", (1, 1), (-1, -1), "CENTER"),
+    ])
+
+    sistema = Sistema.objects.first()
+    funcionario = get_object_or_404(Funcionario, pk=pk)
+
+    # Resposta como PDF
+    response = HttpResponse(content_type="application/pdf")
+    response["Content-Disposition"] = f'inline; filename="ficha_funcionario_{funcionario.user.get_full_name().replace(' ', '_')}.pdf"'
+
+    # Documento base
+    if tipo_pagina == None:
+        tipo_pagina=A4
+
+    doc = SimpleDocTemplate(
+        response, # type: ignore
+        pagesize=tipo_pagina,
+        rightMargin=40,
+        leftMargin=40,
+        topMargin=100,
+        bottonMargin=60
+        )
+    
+    doc.title = f'ficha_funcionario_{funcionario.user.get_full_name().replace(' ', '_')}'
+    doc.author = "Secretaria da Escola"
+    doc.subject = "Relatório Individual"
+    doc.keywords = ["Funcionário", "Ficha", "Escola"]
+
+    # Lista de elementos
+    story = []
+
+    # Estilos de texto
+    styles = getSampleStyleSheet()
+    titulo = styles["Title"]
+    sub_titulo = styles["Heading1"]
+    normal = styles["Normal"]
+    bodytext = styles["BodyText"]
+
+    # Adiciona título
+    story.append(Paragraph("Ficha de Funcionário(a)", titulo))
+    story.append(Spacer(1, 10))  # espaço entre blocos
+    story.append(Paragraph("Dados pessoais", sub_titulo))
+    story.append(Spacer(1, 10))  # espaço entre blocos
+
+    # Exemplo de tabela (boletim, contatos, etc.)
+
+    p1 = [[
+        Paragraph(f"<b>Nome:</b> {funcionario.user.get_full_name()}", bodytext),
+        Paragraph(f"<b>Matrícula:</b> {funcionario.matricula}", bodytext),
+    ]]
+
+    t1 = Table(p1, colWidths=[350,150])
+    t1.setStyle(estilo_simples)
+    story.append(t1)
+
+    nascimento_formatado = datetime.strftime(funcionario.nascimento, "%d/%m/%Y") if funcionario.nascimento else "" # type: ignore
+
+    p2 = [[
+        Paragraph(f"<b>R.G.:</b> {funcionario.rg}", bodytext),
+        Paragraph(f"<b>C.P.F.:</b> {funcionario.user.cpf}", bodytext),
+        Paragraph(f"<b>Nascimento:</b> {nascimento_formatado}", bodytext),
+    ]]
+
+    t2 = Table(p2, colWidths=[150,150, 200])
+    t2.setStyle(estilo_simples)
+    story.append(t2)
+
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Localização / Contato", sub_titulo))
+    story.append(Spacer(1, 10))
+
+    p3 = [[
+        Paragraph(f"<b>Email:</b> {funcionario.user.email}", bodytext),
+        Paragraph(f"<b>Telefone:</b> {funcionario.telefone}", bodytext),
+    ]]
+
+    t3 = Table(p3, colWidths=[250, 250])
+    t3.setStyle(estilo_simples)
+    story.append(t3)
+
+    p4 = [[
+        Paragraph(f"<b>Endereço:</b> {funcionario.endereco}", bodytext),
+    ]]
+
+    t4 = Table(p4, colWidths=[500])
+    t4.setStyle(estilo_simples)
+    story.append(t4)
+
+    story.append(Spacer(1, 10))
+    story.append(Paragraph("Informações Gerais", sub_titulo))
+    story.append(Spacer(1, 10))
+
+    p5 = [[
+        Paragraph(f"<b>Função:</b> {funcionario.funcao}", bodytext),
+    ]]
+
+    t5 = Table(p5, colWidths=[500])
+    t5.setStyle(estilo_simples)
+    story.append(t5)
+
+    p6 = [[
+        Paragraph(f"<b>Observações:</b> {funcionario.observacoes}", bodytext),
+    ]]
+
+    t6 = Table(p6, colWidths=[500])
+    t6.setStyle(estilo_simples)
+    story.append(t6)
+
+    # story.append(Spacer(1, 10))
+    # story.append(Paragraph(f"Faltas em {datetime.now().year}", sub_titulo))
+    # story.append(Spacer(1, 10))
+
+    # TIPOS = [
+    #     ('abonada', 'Abonada'),
+    #     ('justificada', 'Justificada'),
+    #     ('injustificada', 'Injustificada'),
+    #     ('falta-aula', 'Falta-Aula'),
+    #     ('ferias', 'Férias'),
+    #     ('licenca-remunerada', 'Licença Remunerada'),
+    #     ('licenca-premio', 'Licença Prêmio'),
+    #     ('licenca-maternidade', 'Licença Maternidade'),
+    #     ('licenca-paternidade', 'Licença Paternidade'),
+    #     ('licenca-saude', 'Licença Saúde'),
+    #     ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+    #     ('gala', 'Gala'),
+    #     ('nojo', 'Nojo'),
+    #     ('acidente-de-trabalho', 'Acidente de Trabalho'),
+    #     ('doacao-de-sangue', 'Doação de Sangue'),
+    #     ('ol', 'Serviço Obrigatório por LEI'),
+    #     ('recesso-escolar', 'Recesso Escolar'),
+    # ]
+
+    # PERIODOS = [
+    #     ('manha', 'Manhã'),
+    #     ('tarde', 'Tarde'),
+    #     ('manha-tarde', 'Manhã e Tarde'),
+    # ]
+
+    # faltas = FrequenciaProfessores.objects.filter(professor=professor).order_by('data_inicial')
+
+    # faltaHead = [[
+    #     Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
+    #     Paragraph(f"<b>Data</b>", bodytext), # type: ignore
+    #     Paragraph(f"<b>Período</b>", bodytext), # type: ignore
+    #     Paragraph(f"<b>Qtd.</b>", bodytext), # type: ignore
+    # ]]
+
+    # linhaHead = Table(faltaHead, colWidths=[125,200,125,50])
+    # linhaHead.setStyle(estilo_titulo)
+    # story.append(linhaHead)
+
+    # for falta in faltas:
+    #     for i in TIPOS:
+    #         if falta.tipo == i[0]:
+    #             falta_tipo = i[1]
+
+    #     for j in PERIODOS:
+    #         if falta.periodo == j[0]:
+    #             falta_periodo = j[1]
+    #     atrb = [[
+    #         Paragraph(f"{falta_tipo if falta_tipo else ""}", bodytext), # type: ignore
+    #         Paragraph(f"{falta.data_inicial.strftime("%d/%m/%Y") if falta.data_inicial else ""} a {falta.data_final.strftime("%d/%m/%Y") if falta.data_final else ""}", bodytext), # type: ignore
+    #         Paragraph(f"{falta_periodo if falta_periodo else ""}", bodytext), # type: ignore
+    #         Paragraph(f"{falta.quantidade if falta.quantidade else ""} aulas", bodytext), # type: ignore
+    #     ]]
+
+    #     linha = Table(atrb, colWidths=[125,200,125,50])
+    #     linha.setStyle(estilo_simples)
+    #     story.append(linha)
+
+    # story.append(Spacer(1, 10))
+    # story.append(Paragraph(f"Total das Faltas", sub_titulo))
+    # story.append(Spacer(1, 10))
+
+    # tipos = FrequenciaProfessores.objects.filter(professor=professor).annotate(total=Count("tipo"))
+
+    # tiposHead = [[
+    #     Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
+    #     Paragraph(f"<b>Quantidade</b>", bodytext), # type: ignore
+    # ]]
+
+    # linhaHead = Table(tiposHead, colWidths=[200,100])
+    # linhaHead.setStyle(estilo_titulo)
+    # story.append(linhaHead)
+
+    # for tipo in tipos:
+    #     for i in TIPOS:
+    #         if tipo.tipo == i[0]:
+    #             colunaX = [[
+    #                 Paragraph(f"{i[1]}", bodytext), # type: ignore
+    #                 Paragraph(f"{tipo.total}", bodytext), # type: ignore
+    #             ]]
+
+    #             linha = Table(colunaX, colWidths=[200,100])
+    #             linha.setStyle(estilo_simples)
+    #             story.append(linha)
 
     # Gera o PDF
     doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)

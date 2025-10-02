@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime
-from .models import Sala, Disciplina, Professor, Aluno
+from .models import Sala, Disciplina, Professor, Aluno, Funcionario
 from usuarios.models import Usuarios
 from core.models import Auditoria
 from django.http import JsonResponse
@@ -584,4 +584,176 @@ def ficha_aluno(request, pk=None):
 
     return render(request, 'ficha-aluno.html', context)
 
+@login_required
+def funcionarios(request, pk=None):
+    user = request.user
+    funcionarios = Funcionario.objects.all()
 
+    if pk:
+        funcionario = get_object_or_404(Funcionario, pk=pk)
+        usuario = funcionario.user
+        form_action = "form-editar-funcionario"
+    else:
+        funcionario = None
+        usuario = None
+        form_action = "form-cadastro-funcionario"
+
+    if request.method == 'POST':
+        try:
+            nome = request.POST.get('nome')
+            sobrenome = request.POST.get('sobrenome')
+            email = request.POST.get('email')
+            senha1 = request.POST.get('senha')
+            senha2 = request.POST.get('confirmar-senha')
+            matricula = request.POST.get('matricula')
+            cpf = request.POST.get('cpf')
+            rg = request.POST.get('rg')
+            nascimento = request.POST.get('nascimento')
+            funcao = request.POST.get('funcao')
+            telefone = request.POST.get('telefone')
+            endereco = request.POST.get('endereco')
+            observacoes = request.POST.get('observacoes')
+
+            email_exists = Usuarios.objects.filter(email=email).exists()
+
+            if funcionario is not None and usuario is not None:
+                if usuario.email != email:
+                    email_diferente = Usuarios.objects.filter(email=email).exclude(pk=usuario.pk).exists()
+                    if email_diferente:
+                        messages.error(request, 'Email existe nos sistema, digite outro')
+                        return redirect('cadastros:funcionarios')
+                
+                usuario.first_name = nome
+                usuario.last_name = sobrenome
+                usuario.email = email
+
+                if senha1 is not None and senha1 == senha2:
+                    usuario.set_password(senha1)
+
+                usuario.save()
+
+                funcionario.matricula = matricula
+                funcionario.rg = rg
+                funcionario.nascimento = nascimento if nascimento else None
+                funcionario.funcao = funcao
+                funcionario.telefone = telefone
+                funcionario.endereco = endereco
+                funcionario.observacoes = observacoes
+                funcionario.atualizado_por = user.get_full_name()
+
+                funcionario.save()
+
+                messages.success(request, 'Funcionário atualizado com sucesso')
+                
+                return redirect('cadastros:funcionarios')
+            
+        except Exception as e:
+            print(f'Erro ao atualizar funcionário: {e}')
+
+            messages.error(request, 'Erro ao atualizar funcionário, consulte o administrador')
+
+            return redirect('cadastros:funcionarios')
+        
+        else:
+            try:
+                if senha1 != senha2 or email_exists:
+                    messages.error(request, 'Senhas diferentes, ou email já existe no sistema')
+                    return redirect('cadastros:funcionarios')
+                
+                usuario_criado = Usuarios(
+                    first_name=nome,
+                    last_name=sobrenome,
+                    email=email,
+                    cpf=cpf
+                )
+
+                if senha1:
+                    usuario_criado.set_password(senha1)
+
+                usuario_criado.save()
+
+                if usuario_criado:
+                    funcionario_criado = Funcionario(
+                        user=usuario_criado,
+                        matricula=matricula,
+                        rg=rg,
+                        nascimento=nascimento if nascimento else None,
+                        funcao=funcao,
+                        telefone=telefone,
+                        endereco=endereco,
+                        observacoes=observacoes,
+                        criado_por=user.get_full_name()
+                    )
+                    funcionario_criado.save()
+
+                    messages.success(request, 'Funcionário(a) cadastrado(a) com sucesso')
+
+                return redirect('cadastros:funcionarios')
+            
+            except Exception as e:
+                print(f'Erro ao cadastrar funcionário: {e}')
+
+                messages.error(request, 'Erro ao cadastrar funcionário, consulte o administrador')
+
+                return redirect('cadastros:funcionarios')
+
+    context = {
+        'funcionarios': funcionarios,
+        'funcionario': funcionario,
+        'usuario': usuario,
+        'form_action': form_action
+    }
+
+    return render(request, 'funcionarios.html', context)
+
+@login_required
+def ficha_funcionario(request, pk):
+    funcionario = get_object_or_404(Funcionario, pk=pk)
+
+    context = {
+        'funcionario': funcionario,
+    }
+
+    return render(request, 'ficha-funcionario.html', context)
+
+@login_required
+def excluir_funcionario(request, pk):
+    user = request.user
+    funcionario = get_object_or_404(Funcionario, pk=pk)
+
+    if funcionario:
+        try:
+            auditoria = Auditoria(
+                acao='Exclusão de funcionario(a)',
+                criado_por=user.get_full_name(),
+                info=f'Funcionário(a) {funcionario} excluído'
+            )
+            usuario = funcionario.user
+
+            funcionario.delete()
+            usuario.delete()
+
+            auditoria.save()
+
+            messages.success(request, 'Funcionário excluído com sucesso')
+
+            return redirect('cadastros:funcionarios')
+
+        except Exception as e:
+            print(f'Erro ao excluir funcionário: {e}')
+
+            messages.error(request, 'Erro ao excluir funcionário(a), consulte o administrador')
+    
+    return redirect('cadastros:funcionarios')
+
+@login_required
+def verificar_cpf_funcionario(request):
+    cpf = request.GET.get('cpf')
+    funcionario_existe = Usuarios.objects.filter(cpf=cpf).exists()
+    return JsonResponse({"existe": funcionario_existe})
+
+@login_required
+def verificar_email_funcionario(request):
+    email = request.GET.get('email')
+    email_existe = Usuarios.objects.filter(email=email).exists()
+    return JsonResponse({'email_existe': email_existe})
