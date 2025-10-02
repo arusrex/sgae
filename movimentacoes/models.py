@@ -19,9 +19,10 @@ class Turma(ControleDeRegistros):
     numero_aluno = models.IntegerField(default=0)
     status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
 
+
     def __str__(self):
         aluno = self.aluno.nome if self.aluno else "Sem aluno"
-        sala = self.sala.nome if self.sala else "Sem sala"
+        sala =  self.sala if self.sala else "Sem sala"
         ano = self.sala.ano if self.sala else "Sem ano"
 
         return f"{aluno} - {sala} - {ano}"
@@ -32,7 +33,7 @@ class AtribuicaoProfessor(ControleDeRegistros):
 
     def __str__(self):
         professor = self.professor.user.get_full_name() if self.professor else "Sem professor(a)"
-        sala = self.sala.nome if self .sala else "Sem sala"
+        sala = self.sala if self.sala else "Sem sala"
 
         return f"Professor(a): {professor} - Sala: {sala}"
     
