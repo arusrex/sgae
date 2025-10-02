@@ -1,6 +1,7 @@
 from .models import Sistema
 from movimentacoes.models import Movimentacoes, Turma
 from django.db.models import Count
+from datetime import datetime
 
 def context_processors(request):
     dados = Sistema.objects.first()
@@ -34,11 +35,13 @@ def context_processors(request):
 
     return context
 
+ano_atual = datetime.now().year
+
 def dados_graficos(request):
     alunos = Turma.objects.filter(status="Ativo")
 
-    estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno'))
-    estatisticasAtivos = Turma.objects.values('sala__serie').annotate(total=Count('aluno')).filter(status='Ativo')
+    estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno')).filter(sala__ano=ano_atual)
+    estatisticasAtivos = Turma.objects.values('sala__serie').annotate(total=Count('aluno')).filter(status='Ativo').filter(sala__ano=ano_atual)
 
     context = {
         'graficos_alunos': estatisticasAlunos,
