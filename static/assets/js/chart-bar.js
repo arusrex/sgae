@@ -60,6 +60,9 @@ if (gaa) {
   let qtdAlunosClasse = [];
   let cores = []
 
+  console.log(classe);
+  console.log(qtdAlunosClasse);
+
   function corAleatoria(alpha = 0.5) {
     const r = Math.floor(Math.random() * 256); // 0–255
     const g = Math.floor(Math.random() * 256);

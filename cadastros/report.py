@@ -3,7 +3,7 @@ from core.models import Sistema
 from usuarios.models import Usuarios
 from .models import Aluno, Professor, Funcionario
 from movimentacoes.views import faltas_professor
-from movimentacoes.models import AtribuicaoProfessor, FrequenciaProfessores, Movimentacoes
+from movimentacoes.models import AtribuicaoProfessor, FrequenciaProfessores, Movimentacoes, FrequenciaFuncionarios
 from django.conf import settings
 from django.shortcuts import get_object_or_404
 from django.http import HttpResponse
@@ -13,7 +13,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from datetime import datetime
 from reportlab.pdfgen import canvas
-from django.db.models import Count
+from django.db.models import Count, Q
 
 def cabecalho_rodape(canvas, doc):
     dados = Sistema.objects.filter().first()
@@ -529,7 +529,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     story.append(Paragraph(f"Total das Faltas", sub_titulo))
     story.append(Spacer(1, 10))
 
-    tipos = FrequenciaProfessores.objects.filter(professor=professor).annotate(total=Count("tipo"))
+    tipos = FrequenciaProfessores.objects.filter(professor=professor).values("tipo").annotate(total=Count("tipo"))
 
     tiposHead = [[
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
@@ -540,14 +540,12 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
-
-
     for tipo in tipos:
         for i in TIPOS:
-            if tipo.tipo == i[0]:
+            if tipo["tipo"] == i[0]:
                 colunaX = [[
                     Paragraph(f"{i[1]}", bodytext), # type: ignore
-                    Paragraph(f"{tipo.total}", bodytext), # type: ignore
+                    Paragraph(f"{tipo['total']}", bodytext), # type: ignore
                 ]]
 
                 linha = Table(colunaX, colWidths=[200,100])
@@ -679,94 +677,92 @@ def ficha_funcionario(request, pk=None, tipo_pagina=None):
     t6.setStyle(estilo_simples)
     story.append(t6)
 
-    # story.append(Spacer(1, 10))
-    # story.append(Paragraph(f"Faltas em {datetime.now().year}", sub_titulo))
-    # story.append(Spacer(1, 10))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph(f"Faltas em {datetime.now().year}", sub_titulo))
+    story.append(Spacer(1, 10))
 
-    # TIPOS = [
-    #     ('abonada', 'Abonada'),
-    #     ('justificada', 'Justificada'),
-    #     ('injustificada', 'Injustificada'),
-    #     ('falta-aula', 'Falta-Aula'),
-    #     ('ferias', 'Férias'),
-    #     ('licenca-remunerada', 'Licença Remunerada'),
-    #     ('licenca-premio', 'Licença Prêmio'),
-    #     ('licenca-maternidade', 'Licença Maternidade'),
-    #     ('licenca-paternidade', 'Licença Paternidade'),
-    #     ('licenca-saude', 'Licença Saúde'),
-    #     ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
-    #     ('gala', 'Gala'),
-    #     ('nojo', 'Nojo'),
-    #     ('acidente-de-trabalho', 'Acidente de Trabalho'),
-    #     ('doacao-de-sangue', 'Doação de Sangue'),
-    #     ('ol', 'Serviço Obrigatório por LEI'),
-    #     ('recesso-escolar', 'Recesso Escolar'),
-    # ]
+    TIPOS = [
+        ('justificada', 'Justificada'),
+        ('injustificada', 'Injustificada'),
+        ('ferias', 'Férias'),
+        ('licenca-remunerada', 'Licença Remunerada'),
+        ('licenca-premio', 'Licença Prêmio'),
+        ('licenca-maternidade', 'Licença Maternidade'),
+        ('licenca-paternidade', 'Licença Paternidade'),
+        ('licenca-saude', 'Licença Saúde'),
+        ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+        ('gala', 'Gala'),
+        ('nojo', 'Nojo'),
+        ('acidente-de-trabalho', 'Acidente de Trabalho'),
+        ('doacao-de-sangue', 'Doação de Sangue'),
+        ('ol', 'Serviço Obrigatório por LEI'),
+        ('recesso-escolar', 'Recesso Escolar'),
+    ]
 
-    # PERIODOS = [
-    #     ('manha', 'Manhã'),
-    #     ('tarde', 'Tarde'),
-    #     ('manha-tarde', 'Manhã e Tarde'),
-    # ]
+    PERIODOS = [
+        ('manha', 'Manhã'),
+        ('tarde', 'Tarde'),
+        ('manha-tarde', 'Manhã e Tarde'),
+    ]
 
-    # faltas = FrequenciaProfessores.objects.filter(professor=professor).order_by('data_inicial')
+    faltas = FrequenciaFuncionarios.objects.filter(funcionario=funcionario).order_by('data_inicial')
 
-    # faltaHead = [[
-    #     Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
-    #     Paragraph(f"<b>Data</b>", bodytext), # type: ignore
-    #     Paragraph(f"<b>Período</b>", bodytext), # type: ignore
-    #     Paragraph(f"<b>Qtd.</b>", bodytext), # type: ignore
-    # ]]
+    faltaHead = [[
+        Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
+        Paragraph(f"<b>Data</b>", bodytext), # type: ignore
+        Paragraph(f"<b>Período</b>", bodytext), # type: ignore
+    ]]
 
-    # linhaHead = Table(faltaHead, colWidths=[125,200,125,50])
-    # linhaHead.setStyle(estilo_titulo)
-    # story.append(linhaHead)
+    linhaHead = Table(faltaHead, colWidths=[150,200,150])
+    linhaHead.setStyle(estilo_titulo)
+    story.append(linhaHead)
 
-    # for falta in faltas:
-    #     for i in TIPOS:
-    #         if falta.tipo == i[0]:
-    #             falta_tipo = i[1]
+    for falta in faltas:
+        for i in TIPOS:
+            if falta.tipo == i[0]:
+                falta_tipo = i[1]
 
-    #     for j in PERIODOS:
-    #         if falta.periodo == j[0]:
-    #             falta_periodo = j[1]
-    #     atrb = [[
-    #         Paragraph(f"{falta_tipo if falta_tipo else ""}", bodytext), # type: ignore
-    #         Paragraph(f"{falta.data_inicial.strftime("%d/%m/%Y") if falta.data_inicial else ""} a {falta.data_final.strftime("%d/%m/%Y") if falta.data_final else ""}", bodytext), # type: ignore
-    #         Paragraph(f"{falta_periodo if falta_periodo else ""}", bodytext), # type: ignore
-    #         Paragraph(f"{falta.quantidade if falta.quantidade else ""} aulas", bodytext), # type: ignore
-    #     ]]
+        for j in PERIODOS:
+            if falta.periodo == j[0]:
+                falta_periodo = j[1]
+        atrb = [[
+            Paragraph(f"{falta_tipo if falta_tipo else ""}", bodytext), # type: ignore
+            Paragraph(f"{falta.data_inicial.strftime("%d/%m/%Y") if falta.data_inicial else ""} a {falta.data_final.strftime("%d/%m/%Y") if falta.data_final else ""}", bodytext), # type: ignore
+            Paragraph(f"{falta_periodo if falta_periodo else ""}", bodytext), # type: ignore
+        ]]
 
-    #     linha = Table(atrb, colWidths=[125,200,125,50])
-    #     linha.setStyle(estilo_simples)
-    #     story.append(linha)
+        linha = Table(atrb, colWidths=[150,200,150])
+        linha.setStyle(estilo_simples)
+        story.append(linha)
 
-    # story.append(Spacer(1, 10))
-    # story.append(Paragraph(f"Total das Faltas", sub_titulo))
-    # story.append(Spacer(1, 10))
+    story.append(Spacer(1, 10))
+    story.append(Paragraph(f"Total das Faltas", sub_titulo))
+    story.append(Spacer(1, 10))
 
-    # tipos = FrequenciaProfessores.objects.filter(professor=professor).annotate(total=Count("tipo"))
+    tipos = (FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
+        .values("tipo")
+        .annotate(quantidade=Count("tipo")))
 
-    # tiposHead = [[
-    #     Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
-    #     Paragraph(f"<b>Quantidade</b>", bodytext), # type: ignore
-    # ]]
+    tiposHead = [[
+        Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
+        Paragraph(f"<b>Quantidade</b>", bodytext), # type: ignore
+    ]]
 
-    # linhaHead = Table(tiposHead, colWidths=[200,100])
-    # linhaHead.setStyle(estilo_titulo)
-    # story.append(linhaHead)
+    linhaHead = Table(tiposHead, colWidths=[200,100])
+    linhaHead.setStyle(estilo_titulo)
+    story.append(linhaHead)
 
-    # for tipo in tipos:
-    #     for i in TIPOS:
-    #         if tipo.tipo == i[0]:
-    #             colunaX = [[
-    #                 Paragraph(f"{i[1]}", bodytext), # type: ignore
-    #                 Paragraph(f"{tipo.total}", bodytext), # type: ignore
-    #             ]]
+    for key in tipos:
+        for chave in TIPOS:
+            if key['tipo'] == chave[0]:
+                colunaX = [[
+                    Paragraph(f"{chave[1]}", bodytext), # type: ignore
+                    Paragraph(f"{key['quantidade']}", bodytext), # type: ignore
+                ]]
 
-    #             linha = Table(colunaX, colWidths=[200,100])
-    #             linha.setStyle(estilo_simples)
-    #             story.append(linha)
+                linha = Table(colunaX, colWidths=[200,100])
+                linha.setStyle(estilo_simples)
+                story.append(linha)
 
     # Gera o PDF
     doc.build(story, onFirstPage=cabecalho_rodape, onLaterPages=cabecalho_rodape)

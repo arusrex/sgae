@@ -24,6 +24,7 @@
                             <th>Nome</th>
                             <th>Nascimento</th>
                             <th>Situação</th>
+                            <th class="no-print">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,6 +34,9 @@
                             <td>{{aluno.aluno}}</td>
                             <td>{{aluno.aluno.nascimento}}</td>
                             <td>{{aluno.status}}</td>
+                            <td>
+                                <a href="{% url "movimentacoes:excluir-turma" aluno.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>

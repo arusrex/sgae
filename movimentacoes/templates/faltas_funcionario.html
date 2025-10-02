@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% block title %}Faltas de Funcionários{% endblock title %}
+
+{% block content %}
+<div class="container-fluid px-4">
+    <h1 class="mt-4">Movimentações</h1>
+    <ol class="breadcrumb mb-4">
+        <li class="breadcrumb-item active"><a href="{% url "movimentacoes:faltas-funcionario" %}" class="text-decoration-none">Faltas dos Funcionários</a></li>
+    </ol>
+    <div class="row justify-content-center">
+        <div class="col-lg-12">
+            <div class="card mb-4">
+                <div class="card-header">
+                    <i class="fas fa-plus me-1"></i>
+                    Registro de faltas
+                </div>
+                <div class="card-body">
+                    <form name="form-falta-funcionario" method="POST">
+                        {% csrf_token %}
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <label for="funcionario" class="form-label">Funcionário(a)</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="funcionario-visual" type="text" placeholder="Selecione o funcionário abaixo" readonly required />
+                                    <input class="form-control" id="funcionario" name="funcionario" type="text" hidden />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="data_inicial" class="form-label">De</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="data_inicial" name="data_inicial" type="date" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="data_final" class="form-label">Até</label>
+                                <div class="mb-3">
+                                    <input class="form-control" id="data_final" name="data_final" type="date" />
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="periodo" class="form-label">Período</label>
+                                <div class="mb-3">
+                                    <select class="form-select" id="periodo" name="periodo"  >
+                                        <option value="">Selecione o período</option>
+                                        <option value="manha">Manhã</option>
+                                        <option value="tarde">Tarde</option>
+                                        <option value="manha-tarde">Manhã e Tarde</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <label for="tipo" class="form-label">Tipo</label>
+                                <div class="mb-3">
+                                    <select class="form-select" id="tipo" name="tipo"  >
+                                        <option value="">Selecione o tipo de falta</option>
+                                        {% for valor, texto in tipos %}
+                                        <option value="{{valor}}">{{texto}}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>Funcionário(a)</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for funcionario in funcionarios %}
+                                    <tr>
+                                        <td>{{funcionario.user.get_full_name}}</td>
+                                        <td>
+                                            <a class="btn btn-sm btn-warning btn-block" onclick="funcionarioEscolhido('{{funcionario.pk}}', '{{funcionario.user.get_full_name}}')">
+                                                Selecionar funcionário(a)
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="mt-4 mb-0">
+                            <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer text-center py-3">
+                    <div class="small"><a>* Confira os campos necessários para salvar os dados</a></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <i class="fas fa-table me-1"></i>
+            Faltas registradas
+        </div>
+        
+        <div class="card-body">
+            {% if faltas %}
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Funcionário</th>
+                            <th>Tipo</th>
+                            <th>Data inicial</th>
+                            <th>Data final</th>
+                            <th>Período</th>
+                            <th>Qtd. aulas</th>
+                            <th class="no-print">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for falta in faltas %}
+                        <tr>
+                            <td>{{falta.funcionario.user.get_full_name | default_if_none:""}}</td>
+                            <td>
+                                {% for valor, texto in tipos %}
+                                    {% if falta.tipo == valor %}{{texto}}{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{falta.data_inicial}}</td>
+                            <td>{{falta.data_final}}</td>
+                            <td>
+                                {% for valor, texto in periodos %}
+                                    {% if falta.periodo == valor %}{{texto}}{% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>{{falta.quantidade | default_if_none:""}}</td>
+                            <td class="no-print">
+                                {% if user.is_superuser %}<a href="{% url "movimentacoes:excluir-faltas-funcionario" falta.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>{% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+    function funcionarioEscolhido (funcionario_id, funcionario_nome) {
+        const campoVisual = document.getElementById('funcionario-visual');
+        const campo = document.getElementById('funcionario');
+
+        campo.value = funcionario_id;
+        campoVisual.value = funcionario_nome;
+    }
+
+    const form = document.forms['form-falta-funcionario'];
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const erros = document.querySelectorAll('.erro').forEach((e) => e.remove());
+        temErro = false;
+
+        const funcionario = form['funcionario'];
+        const dataInicial = form['data_inicial'];
+        const dataFinal = form['data_final'];
+        const periodo = form['periodo'];
+        const tipo = form['tipo'];
+
+        if (funcionario.value == '') {
+            paragrafoErro(funcionario, 'Selecione um funcionário(a) abaixo');
+            temErro = true;
+            funcionario.focus();
+        }
+
+        if (dataInicial.value == '') {
+            paragrafoErro(dataInicial, 'Escolha a data de início da falta');
+            temErro = true;
+            dataInicial.focus();
+        }
+
+        if (dataFinal.value == '') {
+            paragrafoErro(dataFinal, 'Escolha a data final da falta');
+            temErro = true;
+            dataFinal.focus();
+        }
+
+        if (periodo.value == '') {
+            paragrafoErro(periodo, 'Selecione o período');
+            temErro = true;
+            periodo.focus();
+        }
+
+        if (tipo.value == '') {
+            paragrafoErro(tipo, 'Selecione o tipo de falta');
+            temErro = true;
+            tipo.focus();
+        }
+
+        function paragrafoErro (campo, mensagem) {
+            const p = document.createElement('p');
+            p.classList.add('text-danger', 'mt-1', 'erro');
+            p.innerText = mensagem;
+            campo.insertAdjacentElement('afterend', p);
+        };
+
+        if (!temErro) {
+            const modalDivConfirmacaoFalta = document.getElementById('modalConfirmacao');
+            const modalConfirmacaoFalta = new bootstrap.Modal(modalDivConfirmacaoFalta);
+            modalConfirmacaoFalta.show();
+            if (modalConfirmacaoFalta) {
+                const botaoConfirmacaoModal = document.getElementById('confirmarSalvar');
+                botaoConfirmacaoModal.onclick = () => form.submit();
+            }
+        }
+    });
+
+    const botoesExcluir = document.querySelectorAll('.btn-excluir').forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const modalExcluir = document.getElementById('modalExclusao');
+            const modalConfirmarExclusao = new bootstrap.Modal(modalExcluir);
+            modalConfirmarExclusao.show();
+
+            const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
+            if (botaoConfirmarExclusao) {
+                botaoConfirmarExclusao.onclick = () => window.location.href = e.target.href;
+            }
+        });
+    });
+</script>
+{% endblock %}

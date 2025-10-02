@@ -8,11 +8,14 @@ ano_atual = date.today().year
 
 class Sala(ControleDeRegistros):
     numero = models.IntegerField(blank=True, null=True)
-    nome = models.CharField(max_length=10)
+    serie = models.CharField(max_length=10)
+    classe = models.CharField(max_length=10)
+    periodo = models.CharField(max_length=10)
     ano = models.IntegerField(default=ano_atual)
 
     def __str__(self):
-        return self.nome
+        nome = f"{self.serie} - {self.classe}"
+        return nome
 
 class Disciplina(ControleDeRegistros):
     nome = models.CharField(max_length=150)

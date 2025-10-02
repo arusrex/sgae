@@ -1,6 +1,6 @@
-from .models import Turma, AtribuicaoProfessor, Movimentacoes, FrequenciaProfessores
+from .models import Turma, AtribuicaoProfessor, Movimentacoes, FrequenciaProfessores, FrequenciaFuncionarios
 from core.models import Auditoria
-from cadastros.models import Aluno, Sala, Professor
+from cadastros.models import Aluno, Sala, Professor, Funcionario
 from django.db.models import Count, Q
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
@@ -48,7 +48,7 @@ def excluir_movimentacao(request, pk):
 def matricula(request):
     user = request.user.get_full_name()
     salas = Sala.objects.all().order_by('nome')
-    total_alunos = Aluno.objects.exclude(turmas__isnull=False)
+    total_alunos = Aluno.objects.exclude(turmas__status__in=["Ativo", "Remanejado", "Concluído"])
 
     if request.method == 'POST':
         try:
@@ -451,3 +451,106 @@ def excluir_turma(request, pk):
             messages.error(request, 'Erro ao excluir turma, consulte o administrador')
     
     return redirect('movimentacoes:turmas')
+
+
+@login_required
+def faltas_funcionario(request, pk=None):
+    TIPOS = [
+        ('justificada', 'Justificada'),
+        ('injustificada', 'Injustificada'),
+        ('ferias', 'Férias'),
+        ('licenca-remunerada', 'Licença Remunerada'),
+        ('licenca-premio', 'Licença Prêmio'),
+        ('licenca-maternidade', 'Licença Maternidade'),
+        ('licenca-paternidade', 'Licença Paternidade'),
+        ('licenca-saude', 'Licença Saúde'),
+        ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+        ('gala', 'Gala'),
+        ('nojo', 'Nojo'),
+        ('acidente-de-trabalho', 'Acidente de Trabalho'),
+        ('doacao-de-sangue', 'Doação de Sangue'),
+        ('ol', 'Serviço Obrigatório por LEI'),
+        ('recesso-escolar', 'Recesso Escolar'),
+    ]
+
+    PERIODOS = [
+        ('manha', 'Manhã'),
+        ('tarde', 'Tarde'),
+        ('manha-tarde', 'Manhã e Tarde'),
+    ]
+
+    user = request.user.get_full_name()
+    funcionarios = Funcionario.objects.all()
+    faltas = FrequenciaFuncionarios.objects.all().order_by('funcionario')
+
+    if request.method == "POST":
+        try:
+            funcionario = get_object_or_404(Funcionario, pk=request.POST.get('funcionario'))
+            data_inicial = request.POST.get('data_inicial')
+            data_final = request.POST.get('data_final')
+            periodo = request.POST.get('periodo')
+            tipo = request.POST.get('tipo')
+
+            falta = FrequenciaFuncionarios(
+                funcionario=funcionario,
+                data_inicial=data_inicial,
+                data_final=data_final,
+                periodo=periodo,
+                tipo=tipo,
+            )
+
+            auditoria = Auditoria(
+                acao=f'Falta de funcionário(a)',
+                criado_por=user,
+                info=f'Falta {tipo} para {funcionario}'
+            )
+
+            falta.save()
+            auditoria.save()
+
+            messages.success(request, 'Falta de funcionário(a) registrada com sucesso')
+        
+            return redirect('movimentacoes:faltas-funcionario')
+        
+        except Exception as e:
+            print(f'Erro ao registrar falta de funcionário(a)')
+
+            messages.error(request, 'Erro ao registrar falta de funcionário(a)')
+
+            return redirect('movimentacoes:faltas-funcionario')
+
+    context = {
+        'funcionarios': funcionarios,
+        'faltas': faltas,
+        'tipos': TIPOS,
+        'periodos': PERIODOS
+    }
+
+    return render(request, 'faltas_funcionario.html', context)
+
+@login_required
+def excluir_faltas_funcionario(request, pk):
+    user = request.user.get_full_name()
+    falta = get_object_or_404(FrequenciaFuncionarios, pk=pk)
+
+    if falta:
+        try:
+            auditoria = Auditoria(
+                acao=f'Exclusão de falta de funcionário',
+                criado_por=user,
+                info=f'Falta de {falta.data_inicial} do {falta.funcionario} excluída'
+            )
+            auditoria.save()
+            falta.delete()
+
+            messages.success(request, 'Falta excluída com sucesso')
+
+            return redirect('movimentacoes:faltas-funcionario')
+
+
+        except Exception as e:
+            print(f'Erro ao excluir falta de funcionário: {e}')
+
+            messages.error(request, 'Erro ao excluir falta de funcionário(a), consulte o administrador')
+
+    return redirect('movimentacoes:faltas-funcionario')

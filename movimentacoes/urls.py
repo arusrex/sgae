@@ -19,4 +19,7 @@ urlpatterns = [
 
     path('faltas-professor/', views.faltas_professor, name='faltas-professor'),
     path('excluir-faltas-professor/<str:pk>/', views.excluir_faltas_professor, name='excluir-faltas-professor'),
+
+    path('faltas-funcionario/', views.faltas_funcionario, name='faltas-funcionario'),
+    path('excluir-faltas-funcionario/<str:pk>/', views.excluir_faltas_funcionario, name='excluir-faltas-funcionario'),
 ]

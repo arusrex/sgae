@@ -21,13 +21,15 @@ def salas(request, pk=None):
     if sala and request.method == 'POST':
         try:
             sala.numero = request.POST.get('numero')
-            sala.nome = request.POST.get('nome')
+            sala.serie = request.POST.get('serie')
+            sala.classe = request.POST.get('classe')
+            sala.periodo = request.POST.get('periodo')
             sala.ano = request.POST.get('ano')
 
             Auditoria.objects.create(
                 acao="Edição de sala",
                 atualizado_por=user.get_full_name(),
-                info=f"{sala.nome} - {sala.ano} editada"
+                info=f"{sala.serie}/{sala.classe} - {sala.ano} editada"
             )
 
             sala.save()
@@ -44,20 +46,24 @@ def salas(request, pk=None):
     
     if not sala and request.method == 'POST':
         try:
-            numero = request.POST['numero']
-            nome = request.POST['nome']
-            ano = request.POST['ano']
+            numero = request.POST.get('numero')
+            serie = request.POST.get('serie')
+            classe = request.POST.get('classe')
+            periodo = request.POST.get('periodo')
+            ano = request.POST.get('ano')
 
             sala = Sala.objects.create(
                 numero=numero,
-                nome=nome,
+                serie=serie,
+                classe=classe,
+                periodo=periodo,
                 ano=ano
             )
 
             Auditoria.objects.create(
                 acao="Criação de sala",
                 atualizado_por=user.get_full_name(),
-                info=f"{sala.nome} - {sala.ano} criada"
+                info=f"{sala.serie}/{sala.classe} - {sala.ano} criada"
             )
 
             messages.success(request, 'Sala cadastrada com sucesso')
@@ -86,7 +92,7 @@ def excluir_sala(request, pk):
             Auditoria.objects.create(
                 acao="Exclusão de sala",
                 atualizado_por=user.get_full_name(),
-                info=f"{sala.nome} - {sala.ano} excluída"
+                info=f"{sala.serie}/{sala.classe} - {sala.ano} excluída"
             )
             sala.delete()
 
@@ -96,7 +102,7 @@ def excluir_sala(request, pk):
         
     except Exception as e:
         print(f'Erro: {e}')
-        messages.error(request, f'Erro ao excluir a sala: {sala.nome}')
+        messages.error(request, f'Erro ao excluir a sala: {sala.serie}/{sala.classe}')
 
         return redirect('cadastros:salas')
 
@@ -380,9 +386,9 @@ def alunos(request, pk=None):
     
     if request.method == 'POST':
         try:
-            nome = request.POST['nome']
-            rm = request.POST['rm']
-            ra = request.POST['ra']
+            nome = request.POST.get('nome')
+            rm = request.POST.get('rm')
+            ra = request.POST.get('ra')
             rg = request.POST['rg']
             cpf = request.POST['cpf']
             nascimento = request.POST['nascimento']
@@ -417,10 +423,12 @@ def alunos(request, pk=None):
             integral = bool(request.POST.get('integral'))
             observacoes = request.POST.get('observacoes')
 
+            print(ra)
+
             if aluno is not None:
                 aluno.nome = nome
                 aluno.rm = rm
-                aluno.ra = ra
+                aluno.ra = aluno.ra
                 aluno.rg = rg
                 aluno.cpf = cpf
                 aluno.nascimento = nascimento if nascimento else None
@@ -471,7 +479,6 @@ def alunos(request, pk=None):
 
         else:
             try:
-
                 aluno = Aluno(
                 nome = nome,
                 rm = rm,

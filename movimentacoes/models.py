@@ -1,5 +1,5 @@
 from django.db import models
-from cadastros.models import Professor, Aluno, Sala
+from cadastros.models import Professor, Aluno, Sala, Funcionario
 from core.models import ControleDeRegistros
 from datetime import date
 
@@ -69,4 +69,14 @@ class FrequenciaProfessores(ControleDeRegistros):
 
         return f"Professor(a): {professor}"
     
+class FrequenciaFuncionarios(ControleDeRegistros):
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, blank=True, null=True)
+    data_inicial = models.DateField(blank=True, null=True)
+    data_final = models.DateField(blank=True, null=True)
+    periodo = models.CharField(max_length=30, blank=True, null=True)
+    tipo = models.CharField(max_length=50, blank=True, null=True)
 
+    def __str__(self):
+        funcionario = self.funcionario.user.get_full_name() if self.funcionario else "Sem funcionário"
+
+        return f"Funcionário(a): {funcionario}"
