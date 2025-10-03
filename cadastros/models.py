@@ -7,15 +7,34 @@ ano_atual = date.today().year
 
 
 class Sala(ControleDeRegistros):
+    SERIES = [
+        ('1', '1º'),
+        ('2', '2º'),
+        ('3', '3º'),
+        ('4', '4º'),
+        ('5', '5º'),
+    ]
+
+    CLASSES = [
+        ('1', 'A'),
+        ('2', 'B'),
+        ('3', 'C'),
+        ('4', 'D'),
+    ]
+
+    PERIODOS = [
+        ('1', 'Manhã'),
+        ('2', 'Tarde'),
+    ]
+
     numero = models.IntegerField(blank=True, null=True)
-    serie = models.CharField(max_length=10)
-    classe = models.CharField(max_length=10)
-    periodo = models.CharField(max_length=10)
+    serie = models.CharField(max_length=10, choices=SERIES, default='1')
+    classe = models.CharField(max_length=10, choices=CLASSES, default='1')
+    periodo = models.CharField(max_length=10, choices=PERIODOS, default='1')
     ano = models.IntegerField(default=ano_atual)
 
     def __str__(self):
-        nome = f"{self.serie} - {self.classe}"
-        return nome
+        return f"{self.get_serie_display()} {self.get_classe_display()} {self.get_periodo_display()}" # type: ignore
 
 class Disciplina(ControleDeRegistros):
     nome = models.CharField(max_length=150)

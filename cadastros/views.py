@@ -78,7 +78,10 @@ def salas(request, pk=None):
 
     context = {
         'salas': salas,
-        'sala': sala
+        'sala': sala,
+        'series': Sala.SERIES,
+        'classes': Sala.CLASSES,
+        'periodos': Sala.PERIODOS
     }
 
     return render(request, 'salas.html', context)

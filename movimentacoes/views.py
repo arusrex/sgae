@@ -47,7 +47,7 @@ def excluir_movimentacao(request, pk):
 @login_required
 def matricula(request):
     user = request.user.get_full_name()
-    salas = Sala.objects.all().order_by('nome')
+    salas = Sala.objects.all().order_by('serie')
     total_alunos = Aluno.objects.exclude(turmas__status__in=["Ativo", "Remanejado", "Concluído"])
 
     if request.method == 'POST':
