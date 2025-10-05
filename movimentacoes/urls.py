@@ -11,6 +11,7 @@ urlpatterns = [
     path('transferencia/', views.transferencia, name='transferencia'),
 
     path('turmas/', views.turmas, name='turmas'),
+    path('excluir-turma/<str:pk>/', views.turmas, name='excluir-turma'),
     path('turma/<str:pk>/', views.ficha_turma, name='ficha-turma'),
     path('excluir-turma/<str:pk>/', views.excluir_turma, name='excluir-turma'),
 

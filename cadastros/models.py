@@ -33,8 +33,9 @@ class Sala(ControleDeRegistros):
     periodo = models.CharField(max_length=10, choices=PERIODOS, default='1')
     ano = models.IntegerField(default=ano_atual)
 
+
     def __str__(self):
-        return f"{self.get_serie_display()} {self.get_classe_display()} {self.get_periodo_display()}" # type: ignore
+        return f"{self.get_serie_display()} ano {self.get_classe_display()} - {self.get_periodo_display()}" # type: ignore
 
 class Disciplina(ControleDeRegistros):
     nome = models.CharField(max_length=150)

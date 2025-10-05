@@ -227,7 +227,9 @@
 
             const botaoConfirmarExclusao = document.getElementById('confirmarExclusao');
             if (botaoConfirmarExclusao) {
-                botaoConfirmarExclusao.onclick = () => window.location.href = e.target.href;
+                botaoConfirmarExclusao.onclick = () => {
+                    window.location.href = botao.href;
+                };
             }
         });
     });

@@ -50,6 +50,51 @@
             </div>
             {% endif %}
         </div>
+
+        {% if movimentacoes_turma and user.is_superuser%}
+        <div class="card-body">
+            <div class="card-body">
+                <table id="datatablesSimple">
+                    <thead>
+                        <tr>
+                            <th>Sala</th>
+                            <th class="no-print">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mov in movimentacoes_turma %}
+                        <tr>
+                            <td>{{mov}}</td>
+                            <td class="no-print">
+                                <a href="{% url "movimentacoes:excluir-turma" mov.pk %}"  class="btn btn-sm btn-danger btn-block btn-excluir"><small>Excluir</small></a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
     </div>
 </div>
+
+<script>
+    const botoesExclusao = document.querySelectorAll('.btn-excluir');
+    botoesExclusao.forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            e.preventDefault();
+
+            const modalDiv = document.getElementById('modalExclusao');
+            const exclusao = new bootstrap.Modal(modalDiv);
+            exclusao.show();
+
+            const botaoConfirmacao = document.getElementById('confirmarExclusao');
+            if (botaoConfirmacao) {
+                botaoConfirmacao.onclick = () => {
+                    window.location.href = botao.href;
+                };
+            }
+        });
+    });
+</script>
 {% endblock %}

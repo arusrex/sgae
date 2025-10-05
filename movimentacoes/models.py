@@ -14,8 +14,8 @@ class Turma(ControleDeRegistros):
         ('concluido', 'Concluído'),
     ]
 
-    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True, related_name='turmas')
-    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True, related_name='turmas')
+    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, blank=True, null=True, related_name='turmas')
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, blank=True, null=True, related_name='turmas')
     numero_aluno = models.IntegerField(default=0)
     status = models.CharField(max_length=30, choices=STATUS, default='Ativo')
 
@@ -28,8 +28,8 @@ class Turma(ControleDeRegistros):
         return f"{aluno} - {sala} - {ano}"
     
 class AtribuicaoProfessor(ControleDeRegistros):
-    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
-    sala = models.ForeignKey(Sala, on_delete=models.SET_NULL, blank=True, null=True)
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, blank=True, null=True)
+    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, blank=True, null=True)
 
     def __str__(self):
         professor = self.professor.user.get_full_name() if self.professor else "Sem professor(a)"
@@ -44,11 +44,11 @@ class Movimentacoes(ControleDeRegistros):
         ('transferencia', 'Transferência')
     ]
 
-    aluno = models.ForeignKey(Aluno, on_delete=models.SET_NULL, blank=True, null=True)
+    aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE, blank=True, null=True)
     origem_input = models.CharField(max_length=150, blank=True, null=True)
-    origem = models.ForeignKey(Sala, on_delete=models.SET_NULL, related_name='origem', blank=True, null=True)
+    origem = models.ForeignKey(Sala, on_delete=models.CASCADE, related_name='origem', blank=True, null=True)
     destino_input = models.CharField(max_length=150, blank=True, null=True)
-    destino = models.ForeignKey(Sala, on_delete=models.SET_NULL, related_name='destino', blank=True, null=True)
+    destino = models.ForeignKey(Sala, on_delete=models.CASCADE, related_name='destino', blank=True, null=True)
     tipo = models.CharField(max_length=30, choices=TIPOS, default='Matrícula')
     data = models.DateField(blank=True, null=True)
 
@@ -58,7 +58,7 @@ class Movimentacoes(ControleDeRegistros):
         return f"{self.tipo} de {aluno}"
     
 class FrequenciaProfessores(ControleDeRegistros):
-    professor = models.ForeignKey(Professor, on_delete=models.SET_NULL, blank=True, null=True)
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, blank=True, null=True)
     data_inicial = models.DateField(blank=True, null=True)
     data_final = models.DateField(blank=True, null=True)
     periodo = models.CharField(max_length=30, blank=True, null=True)
@@ -71,7 +71,7 @@ class FrequenciaProfessores(ControleDeRegistros):
         return f"Professor(a): {professor}"
     
 class FrequenciaFuncionarios(ControleDeRegistros):
-    funcionario = models.ForeignKey(Funcionario, on_delete=models.SET_NULL, blank=True, null=True)
+    funcionario = models.ForeignKey(Funcionario, on_delete=models.CASCADE, blank=True, null=True)
     data_inicial = models.DateField(blank=True, null=True)
     data_final = models.DateField(blank=True, null=True)
     periodo = models.CharField(max_length=30, blank=True, null=True)

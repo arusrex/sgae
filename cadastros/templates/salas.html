@@ -101,11 +101,9 @@
                         <tr>
                             <td>{{sala.numero}}</td>
                             <td>
-                                {% for valor, label in series %}{% if sala.serie == valor %}{{label}}{% endif %}{% endfor %}
-                                {% for valor, label in classes %}{% if sala.classe == valor %}{{label}}{% endif %}{% endfor %}
-                                {{ sala.get_serie_display }} {{ sala.get_classe_display }}
+                                {{sala.get_serie_display}} ano
+                                {{sala.get_classe_display}}
                             </td>
-                            <td>{% for valor, label in periodos %}{% if sala.periodo == valor %}{{label}}{% endif %}{% endfor %}</td>
                             <td>{{ sala.get_periodo_display }}</td>
                             <td>{{sala.ano}}</td>
                             <td class="no-print">

@@ -397,6 +397,8 @@ def excluir_faltas_professor(request, pk):
 
 @login_required
 def turmas(request, pk=None):
+    user = request.user
+    movimentacoes_turma = Turma.objects.all()
     salas = (
         Sala.objects.all()
         .annotate(
@@ -410,8 +412,18 @@ def turmas(request, pk=None):
         .order_by('-ano')
     )
 
+    if pk:
+        turma = get_object_or_404(Turma, pk=pk)
+
+        if turma:
+            messages.warning(request, 'Movimentação de turma excluída com sucesso')
+            Auditoria.objects.create(acao='Exclusão na movimentação de turma',criado_por=user, info=f'{turma} excluída com sucesso')
+            turma.delete()
+            return redirect('movimentacoes:turmas')
+
     context = {
         'turmas': salas,
+        'movimentacoes_turma': movimentacoes_turma,
     }
 
     return render(request, 'turmas.html', context)
