@@ -201,12 +201,14 @@
 
     let graficosAlunosAtivos = [];
 
-    {% for estatistica in graficos_ativos_por_sala %}
+    {% comment %} {% for estatistica in graficos_ativos_por_sala %}
         graficosAlunosAtivos.push({{estatistica|safe}});
-    {% endfor %}
+    {% endfor %} {% endcomment %}
 
-    console.log(graficoStatus);
-    console.log(graficosAlunosAtivos);
+    {% for serie in series %}
+        console.log({{serie|safe}});
+    {% endfor %}
+    
 
 </script>
 {% endblock %}

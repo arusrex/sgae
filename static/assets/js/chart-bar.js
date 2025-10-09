@@ -60,8 +60,8 @@ if (gaa) {
   let qtdAlunosClasse = [];
   let cores = []
 
-  console.log(classe);
-  console.log(qtdAlunosClasse);
+  // console.log('classe', classe);
+  // console.log('qtd', qtdAlunosClasse);
 
   function corAleatoria(alpha = 0.5) {
     const r = Math.floor(Math.random() * 256); // 0–255
@@ -71,7 +71,7 @@ if (gaa) {
   }
 
   graficosAlunosAtivos.forEach(element => {
-    classe.push(element.sala__nome);
+    classe.push(element.sala__serie);
     qtdAlunosClasse.push(element.total);
     cores.push(corAleatoria());
   });
