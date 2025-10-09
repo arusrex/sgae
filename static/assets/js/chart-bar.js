@@ -56,12 +56,7 @@ if (gsa) {
 
 var gaa = document.getElementById("graficosAlunosAtivosPorSala");
 if (gaa) {
-  let classe = [];
-  let qtdAlunosClasse = [];
   let cores = []
-
-  // console.log('classe', classe);
-  // console.log('qtd', qtdAlunosClasse);
 
   function corAleatoria(alpha = 0.5) {
     const r = Math.floor(Math.random() * 256); // 0–255
@@ -70,21 +65,19 @@ if (gaa) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   }
 
-  graficosAlunosAtivos.forEach(element => {
-    classe.push(element.sala__serie);
-    qtdAlunosClasse.push(element.total);
+  salasAtivos.forEach(element => {
     cores.push(corAleatoria());
   });
 
   const grafico = new Chart(gaa, {
     type: 'bar',
     data: {
-      labels: classe,
+      labels: salasAtivos,
       datasets: [{
         label: "Salas",
         backgroundColor: cores,
         borderColor: "rgba(2,117,216,1)",
-        data: qtdAlunosClasse,
+        data: qtdAtivos,
       }],
     },
     options: {
@@ -94,7 +87,7 @@ if (gaa) {
           labels: {
             generateLabels: function (grafico) {
               let legendas = [];
-              classe.forEach((label, i) => {
+              salasAtivos.forEach((label, i) => {
                 legendas.push({
                   text: label,
                   fillStyle: cores[i],

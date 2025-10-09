@@ -3,6 +3,7 @@ from movimentacoes.models import Movimentacoes, Turma
 from cadastros.models import Sala
 from django.db.models import Count
 from datetime import datetime
+from django.db.models import Q
 
 def context_processors(request):
     dados = Sistema.objects.first()
@@ -46,13 +47,13 @@ def dados_graficos(request):
     alunos = Turma.objects.filter(status="Ativo")
 
     estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno')).filter(sala__ano=ano_atual)
-    alunosAtivosPorSala = (Turma.objects.filter(status='Ativo', sala__ano=ano_atual).annotate(total=Count('aluno')))
-
-    print(alunosAtivosPorSala)
-
-    total = []
-    for sala in alunosAtivosPorSala:
-        print(sala)
+    alunosAtivosPorSala = (
+        Sala.objects.all()
+        .filter(ano=ano_atual)
+        .annotate(
+            ativos=Count('turmas', Q(turmas__status='Ativo'))
+            )
+        )
 
     context = {
         'graficos_alunos': estatisticasAlunos,

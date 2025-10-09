@@ -199,14 +199,12 @@
         graficoStatus.push({{estatistica|safe}});
     {% endfor %}
 
-    let graficosAlunosAtivos = [];
+    let salasAtivos = [];
+    let qtdAtivos = [];
 
-    {% comment %} {% for estatistica in graficos_ativos_por_sala %}
-        graficosAlunosAtivos.push({{estatistica|safe}});
-    {% endfor %} {% endcomment %}
-
-    {% for serie in series %}
-        console.log({{serie|safe}});
+    {% for estatistica in graficos_ativos_por_sala %}
+        salasAtivos.push('{{estatistica|safe}}');
+        qtdAtivos.push({{estatistica.ativos|safe}});
     {% endfor %}
     
 
