@@ -23,4 +23,7 @@ urlpatterns = [
 
     path('faltas-funcionario/', views.faltas_funcionario, name='faltas-funcionario'),
     path('excluir-faltas-funcionario/<str:pk>/', views.excluir_faltas_funcionario, name='excluir-faltas-funcionario'),
+
+    # COMUNICAR MOVIMENTAÇÕES
+    path('comunicar-movimentacao/', views.comunicar_movimentacao, name='comunicar-movimentacao'),
 ]

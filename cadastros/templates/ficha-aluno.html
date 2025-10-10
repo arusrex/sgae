@@ -37,9 +37,9 @@
 
                     <div class="border-bottom col-12 p-1"><strong>Endereço:</strong> {{aluno.endereco}}</div>
                     <div class="border-bottom col-sm-8 p-1"><strong>Filiação 1:</strong> {{aluno.responsavel_1}}</div>
-                    <div class="border-bottom col p-1"><strong>Contato:</strong> {{aluno.contato_1}}</div>
+                    <div class="border-bottom col p-1"><strong>Contato:</strong>{% if aluno.contato_1 %} {{aluno.contato_1}} <a class="btn btn-success p-1" href="https://wa.me/{{aluno.contato_1}}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>{% endif %}</div>
                     <div class="border-bottom col-sm-8 p-1"><strong>Filiação 2:</strong> {{aluno.responsavel_2}}</div>
-                    <div class="border-bottom col p-1"><strong>Contato:</strong> {{aluno.contato_2}}</div>
+                    <div class="border-bottom col p-1"><strong>Contato:</strong>{% if aluno.contato_2 %} {{aluno.contato_2}} <a class="btn btn-success p-1" href="https://wa.me/{{aluno.contato_2}}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>{% endif %}</div>
                     <div class="border-bottom col-12 p-1"><strong>Outros contatos:</strong> {{aluno.outros_contatos}}</div>
                     <div class="border-bottom col-2 p-1"><strong>Mora com os Pais?:</strong> {% if aluno.mora_com_os_pais %}Sim{% else %}Não{% endif %}</div>
                     <div class="border-bottom col-10 p-1"><strong>Porquê não mora com os Pais?:</strong> {{aluno.motivo_mora_com_os_pais}}</div>

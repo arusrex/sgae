@@ -40,10 +40,6 @@ def context_processors(request):
 ano_atual = datetime.now().year
 
 def dados_graficos(request):
-    SERIES = Sala.SERIES
-    CLASSES = Sala.CLASSES
-    PERIODOS = Sala.PERIODOS
-    
     alunos = Turma.objects.filter(status="Ativo")
 
     estatisticasAlunos = Turma.objects.values('status').annotate(total=Count('aluno')).filter(sala__ano=ano_atual)
@@ -53,14 +49,11 @@ def dados_graficos(request):
         .annotate(
             ativos=Count('turmas', Q(turmas__status='Ativo'))
             )
-        )
+        ).order_by('serie')
 
     context = {
         'graficos_alunos': estatisticasAlunos,
         'graficos_ativos_por_sala': alunosAtivosPorSala,
-        'series': SERIES,
-        'classes': CLASSES,
-        'periodos': PERIODOS
     }
 
     return context

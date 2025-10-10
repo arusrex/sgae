@@ -53,6 +53,7 @@
                             <td>{% if movimentacao.destino %}{{movimentacao.destino}}{% else %}{{movimentacao.destino_input}}{% endif %}</td>
                             {% if user.is_superuser %}
                             <td class="no-print">
+                                <button class="btn btn-sm btn-success btn-block btn-comunicar" data-id="{{movimentacao.pk}}">Comunicar professores</button>
                                 <a href="{% url "movimentacoes:excluir-movimentacao" movimentacao.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
                             </td>
                             {% endif %}
@@ -67,6 +68,22 @@
 </div>
 
 <script>
+    const botoesComunicar = document.querySelectorAll('.btn-comunicar').forEach((botao) => {
+        botao.addEventListener('click', (e) => {
+            console.log('Botaõ clcado:', botao.dataset.id);
+
+            const modal = document.getElementById('modalMovimentacao');
+            const modalComunicar = new bootstrap.Modal(modal);
+            modalComunicar.show();
+
+            async function pegaProfessores() {
+                let movimentacao = await fetch(`/movimentacoes/comunicar-movimentacao/?id=${botao.dataset.id}`);
+                console.log(movimentacao);
+            }
+            pegaProfessores();
+        });
+    });
+
     const botaoExcluir = document.querySelectorAll('.btn-excluir').forEach((botao) => {
         botao.addEventListener('click', (e) => {
             e.preventDefault();

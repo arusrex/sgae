@@ -28,8 +28,8 @@ class Turma(ControleDeRegistros):
         return f"{aluno} - {sala} - {ano}"
     
 class AtribuicaoProfessor(ControleDeRegistros):
-    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, blank=True, null=True)
-    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, blank=True, null=True)
+    professor = models.ForeignKey(Professor, on_delete=models.CASCADE, related_name='atribuicoes', blank=True, null=True)
+    sala = models.ForeignKey(Sala, on_delete=models.CASCADE, related_name='atribuicoes', blank=True, null=True)
 
     def __str__(self):
         professor = self.professor.user.get_full_name() if self.professor else "Sem professor(a)"

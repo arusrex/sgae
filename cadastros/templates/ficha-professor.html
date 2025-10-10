@@ -30,7 +30,7 @@
                     <hr class="mt-4 border border-secondary border-3">
 
                     <div class="border-bottom col-6 p-1"><strong>E-mail:</strong> {{professor.user.email}}</div>
-                    <div class="border-bottom col-6 p-1"><strong>Telefone:</strong> {{professor.telefone}}</div>
+                    <div class="border-bottom col-6 p-1"><strong>Telefone:</strong>{% if professor.telefone %} {{professor.telefone}} <a class="btn btn-success p-1" href="https://wa.me/{{professor.telefone}}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>{% endif %}</div>
                     <div class="border-bottom col-12 p-1"><strong>Endereço:</strong> {{professor.endereco}}</div>
 
                     <hr class="mt-4 border border-secondary border-3">

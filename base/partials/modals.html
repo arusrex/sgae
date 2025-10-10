@@ -38,6 +38,25 @@
     </div>
 </div>
 
+<!-- MODAL DE COMUNICAÇÃO DE MOVIMENTAÇÃO -->
+
+<div class="modal fade" id="modalMovimentacao" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Dados da movimentação</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                {% if aluno.contato_2 %} {{aluno.contato_2}} <a class="btn btn-success p-1" href="https://wa.me/{{professor.telefone}}?text={{mensagem}}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>{% endif %}
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- MODAL DE MESSAGES -->
 
 {% if messages %}

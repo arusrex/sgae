@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 import datetime
 from django.contrib import messages
+from django.http import JsonResponse
 
 @login_required
 def movimentacoes(request):
@@ -104,7 +105,7 @@ def matricula(request):
 @login_required
 def remanejamento(request, pk=None):
     user = request.user.get_full_name()
-    salas = Sala.objects.filter(ano=datetime.date.today().year)
+    salas = Sala.objects.filter(ano=datetime.date.today().year).order_by('serie')
     total_alunos = Aluno.objects.filter(turmas__status='Ativo')
 
     if request.method == 'POST':
@@ -166,7 +167,7 @@ def remanejamento(request, pk=None):
 @login_required
 def transferencia(request, pk=None):
     user = request.user.get_full_name()
-    salas = Sala.objects.filter(ano=datetime.date.today().year)
+    salas = Sala.objects.filter(ano=datetime.date.today().year).order_by('serie')
     total_alunos = Aluno.objects.filter(turmas__status='Ativo')
 
     if request.method == 'POST':
@@ -566,3 +567,24 @@ def excluir_faltas_funcionario(request, pk):
             messages.error(request, 'Erro ao excluir falta de funcionário(a), consulte o administrador')
 
     return redirect('movimentacoes:faltas-funcionario')
+
+def comunicar_movimentacao(request):
+    pk = request.GET.get('id')
+    movimentacao = get_object_or_404(Movimentacoes, pk=pk)
+
+    context = {}
+
+    if movimentacao.origem:
+        print('origem', movimentacao.origem.pk)
+        professores_origem = Sala.objects.get(pk=movimentacao.origem.pk)
+        for atribuicao in professores_origem.atribuicoes.all():
+            print(atribuicao.professor.telefone)
+
+
+    if movimentacao.destino:
+        print('destino', movimentacao.destino.pk)
+        professores_destino = Sala.objects.get(pk=movimentacao.destino.pk)
+        for atribuicao in professores_destino.atribuicoes.all():
+            print(atribuicao.professor.telefone)
+
+    return JsonResponse(context)
