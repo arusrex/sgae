@@ -47,8 +47,7 @@
                 <h5 class="modal-title">Dados da movimentação</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body">
-                {% if aluno.contato_2 %} {{aluno.contato_2}} <a class="btn btn-success p-1" href="https://wa.me/{{professor.telefone}}?text={{mensagem}}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>{% endif %}
+            <div class="modal-body" id="modalBody">
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

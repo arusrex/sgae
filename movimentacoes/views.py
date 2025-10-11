@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 import datetime
 from django.contrib import messages
 from django.http import JsonResponse
+import json
 
 @login_required
 def movimentacoes(request):
@@ -572,19 +573,22 @@ def comunicar_movimentacao(request):
     pk = request.GET.get('id')
     movimentacao = get_object_or_404(Movimentacoes, pk=pk)
 
-    context = {}
+    context = []
 
     if movimentacao.origem:
-        print('origem', movimentacao.origem.pk)
         professores_origem = Sala.objects.get(pk=movimentacao.origem.pk)
         for atribuicao in professores_origem.atribuicoes.all():
-            print(atribuicao.professor.telefone)
-
+            context.append({
+                'nome': atribuicao.professor.user.get_full_name(),
+                'telefone': atribuicao.professor.telefone
+            })
 
     if movimentacao.destino:
-        print('destino', movimentacao.destino.pk)
         professores_destino = Sala.objects.get(pk=movimentacao.destino.pk)
         for atribuicao in professores_destino.atribuicoes.all():
-            print(atribuicao.professor.telefone)
+            context.append({
+                'nome': atribuicao.professor.user.get_full_name(),
+                'telefone': atribuicao.professor.telefone
+            })
 
-    return JsonResponse(context)
+    return JsonResponse(context, safe=False)
