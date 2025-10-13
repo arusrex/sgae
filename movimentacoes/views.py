@@ -8,6 +8,7 @@ import datetime
 from django.contrib import messages
 from django.http import JsonResponse
 import json
+import datetime
 
 @login_required
 def movimentacoes(request):
@@ -572,15 +573,25 @@ def excluir_faltas_funcionario(request, pk):
 def comunicar_movimentacao(request):
     pk = request.GET.get('id')
     movimentacao = get_object_or_404(Movimentacoes, pk=pk)
+    aluno = movimentacao.aluno
+    origem = movimentacao.origem if movimentacao.origem else movimentacao.origem_input
+    destino = movimentacao.destino if movimentacao.destino else movimentacao.destino_input
+    data = movimentacao.data.strftime("%d/%m/%Y")
 
     context = []
+
+    context.append({'tipo': movimentacao.tipo},)
+    context.append({'aluno': str(aluno)},)
+    context.append({'origem': str(origem)},)
+    context.append({'destino': str(destino)},)
+    context.append({'data': str(data)},)
 
     if movimentacao.origem:
         professores_origem = Sala.objects.get(pk=movimentacao.origem.pk)
         for atribuicao in professores_origem.atribuicoes.all():
             context.append({
                 'nome': atribuicao.professor.user.get_full_name(),
-                'telefone': atribuicao.professor.telefone
+                'telefone': atribuicao.professor.telefone,
             })
 
     if movimentacao.destino:
@@ -590,5 +601,7 @@ def comunicar_movimentacao(request):
                 'nome': atribuicao.professor.user.get_full_name(),
                 'telefone': atribuicao.professor.telefone
             })
+
+    print(context)
 
     return JsonResponse(context, safe=False)

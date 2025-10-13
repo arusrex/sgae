@@ -81,20 +81,62 @@
             async function pegaProfessores() {
                 let movimentacao = await fetch(`/movimentacoes/comunicar-movimentacao/?id=${botao.dataset.id}`);
                 let response = await movimentacao.json();
+                console.log(response);
+
+                // DIV DADOS MOVIMENTAÇÃO
+                const div1 = document.createElement('div');
+                div1.classList.add('col-sm-6');
+
+                for (let data of response) {
+                    if (data.tipo) {
+                        const p = document.createElement('p');
+                        p.innerText = `Tipo: ${data.tipo}`;
+                        div1.appendChild(p);
+                    }
+                    if (data.aluno) {
+                        const p = document.createElement('p');
+                        p.innerText = `Aluno: ${data.aluno}`;
+                        div1.appendChild(p);
+                    }
+                    if (data.origem) {
+                        const p = document.createElement('p');
+                        p.innerText = `Origem: ${data.origem}`;
+                        div1.appendChild(p);
+                    }
+                    if (data.destino) {
+                        const p = document.createElement('p');
+                        p.innerText = `Destino: ${data.destino}`;
+                        div1.appendChild(p);
+                    }
+                    if (data.data) {
+                        const p = document.createElement('p');
+                        p.innerText = `Data: ${data.data}`;
+                        div1.appendChild(p);
+                    }
+                }
+                
+                bodyModal.appendChild(div1);
+
+                // DIV PROFESSORES
                 const div = document.createElement('div');
-                div.classList.add('d-flex', 'justify-content-center', 'gap-4');
+                div.classList.add('col-sm-6', 'border', 'd-flex', 'justify-content-center', 'align-items-center',);
                 const ul = document.createElement('ul');
+                const h4 =document.createElement('h4');
+                h4.innerText = 
                 div.appendChild(ul);
 
                 for(let data of response) {
-                    const li = document.createElement('li');
-                    li.innerHTML =`
-                        <li>
-                            <span>${data.nome}</span>
-                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Enviar mensagem</a>
-                        </li>
-                    `;
-                    ul.appendChild(li);
+                    if (data.nome) {
+                        const li = document.createElement('li');
+                        li.innerHTML =`
+                            <li>
+                                <span>${data.nome}</span>
+                                <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
+                            </li>
+                        `;
+                        ul.appendChild(li);
+                    }
+                    
                 }
                 bodyModal.appendChild(div);
             }
