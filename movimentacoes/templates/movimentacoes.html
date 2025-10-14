@@ -74,14 +74,18 @@
             const modalComunicar = new bootstrap.Modal(modal);
             modalComunicar.show();
             const bodyModal = document.getElementById('modalBody');
-            bodyModal.childNodes.forEach((e) => {
-                e.remove();
-            });
+
+            let elements = bodyModal.querySelectorAll('div');
+
+            if (elements.length > 0) {
+                elements.forEach((e) => {
+                    e.remove();
+                });
+            }
 
             async function pegaProfessores() {
                 let movimentacao = await fetch(`/movimentacoes/comunicar-movimentacao/?id=${botao.dataset.id}`);
                 let response = await movimentacao.json();
-                console.log(response);
 
                 // DIV DADOS MOVIMENTAÇÃO
                 const div1 = document.createElement('div');
@@ -90,27 +94,33 @@
                 for (let data of response) {
                     if (data.tipo) {
                         const p = document.createElement('p');
-                        p.innerText = `Tipo: ${data.tipo}`;
+                        p.classList.add('text-center');
+                        p.innerHTML = `<h4>${data.tipo}</h4>`;
                         div1.appendChild(p);
                     }
                     if (data.aluno) {
                         const p = document.createElement('p');
-                        p.innerText = `Aluno: ${data.aluno}`;
+                        p.innerHTML = `<strong>Aluno:</strong> ${data.aluno}`;
+                        div1.appendChild(p);
+                    }
+                    if (data.nascimento) {
+                        const p = document.createElement('p');
+                        p.innerHTML = `<strong>Nascimento:</strong> ${data.nascimento}`;
                         div1.appendChild(p);
                     }
                     if (data.origem) {
                         const p = document.createElement('p');
-                        p.innerText = `Origem: ${data.origem}`;
+                        p.innerHTML = `<strong>Origem:</strong> ${data.origem}`;
                         div1.appendChild(p);
                     }
                     if (data.destino) {
                         const p = document.createElement('p');
-                        p.innerText = `Destino: ${data.destino}`;
+                        p.innerHTML = `<strong>Destino:</strong> ${data.destino}`;
                         div1.appendChild(p);
                     }
                     if (data.data) {
                         const p = document.createElement('p');
-                        p.innerText = `Data: ${data.data}`;
+                        p.innerHTML = `<strong>Data:</strong> ${data.data}`;
                         div1.appendChild(p);
                     }
                 }
@@ -119,28 +129,53 @@
 
                 // DIV PROFESSORES
                 const div = document.createElement('div');
-                div.classList.add('col-sm-6', 'border', 'd-flex', 'justify-content-center', 'align-items-center',);
+                div.classList.add('col-sm-6', 'd-flex', 'justify-content-center', 'flex-column',);
                 const ul = document.createElement('ul');
+                ul.classList.add('list-group');
                 const h4 =document.createElement('h4');
-                h4.innerText = 
+                h4.classList.add('text-center');
+                div.appendChild(h4);
                 div.appendChild(ul);
 
                 for(let data of response) {
+
                     if (data.nome) {
                         const li = document.createElement('li');
+                        li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'list-group-item')
                         li.innerHTML =`
-                            <li>
-                                <span>${data.nome}</span>
-                                <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
-                            </li>
+                            <small>${data.nome}</small>
+                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
                         `;
+                        h4.innerText = 'Professores';
                         ul.appendChild(li);
+                    } else {
+                        h4.innerText = "Sem professor atribuído !";
                     }
-                    
                 }
                 bodyModal.appendChild(div);
+
+                function imprimirMovimentação () {
+                    const modalMovimentacao = document.getElementById('modalMovimentacao');
+                    const novaJanela = window.open('', '_blank');
+
+                    const elements = modalMovimentacao.querySelectorAll('div');
+                    console.log(elements);
+
+                    novaJanela.document.write(`
+                        <html>
+                            <head>
+                            </head>
+                            <body>
+                                
+                            </body>
+                        </html>
+                    `);
+                    novaJanela.document.close();
+                }
             }
+
             pegaProfessores();
+
         });
     });
 
