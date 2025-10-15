@@ -74,6 +74,7 @@
             const modalComunicar = new bootstrap.Modal(modal);
             modalComunicar.show();
             const bodyModal = document.getElementById('modalBody');
+            const botaoImprimir = document.getElementById('imprimir-movimentacao');
 
             let elements = bodyModal.querySelectorAll('div');
 
@@ -87,38 +88,51 @@
                 let movimentacao = await fetch(`/movimentacoes/comunicar-movimentacao/?id=${botao.dataset.id}`);
                 let response = await movimentacao.json();
 
+                let dadoTipo;
+                let dadoAluno;
+                let dadoNascimento;
+                let dadoTOrigem;
+                let dadoDestino;
+                let dadoData;
+
                 // DIV DADOS MOVIMENTAÇÃO
                 const div1 = document.createElement('div');
                 div1.classList.add('col-sm-6');
 
                 for (let data of response) {
                     if (data.tipo) {
+                        dadoTipo = data.tipo;
                         const p = document.createElement('p');
                         p.classList.add('text-center');
                         p.innerHTML = `<h4>${data.tipo}</h4>`;
                         div1.appendChild(p);
                     }
                     if (data.aluno) {
+                        dadoAluno = data.aluno;
                         const p = document.createElement('p');
                         p.innerHTML = `<strong>Aluno:</strong> ${data.aluno}`;
                         div1.appendChild(p);
                     }
                     if (data.nascimento) {
+                        dadoNascimento = data.nascimento;
                         const p = document.createElement('p');
                         p.innerHTML = `<strong>Nascimento:</strong> ${data.nascimento}`;
                         div1.appendChild(p);
                     }
                     if (data.origem) {
+                        dadoTOrigem = data.origem;
                         const p = document.createElement('p');
                         p.innerHTML = `<strong>Origem:</strong> ${data.origem}`;
                         div1.appendChild(p);
                     }
                     if (data.destino) {
+                        dadoDestino = data.destino;
                         const p = document.createElement('p');
                         p.innerHTML = `<strong>Destino:</strong> ${data.destino}`;
                         div1.appendChild(p);
                     }
                     if (data.data) {
+                        dadoData = data.data;
                         const p = document.createElement('p');
                         p.innerHTML = `<strong>Data:</strong> ${data.data}`;
                         div1.appendChild(p);
@@ -138,13 +152,21 @@
                 div.appendChild(ul);
 
                 for(let data of response) {
-
                     if (data.nome) {
                         const li = document.createElement('li');
+                        const mensagem = `
+                        *EMEF Professora Helena de Castro pirágine*\n
+                        *Novo(a) ${data.tipo}*\n
+                        *Aluno(a):* ${data.aluno}\n
+                        *Nascimento:* ${data.nascimento}\n
+                        *Origem:* ${data.origem}\n
+                        *Destino:* ${data.destino}\n
+                        *Data:* ${data.data}
+                        `;
                         li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'list-group-item')
                         li.innerHTML =`
                             <small>${data.nome}</small>
-                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
+                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}?text=" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
                         `;
                         h4.innerText = 'Professores';
                         ul.appendChild(li);
@@ -154,23 +176,114 @@
                 }
                 bodyModal.appendChild(div);
 
-                function imprimirMovimentação () {
-                    const modalMovimentacao = document.getElementById('modalMovimentacao');
+                botaoImprimir.onclick = () => {
                     const novaJanela = window.open('', '_blank');
 
-                    const elements = modalMovimentacao.querySelectorAll('div');
-                    console.log(elements);
+                    let linha = document.createElement('tr');
+                    let bodyProfessores = document.createElement('tbody');
+
+                    for (let data of response) {
+                        if (data.aluno) {
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.aluno;
+                            linha.appendChild(coluna);
+                        }
+                        if (data.nascimento) {
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.nascimento;
+                            linha.appendChild(coluna);
+                        }
+                        if (data.origem) {
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.origem;
+                            linha.appendChild(coluna);
+                        }
+                        if (data.destino) {
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.destino;
+                            linha.appendChild(coluna);
+                        }
+                        if (data.data) {
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.data;
+                            linha.appendChild(coluna);
+                        }
+                        if (data.nome) {
+                            const linhaP = document.createElement('tr');
+                            const coluna = document.createElement('td');
+                            coluna.innerText = data.nome;
+                            linhaP.appendChild(coluna);
+                            bodyProfessores.appendChild(linhaP);
+                        }
+                    }
+                    linha = linha.outerHTML;
+                    bodyProfessores = bodyProfessores.outerHTML;
 
                     novaJanela.document.write(`
                         <html>
                             <head>
+                                <style>
+                                    body {
+                                        font-family: Arial, sans-serif;
+                                        background: #f9f9f9;
+                                        padding: 30px;
+                                    }
+                                    table {
+                                        width: 100%;
+                                        background: white;
+                                        overflow: hidden;
+                                        border-collapse: collapse;
+                                    }
+                                    thead {
+                                        background: grey;
+                                        color: white;
+                                    }
+                                    th, td {
+                                        padding: 12px 16px;
+                                        text-align: left;
+                                        margin: 0;
+                                        border: 1px solid black;
+                                    }
+                                    tr:hover {
+                                        background: #e8f0ff;
+                                    }
+                                    h2 {
+                                        text-align: center;
+                                        background-color: black;
+                                        color: white;
+                                    }
+                                </style>
                             </head>
                             <body>
-                                
+                                <h2>${dadoTipo}</h2>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Aluno</th>
+                                            <th>Nascimento</th>
+                                            <th>Origem</th>
+                                            <th>Destino</th>
+                                            <th>Data</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        ${linha}
+                                    </tbody>
+                                </table>
+                                <h2>Professores</h2>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Nome</th>
+                                        </tr>
+                                    </thead>
+                                    ${bodyProfessores}
+                                </table>
                             </body>
                         </html>
                     `);
                     novaJanela.document.close();
+                    novaJanela.print();
                 }
             }
 
