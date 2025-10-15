@@ -154,19 +154,19 @@
                 for(let data of response) {
                     if (data.nome) {
                         const li = document.createElement('li');
-                        const mensagem = `
+                        const mensagem = encodeURIComponent(`
                         *EMEF Professora Helena de Castro pirágine*\n
-                        *Novo(a) ${data.tipo}*\n
-                        *Aluno(a):* ${data.aluno}\n
-                        *Nascimento:* ${data.nascimento}\n
-                        *Origem:* ${data.origem}\n
-                        *Destino:* ${data.destino}\n
-                        *Data:* ${data.data}
-                        `;
+                        *Novo(a) ${dadoTipo}*\n
+                        *Aluno(a):* ${dadoAluno}\n
+                        *Nascimento:* ${dadoNascimento}\n
+                        *Origem:* ${dadoTOrigem}\n
+                        *Destino:* ${dadoDestino}\n
+                        *Data:* ${dadoData}
+                        `);
                         li.classList.add('d-flex', 'justify-content-between', 'align-items-center', 'list-group-item')
                         li.innerHTML =`
                             <small>${data.nome}</small>
-                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}?text=" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
+                            <a class="btn btn-success p-1 m-1" href="https://wa.me/${data.telefone}?text=${mensagem}" target="_blank"><i class="fa-brands fa-whatsapp"></i> Comunicar</a>
                         `;
                         h4.innerText = 'Professores';
                         ul.appendChild(li);
