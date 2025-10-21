@@ -197,3 +197,8 @@ PWA_APP_ICONS_APPLE = [
 PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pt-BR'
 
+try:
+    from .local_settings import *
+except ImportError:
+    pass
+
