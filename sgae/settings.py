@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'core',
     'movimentacoes',
     'usuarios',
+    'pwa',
 ]
 
 MIDDLEWARE = [
@@ -162,4 +163,37 @@ MESSAGE_TAGS = {
 }
 
 USE_X_FORWARDED_HOST = True
+
+# PWA Settings
+PWA_APP_NAME = 'SGAE'
+PWA_APP_DESCRIPTION = "Sistema de Gestão Administrativo Escolar"
+PWA_APP_THEME_COLOR = '#0d6efd'
+PWA_APP_BACKGROUND_COLOR = '#ffffff'
+PWA_APP_DISPLAY = 'standalone'
+PWA_APP_SCOPE = '/'
+PWA_APP_ORIENTATION = 'any'
+PWA_APP_START_URL = '/'
+PWA_APP_STATUS_BAR_COLOR = 'default'
+PWA_APP_ICONS = [
+    {
+        'src': '/static/assets/img/icons/carimbo.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/assets/img/icons/carimbo.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_ICONS_APPLE = [
+    {
+        'src': '/static/assets/img/icons/carimbo.png',
+        'sizes': '192x192'
+    },
+    {
+        'src': '/static/assets/img/icons/carimbo.png',
+        'sizes': '512x512'
+    }
+]
+PWA_APP_DIR = 'ltr'
+PWA_APP_LANG = 'pt-BR'
 
