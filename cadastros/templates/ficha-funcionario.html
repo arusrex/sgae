@@ -43,6 +43,54 @@
                     <div class="border-bottom col-6 p-1"><strong>Disciplina:</strong> {{funcionario.disciplina}}</div>
                     
                     <div class="border-bottom col-12 p-1"><strong>Observações:</strong> {{funcionario.observacoes}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Faltas de {{funcionario}}</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Período</th>
+                                    <th>Tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dado in frequencia %}
+                                <tr>
+                                    <td>{% if dado.data_inicial == dado.data_final %}{{dado.data_inicial}}{% else %}{{dado.data_inicial}} a {{dado.data_final}}{% endif %}</td>
+                                    <td>{% for chave, valor in periodos %}{% if chave == dado.periodo %}{{valor}}{% endif %}{% endfor %}</td>
+                                    <td>{% for chave, valor in tipos %}{% if chave == dado.tipo %}{{valor}}{% endif %}{% endfor %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Quantidade de faltas de {{funcionario}}</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Qtd.</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for dado in qtd_faltas %}
+                                <tr>
+                                    <td>{% for chave, valor in tipos %}{% if chave == dado.tipo %}{{valor}}{% endif %}{% endfor %}</td>
+                                    <td>{{dado.total}}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>

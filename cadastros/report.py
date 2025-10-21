@@ -455,7 +455,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
 
     for atribuicao in atribuicoes:
         atrb = [[
-            Paragraph(f"{atribuicao.sala.nome if atribuicao.sala.nome else ''}", bodytext), # type: ignore
+            Paragraph(f"{atribuicao.sala if atribuicao.sala else ''}", bodytext), # type: ignore
             Paragraph(f'{atribuicao.sala.ano if atribuicao.sala.ano else ""}', bodytext), # type: ignore
         ]]
 

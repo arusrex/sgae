@@ -10,10 +10,54 @@ from django.http import JsonResponse
 import json
 import datetime
 
+TIPOS_FUNCIONARIOS = [
+    ('justificada', 'Justificada'),
+    ('injustificada', 'Injustificada'),
+    ('ferias', 'Férias'),
+    ('licenca-remunerada', 'Licença Remunerada'),
+    ('licenca-premio', 'Licença Prêmio'),
+    ('licenca-maternidade', 'Licença Maternidade'),
+    ('licenca-paternidade', 'Licença Paternidade'),
+    ('licenca-saude', 'Licença Saúde'),
+    ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+    ('gala', 'Gala'),
+    ('nojo', 'Nojo'),
+    ('acidente-de-trabalho', 'Acidente de Trabalho'),
+    ('doacao-de-sangue', 'Doação de Sangue'),
+    ('ol', 'Serviço Obrigatório por LEI'),
+    ('recesso-escolar', 'Recesso Escolar'),
+]
+
+TIPOS_PROFESSOR = [
+    ('abonada', 'Abonada'),
+    ('justificada', 'Justificada'),
+    ('injustificada', 'Injustificada'),
+    ('falta-aula', 'Falta-Aula'),
+    ('ferias', 'Férias'),
+    ('licenca-remunerada', 'Licença Remunerada'),
+    ('licenca-premio', 'Licença Prêmio'),
+    ('licenca-maternidade', 'Licença Maternidade'),
+    ('licenca-paternidade', 'Licença Paternidade'),
+    ('licenca-saude', 'Licença Saúde'),
+    ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
+    ('gala', 'Gala'),
+    ('nojo', 'Nojo'),
+    ('acidente-de-trabalho', 'Acidente de Trabalho'),
+    ('doacao-de-sangue', 'Doação de Sangue'),
+    ('ol', 'Serviço Obrigatório por LEI'),
+    ('recesso-escolar', 'Recesso Escolar'),
+]
+
+PERIODOS = [
+    ('manha', 'Manhã'),
+    ('tarde', 'Tarde'),
+    ('manha-tarde', 'Manhã e Tarde'),
+]
+
 @login_required
 def movimentacoes(request):
     user = request.user.get_full_name()
-    movimentacoes = Movimentacoes.objects.all().order_by('data')
+    movimentacoes = Movimentacoes.objects.all().order_by('-data')
 
     context = {
         'movimentacoes': movimentacoes,
@@ -293,32 +337,6 @@ def excluir_atribuicoes(request, pk):
 
 @login_required
 def faltas_professor(request, pk=None):
-    TIPOS = [
-        ('abonada', 'Abonada'),
-        ('justificada', 'Justificada'),
-        ('injustificada', 'Injustificada'),
-        ('falta-aula', 'Falta-Aula'),
-        ('ferias', 'Férias'),
-        ('licenca-remunerada', 'Licença Remunerada'),
-        ('licenca-premio', 'Licença Prêmio'),
-        ('licenca-maternidade', 'Licença Maternidade'),
-        ('licenca-paternidade', 'Licença Paternidade'),
-        ('licenca-saude', 'Licença Saúde'),
-        ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
-        ('gala', 'Gala'),
-        ('nojo', 'Nojo'),
-        ('acidente-de-trabalho', 'Acidente de Trabalho'),
-        ('doacao-de-sangue', 'Doação de Sangue'),
-        ('ol', 'Serviço Obrigatório por LEI'),
-        ('recesso-escolar', 'Recesso Escolar'),
-    ]
-
-    PERIODOS = [
-        ('manha', 'Manhã'),
-        ('tarde', 'Tarde'),
-        ('manha-tarde', 'Manhã e Tarde'),
-    ]
-
     user = request.user.get_full_name()
     professores = Professor.objects.all()
     faltas = FrequenciaProfessores.objects.all().order_by('professor')
@@ -364,7 +382,7 @@ def faltas_professor(request, pk=None):
     context = {
         'professores': professores,
         'faltas': faltas,
-        'tipos': TIPOS,
+        'tipos': TIPOS_PROFESSOR,
         'periodos': PERIODOS
     }
 
@@ -412,7 +430,7 @@ def turmas(request, pk=None):
             concluidos=Count('turmas', Q(turmas__status="Concluído")),
             total=Count('turmas'),
         )
-        .order_by('-ano')
+        .order_by('serie', 'classe', 'periodo', '-ano')
     )
 
     if pk:
@@ -470,30 +488,6 @@ def excluir_turma(request, pk):
 
 @login_required
 def faltas_funcionario(request, pk=None):
-    TIPOS = [
-        ('justificada', 'Justificada'),
-        ('injustificada', 'Injustificada'),
-        ('ferias', 'Férias'),
-        ('licenca-remunerada', 'Licença Remunerada'),
-        ('licenca-premio', 'Licença Prêmio'),
-        ('licenca-maternidade', 'Licença Maternidade'),
-        ('licenca-paternidade', 'Licença Paternidade'),
-        ('licenca-saude', 'Licença Saúde'),
-        ('licenca-sem-vencimentos', 'Licença sem Vencimentos'),
-        ('gala', 'Gala'),
-        ('nojo', 'Nojo'),
-        ('acidente-de-trabalho', 'Acidente de Trabalho'),
-        ('doacao-de-sangue', 'Doação de Sangue'),
-        ('ol', 'Serviço Obrigatório por LEI'),
-        ('recesso-escolar', 'Recesso Escolar'),
-    ]
-
-    PERIODOS = [
-        ('manha', 'Manhã'),
-        ('tarde', 'Tarde'),
-        ('manha-tarde', 'Manhã e Tarde'),
-    ]
-
     user = request.user.get_full_name()
     funcionarios = Funcionario.objects.all()
     faltas = FrequenciaFuncionarios.objects.all().order_by('funcionario')
@@ -537,7 +531,7 @@ def faltas_funcionario(request, pk=None):
     context = {
         'funcionarios': funcionarios,
         'faltas': faltas,
-        'tipos': TIPOS,
+        'tipos': TIPOS_FUNCIONARIOS,
         'periodos': PERIODOS
     }
 

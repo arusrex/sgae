@@ -2,10 +2,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime
 from .models import Sala, Disciplina, Professor, Aluno, Funcionario
+from movimentacoes.models import Movimentacoes, AtribuicaoProfessor, FrequenciaProfessores, FrequenciaFuncionarios
 from usuarios.models import Usuarios
 from core.models import Auditoria
 from django.http import JsonResponse
 from django.contrib import messages
+from movimentacoes.views import TIPOS_PROFESSOR, PERIODOS, TIPOS_FUNCIONARIOS
+from django.db.models import Count, Q
 
 @login_required
 def salas(request, pk=None):
@@ -325,9 +328,20 @@ def professores(request, pk=None):
 @login_required
 def ficha_professor(request, pk):
     professor = get_object_or_404(Professor, pk=pk)
+    atribuicoes = AtribuicaoProfessor.objects.filter(professor=professor)
+    frequencia = FrequenciaProfessores.objects.filter(professor=professor)
+    qtd_faltas = (FrequenciaProfessores.objects.filter(professor=professor)
+        .values('tipo')
+        .annotate(total=Count("tipo"))
+    )
 
     context = {
         'professor': professor,
+        'atribuicoes': atribuicoes,
+        'frequencia': frequencia,
+        'tipos': TIPOS_PROFESSOR,
+        'periodos': PERIODOS,
+        'qtd_faltas': qtd_faltas
     }
 
     return render(request, 'ficha-professor.html', context)
@@ -425,8 +439,6 @@ def alunos(request, pk=None):
             retirada_aluno = request.POST['retirada_aluno']
             integral = bool(request.POST.get('integral'))
             observacoes = request.POST.get('observacoes')
-
-            print(ra)
 
             if aluno is not None:
                 aluno.nome = nome
@@ -587,9 +599,11 @@ def ficha_aluno(request, pk=None):
 
     if pk:
         aluno = get_object_or_404(Aluno, pk=pk)
+        movimentacoes = Movimentacoes.objects.filter(aluno=aluno)
 
     context = {
         'aluno': aluno,
+        'movimentacoes': movimentacoes,
     }
 
     return render(request, 'ficha-aluno.html', context)
@@ -719,9 +733,19 @@ def funcionarios(request, pk=None):
 @login_required
 def ficha_funcionario(request, pk):
     funcionario = get_object_or_404(Funcionario, pk=pk)
+    frequencia = FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
+    qtd_faltas = (
+        FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
+        .values("tipo")
+        .annotate(total=Count("tipo"))
+    )
 
     context = {
         'funcionario': funcionario,
+        'frequencia': frequencia,
+        'qtd_faltas': qtd_faltas,
+        'tipos': TIPOS_FUNCIONARIOS,
+        'periodos': PERIODOS
     }
 
     return render(request, 'ficha-funcionario.html', context)

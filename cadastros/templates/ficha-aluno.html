@@ -68,6 +68,34 @@
                     <div class="border-bottom col-12 p-1"><strong>Interesse no período integral?:</strong> {% if aluno.integral %}Sim{% else %}Não{% endif %}</div>
                     <div class="border-bottom col-12 p-1"><strong>Tipo de transporte:</strong> {{aluno.transporte}}</div>
                     <div class="border-bottom col-12 p-1"><strong>Observações:</strong> {{aluno.observacoes}}</div>
+
+                    <hr class="mt-4 border border-secondary border-3">
+                    <div class="col-12"><h3>Movimentações</h3></div>
+                    <hr class="mt-4 border border-secondary border-3">
+
+                    <div class=" table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Tipo</th>
+                                    <th>Data</th>
+                                    <th>Origem</th>
+                                    <th>Destino</th>
+                                </tr>
+                            </thead>
+                            
+                            <tbody>
+                                {% for dado in movimentacoes %}
+                                <tr>
+                                    <td>{{dado.tipo}}</td>
+                                    <td>{{dado.data}}</td>
+                                    <td>{% if dado.origem_input %}{{dado.origem_input}}{% else %}{{dado.origem}}{% endif %}</td>
+                                    <td>{% if dado.destino_input %}{{dado.destino_input}}{% else %}{{dado.destino}}{% endif %}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="card-footer">
 
