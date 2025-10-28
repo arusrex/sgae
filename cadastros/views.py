@@ -203,7 +203,7 @@ def excluir_disciplina(request, pk):
 @login_required
 def professores(request, pk=None):
     user = request.user
-    professores = Professor.objects.all()
+    professores = Professor.objects.all().order_by('user__first_name')
     disciplinas = Disciplina.objects.all()
 
     if pk:
@@ -392,7 +392,7 @@ def verificar_email_professor(request):
 @login_required
 def alunos(request, pk=None):
     user = request.user
-    alunos = Aluno.objects.all()
+    alunos = Aluno.objects.all().order_by('nome')
 
     if pk:
         aluno = get_object_or_404(Aluno, pk=pk)
