@@ -198,6 +198,6 @@ PWA_APP_DIR = 'ltr'
 PWA_APP_LANG = 'pt-BR'
 
 try:
-    from .local_settings import *
+    from ..local_settings import *
 except ImportError:
     pass
