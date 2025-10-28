@@ -33,7 +33,7 @@ def tratar_imagens(imagem, qualidade=None, largura=None, altura=None):
         img.thumbnail((novaLargura, novaAltura))
 
         imagem_com_fundo = Image.new('RGB', img.size, fundo_branco)
-        imagem_com_fundo.paste(img, mask=img.split()[3])
+        imagem_com_fundo.paste(img, mask=img.split()[2])
 
         # img = img.resize((novaLargura, novaAltura))
 
