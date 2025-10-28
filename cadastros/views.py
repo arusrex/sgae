@@ -611,7 +611,7 @@ def ficha_aluno(request, pk=None):
 @login_required
 def funcionarios(request, pk=None):
     user = request.user
-    funcionarios = Funcionario.objects.all()
+    funcionarios = Funcionario.objects.all().order_by('user__first_name')
 
     if pk:
         funcionario = get_object_or_404(Funcionario, pk=pk)

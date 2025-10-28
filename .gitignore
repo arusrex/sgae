@@ -44,3 +44,6 @@ build/
 htmlcov/
 .tox/
 .pytest_cache/
+
+local_settings.py
+.local_settings.py
