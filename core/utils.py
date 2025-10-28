@@ -34,7 +34,7 @@ def tratar_imagens(imagem, qualidade=None, largura=None, altura=None):
 
         imagem_com_fundo = Image.new('RGB', img.size, fundo_branco)
 
-        if img.mode == "RGBA"
+        if img.mode == "RGBA":
             imagem_com_fundo.paste(img, mask=img.split()[3])
         else:
             imagem_com_fundo.paste(img)
