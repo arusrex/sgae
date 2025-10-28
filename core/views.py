@@ -149,9 +149,9 @@ def sistema(request):
         logo_municipio = request.FILES.get('logo-municipio')
         logo_educacao = request.FILES.get('logo-educacao')
 
-        logo_novo = tratar_imagens(logo, 85, 150, 150)
-        logo_municipio_novo = tratar_imagens(logo_municipio, 85, 500, 500)
-        logo_educacao_novo = tratar_imagens(logo_educacao, 85, 300, 300)
+        logo_novo = tratar_imagens(logo, 100, 150, 150)
+        logo_municipio_novo = tratar_imagens(logo_municipio, 100, 500, 500)
+        logo_educacao_novo = tratar_imagens(logo_educacao, 100, 300, 300)
 
         if dados:
             try:
