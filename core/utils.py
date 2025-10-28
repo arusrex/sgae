@@ -29,11 +29,15 @@ def tratar_imagens(imagem, qualidade=None, largura=None, altura=None):
     fundo_branco = (255, 255, 255)
 
     if imagem:
-        img = Image.open(imagem)
+        img = Image.open(imagem).convert("RGBA")
         img.thumbnail((novaLargura, novaAltura))
 
         imagem_com_fundo = Image.new('RGB', img.size, fundo_branco)
-        imagem_com_fundo.paste(img, mask=img.split()[2])
+
+        if img.mode == "RGBA"
+            imagem_com_fundo.paste(img, mask=img.split()[3])
+        else:
+            imagem_com_fundo.paste(img)
 
         # img = img.resize((novaLargura, novaAltura))
 
