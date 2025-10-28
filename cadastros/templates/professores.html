@@ -164,7 +164,7 @@
                         {% for professor in professores %}
                         <tr>
                             <td>{{professor.matricula | default_if_none:""}}</td>
-                            <td>{{professor.user.first_name | default_if_none:""}}</td>
+                            <td>{{professor.user.get_full_name | default_if_none:""}}</td>
                             <td>{{professor.user.email | default_if_none:""}}</td>
                             <td>{{professor.telefone | default_if_none:""}}</td>
                             <td class="no-print">
