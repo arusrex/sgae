@@ -59,9 +59,9 @@ class Professor(ControleDeRegistros):
 
 class Aluno(ControleDeRegistros):
     TRANSPORTE = [
+        ('indefinido', 'Indefinido'),
         ('onibus', 'Onibus'),
         ('van', 'Van'),
-        ('indefinido', 'Indefinido'),
     ]
 
     SEXO = [
