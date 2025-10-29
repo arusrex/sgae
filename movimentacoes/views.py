@@ -57,7 +57,7 @@ PERIODOS = [
 @login_required
 def movimentacoes(request):
     user = request.user.get_full_name()
-    movimentacoes = Movimentacoes.objects.all().order_by('-data')
+    movimentacoes = Movimentacoes.objects.all().order_by('-data', 'pk')
 
     context = {
         'movimentacoes': movimentacoes,
@@ -94,8 +94,8 @@ def excluir_movimentacao(request, pk):
 @login_required
 def matricula(request):
     user = request.user.get_full_name()
-    salas = Sala.objects.all().order_by('serie')
-    total_alunos = Aluno.objects.exclude(turmas__status__in=["Ativo", "Remanejado", "Concluído"])
+    salas = Sala.objects.all().order_by('serie', 'classe', 'periodo')
+    total_alunos = Aluno.objects.exclude(turmas__status__in=["Ativo", "Remanejado", "Concluído"]).order_by('nome')
 
     if request.method == 'POST':
         try:
@@ -151,7 +151,7 @@ def matricula(request):
 @login_required
 def remanejamento(request, pk=None):
     user = request.user.get_full_name()
-    salas = Sala.objects.filter(ano=datetime.date.today().year).order_by('serie')
+    salas = Sala.objects.filter(ano=datetime.date.today().year).order_by('serie', 'classe', 'periodo')
     total_alunos = Aluno.objects.filter(turmas__status='Ativo')
 
     if request.method == 'POST':
@@ -214,7 +214,7 @@ def remanejamento(request, pk=None):
 def transferencia(request, pk=None):
     user = request.user.get_full_name()
     salas = Sala.objects.filter(ano=datetime.date.today().year).order_by('serie')
-    total_alunos = Aluno.objects.filter(turmas__status='Ativo')
+    total_alunos = Aluno.objects.filter(turmas__status='Ativo').order_by('turmas__aluno')
 
     if request.method == 'POST':
         try:
