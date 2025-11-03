@@ -414,15 +414,15 @@
         });
 
         formNome.addEventListener("input", () => {
-            formNome.value = formNome.value.replace(/[^A-Za-z\s]/g, "");
+            formNome.value = formNome.value.replace(/\d/g, "");
         });
 
         formResponsavel1.addEventListener("input", () => {
-            formResponsavel1.value = formResponsavel1.value.replace(/[^A-Za-z\s]/g, "");
+            formResponsavel1.value = formResponsavel1.value.replace(/\d/g, "");
         });
 
         formResponsavel2.addEventListener("input", () => {
-            formResponsavel2.value = formResponsavel2.value.replace(/[^A-Za-z\s]/g, "");
+            formResponsavel2.value = formResponsavel2.value.replace(/\d/g, "");
         });
 
         async function buscaCep (cep) {
