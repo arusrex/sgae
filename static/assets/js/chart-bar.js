@@ -74,32 +74,13 @@ if (gaa) {
     data: {
       labels: salasAtivos,
       datasets: [{
-        label: "Salas",
+        label: "Quantidade",
         backgroundColor: cores,
         borderColor: "rgba(2,117,216,1)",
         data: qtdAtivos,
       }],
     },
     options: {
-      plugins: {
-        legend: {
-          display: true,
-          labels: {
-            generateLabels: function (grafico) {
-              let legendas = [];
-              salasAtivos.forEach((label, i) => {
-                legendas.push({
-                  text: label,
-                  fillStyle: cores[i],
-                  strokesStyle: cores[i],
-                  hidden: false,
-                });
-              });
-              return legendas;
-            },
-          },
-        },
-      },
       scales: {
         y: {
           beginAtZero: true,
@@ -109,3 +90,24 @@ if (gaa) {
     }
   });
 }
+
+
+// plugins: {
+//   legend: {
+//     display: true,
+//     labels: {
+//       generateLabels: function (grafico) {
+//         let legendas = [];
+//         salasAtivos.forEach((label, i) => {
+//           legendas.push({
+//             text: label,
+//             fillStyle: cores[i],
+//             strokesStyle: cores[i],
+//             hidden: false,
+//           });
+//         });
+//         return legendas;
+//       },
+//     },
+//   },
+// },
