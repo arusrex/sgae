@@ -51,7 +51,7 @@ def dados_graficos(request):
         .annotate(
             ativos=Count('turmas', Q(turmas__status='Ativo'))
             )
-        ).order_by('serie')
+        ).order_by('serie').order_by('classe').order_by('periodo')
 
     context = {
         'graficos_alunos': estatisticasAlunos,

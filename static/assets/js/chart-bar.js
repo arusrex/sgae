@@ -108,5 +108,4 @@ if (gaa) {
       responsive: true,
     }
   });
-
 }
