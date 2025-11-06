@@ -53,8 +53,6 @@ def dados_graficos(request):
             )
         ).order_by('serie', 'classe', 'periodo')
     
-    print(alunosAtivosPorSala)
-
     context = {
         'graficos_alunos': estatisticasAlunos,
         'graficos_ativos_por_sala': alunosAtivosPorSala,

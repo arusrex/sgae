@@ -23,63 +23,90 @@
                             <div class="col-12">
                                 <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="professor" name="professor" type="text" placeholder="Selecione o Professor(a) abaixo" hidden />
-                                    <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o Professor(a) abaixo" readonly />
-                                    {% if professores %}
-                                    <div class="card-body">
-                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nome</th>
-                                                    <th>Ações</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for professor in professores %}
-                                                <tr>
-                                                    <td>
-                                                        {{professor.user.get_full_name | default_if_none:""}}
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-sm btn-warning btn-block" onclick="selecionaProfessor('{{professor.pk}}', '{{professor.user.get_full_name}}')">Selecionar</a>
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                    <input class="form-control" id="professor" name="professor" type="text" hidden />
+                                    <input class="form-control" id="professor-visual" type="text" placeholder="Clique para escolher o Professor(a)" readonly />
+                                    
+                                    <!-- MODAL DE PROFESSORES -->
+
+                                    <div class="modal modal-lg fade" id="modalSelecionarProfessor" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Selecione o Professor(a)</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body row" id="modalBody">
+                                                    {% if professores %}
+                                                    <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Nome</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for professor in professores %}
+                                                            <tr>
+                                                                <td>
+                                                                    {{professor.user.get_full_name | default_if_none:""}}
+                                                                </td>
+                                                                <td>
+                                                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaProfessor('{{professor.pk}}', '{{professor.user.get_full_name}}')">Selecionar</a>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    {% endif %}
+                    
                                 </div>
                             </div>
                             <div class="col-12">
                                 <label for="sala" class="form-label">Sala</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="sala" name="sala" type="text" placeholder="Selecione a sala disponível" hidden />
-                                    <input class="form-control" id="sala-visual" type="text" placeholder="Selecione a sala disponível" readonly />
-                                    {% if salas %}
-                                    <div class="card-body">
-                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                                            <thead>
-                                                <tr>
-                                                    <th>Nome</th>
-                                                    <th>Ações</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {% for sala in salas %}
-                                                <tr>
-                                                    <td>
-                                                        {{sala | default_if_none:""}} - {{sala.ano | default_if_none:""}}
-                                                    </td>
-                                                    <td>
-                                                        <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala}}')">Selecionar</a>
-                                                    </td>
-                                                </tr>
-                                                {% endfor %}
-                                            </tbody>
-                                        </table>
+                                    <input class="form-control" id="sala" name="sala" type="text" hidden />
+                                    <input class="form-control" id="sala-visual" type="text" placeholder="Clique para escolher a sala" readonly />
+                                    
+                                    <!-- MODAL DE SELECIONAR SALAS -->
+
+                                    <div class="modal modal-lg fade" id="modalSelecionarSala" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Selecione a sala</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body row" id="modalBody">
+                                                    {% if salas %}
+                                                    <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                                        <thead>
+                                                            <tr>
+                                                                <th>Nome</th>
+                                                                <th>Ações</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            {% for sala in salas %}
+                                                            <tr>
+                                                                <td>
+                                                                    {{sala | default_if_none:""}} - {{sala.ano | default_if_none:""}}
+                                                                </td>
+                                                                <td>
+                                                                    <a class="btn btn-sm btn-warning btn-block" onclick="selecionaSala('{{sala.pk}}', '{{sala}}')">Selecionar</a>
+                                                                </td>
+                                                            </tr>
+                                                            {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                    {% endif %}
                                 </div>
                             </div>
                         </div>
@@ -150,15 +177,29 @@
     const professorVisual = document.getElementById('professor-visual');
     const sala = document.getElementById('sala');
     const salaVisual = document.getElementById('sala-visual');
+    const modalSelecionarProfessor = document.getElementById('modalSelecionarProfessor');
+    const modalProfessor = new bootstrap.Modal(modalSelecionarProfessor);
+    const modalSelecionarSala = document.getElementById('modalSelecionarSala');
+    const modalSala = new bootstrap.Modal(modalSelecionarSala);
+
+    professorVisual.onclick = () => {
+        modalProfessor.show();
+    }
+
+    salaVisual.onclick = () => {
+        modalSala.show();
+    }
 
     function selecionaProfessor (professor_id, professor_nome) {
         professor.value = professor_id;
         professorVisual.value = professor_nome;
+        modalProfessor.hide();
     }
 
     function selecionaSala (sala_id, sala_nome) {
         sala.value = sala_id;
         salaVisual.value = sala_nome;
+        modalSala.hide();
     }
 
     const form = document.forms['form-atribuicao'];
