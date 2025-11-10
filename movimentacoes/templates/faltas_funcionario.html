@@ -21,7 +21,7 @@
                             <div class="col-12">
                                 <label for="funcionario" class="form-label">Funcionário(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="funcionario-visual" type="text" placeholder="Selecione o funcionário abaixo" readonly required />
+                                    <input class="form-control" id="funcionario-visual" type="text" placeholder="Selecione aqui o(a) funcionário(a)" readonly required />
                                     <input class="form-control" id="funcionario" name="funcionario" type="text" hidden />
                                 </div>
                             </div>
@@ -61,27 +61,39 @@
                             </div>
                         </div>
 
-                        <div>
-                            <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>Funcionário(a)</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for funcionario in funcionarios %}
-                                    <tr>
-                                        <td>{{funcionario.user.get_full_name}}</td>
-                                        <td>
-                                            <a class="btn btn-sm btn-warning btn-block" onclick="funcionarioEscolhido('{{funcionario.pk}}', '{{funcionario.user.get_full_name}}')">
-                                                Selecionar funcionário(a)
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        <!-- MODAL DE SELEÇÃO DE FUNCIONÁRIO -->
+
+                        <div class="modal modal-lg fade" id="modalSelecaoFuncionario" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Selecione o funcionário</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body row" id="modalBody">
+                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Funcionário(a)</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for funcionario in funcionarios %}
+                                                <tr>
+                                                    <td>{{funcionario.user.get_full_name}}</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning btn-block" onclick="funcionarioEscolhido('{{funcionario.pk}}', '{{funcionario.user.get_full_name}}')">
+                                                            Selecionar funcionário(a)
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="mt-4 mb-0">
@@ -148,12 +160,20 @@
 </div>
 
 <script>
+    const modalSelecaoFuncionario = document.getElementById('modalSelecaoFuncionario');
+    const modalFuncionario = new bootstrap.Modal(modalSelecaoFuncionario);
+    const campoVisual = document.getElementById('funcionario-visual');
+
+    campoVisual.onclick = () => {
+        modalFuncionario.show();
+    };
+
     function funcionarioEscolhido (funcionario_id, funcionario_nome) {
-        const campoVisual = document.getElementById('funcionario-visual');
         const campo = document.getElementById('funcionario');
 
         campo.value = funcionario_id;
         campoVisual.value = funcionario_nome;
+        modalFuncionario.hide();
     }
 
     const form = document.forms['form-falta-funcionario'];

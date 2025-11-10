@@ -89,57 +89,60 @@
                             {% endif %}
                             
                         </div>
-                        {% if total_alunos %}
-                        <div class="card">
-                        
-                            <div class="card-header">
-                                <i class="fas fa-users me-1"></i>
-                                {% if matricula %}
-                                Alunos sem turma
-                                {% else %}
-                                Alunos ativos
-                                {% endif %}
-                            </div>
-                            
-                            <div class="card-body">
-                                <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                                    <thead>
-                                        <tr>
-                                            <th>Aluno</th>
-                                            <th>R.A.</th>
-                                            <th>Sala</th>
-                                            <th>Ações</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for aluno in total_alunos %}
-                                        <tr>
-                                            <td>{{aluno.nome}}</td>
-                                            <td>{{aluno.ra}}</td>
-                                            <td>
-                                                {% if aluno.turmas.all %}
-                                                    {% for turma in aluno.turmas.all %}
-                                                    {% if turma.status == 'Ativo' %}
-                                                    {{turma.sala}}
-                                                    {% endif %}
-                                                    {% endfor %}
-                                                {% else %}
-                                                Sem sala
-                                                {% endif %}
-                                            </td>
-                                            <td>
-                                                <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}'{% if aluno.turmas.first %}, '{{aluno.turmas.first.sala.pk}}', '{{aluno.turmas.first.sala}}', '{{aluno.turmas.first.sala.serie}}', '{{aluno.turmas.first.sala.classe}}'{% endif %})">
-                                                    Selecionar aluno(a)
-                                                </a>
-                                            </td>
-                                        </tr>
-                                        {% endfor %}
-                                    </tbody>
-                                </table>
+
+                        <!-- MODAL DE SELEÇÃO DE ALUNOS -->
+
+                        <div class="modal modal-lg fade" id="modalSelecioneAluno" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Selecione o aluno(a)</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body row" id="modalBody">
+                                        {% if total_alunos %}
+                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Aluno</th>
+                                                    <th>R.A.</th>
+                                                    <th>Sala</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for aluno in total_alunos %}
+                                                <tr>
+                                                    <td>{{aluno.nome}}</td>
+                                                    <td>{{aluno.ra}}</td>
+                                                    <td>
+                                                        {% if aluno.turmas.all %}
+                                                            {% for turma in aluno.turmas.all %}
+                                                            {% if turma.status == 'Ativo' %}
+                                                            {{turma.sala}}
+                                                            {% endif %}
+                                                            {% endfor %}
+                                                        {% else %}
+                                                        Sem sala
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning btn-block" onclick="alunoEscolhido('{{aluno.pk}}', '{{aluno.nome}}'{% if aluno.turmas.first %}, '{{aluno.turmas.first.sala.pk}}', '{{aluno.turmas.first.sala}}', '{{aluno.turmas.first.sala.serie}}', '{{aluno.turmas.first.sala.classe}}'{% endif %})">
+                                                            Selecionar aluno(a)
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                        {% else %}
+                                        <p>Não foram encontrados alunos(as) para está operação !</p>
+                                        {% endif %}
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        {% endif %}
-                        
+
                         <div class="mt-2 mb-0">
                             <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
                         </div>
@@ -158,8 +161,16 @@
     const remanejamento = "{{remanejamento}}";
     const transferencia = "{{transferencia}}";
 
+    const modalSelecioneAluno = document.getElementById('modalSelecioneAluno');
+    const modalAluno = new bootstrap.Modal(modalSelecioneAluno);
+    let campoAlunoVisual = document.getElementById('aluno_visual');
+
+    campoAlunoVisual.onclick = () => {
+        modalAluno.show();
+    };
+
+
     function alunoEscolhido (id_aluno, aluno_nome, id_sala=null, sala_nome=null, serie=null, classe=null) {
-        let campoAlunoVisual = document.getElementById('aluno_visual');
         let campoAluno = document.getElementById('aluno');
         campoAlunoVisual.value=aluno_nome;
         campoAluno.value=id_aluno;
@@ -199,6 +210,8 @@
                 origem_input.value = id_sala;
             }
         }
+
+        modalAluno.hide();
     }
 
     const form = document.forms['form-movimentacao'];

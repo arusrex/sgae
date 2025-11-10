@@ -21,7 +21,7 @@
                             <div class="col-12">
                                 <label for="professor" class="form-label">Professor(a)</label>
                                 <div class="mb-3">
-                                    <input class="form-control" id="professor-visual" type="text" placeholder="Selecione o professor abaixo" readonly required />
+                                    <input class="form-control text-danger" id="professor-visual" type="text" placeholder="Selecionar aqui o(a) professor(a)" readonly required />
                                     <input class="form-control" id="professor" name="professor" type="text" hidden />
                                 </div>
                             </div>
@@ -74,28 +74,42 @@
                             </div>
                         </div>
 
-                        <div>
-                            <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>Professor(a)</th>
-                                        <th>Ações</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {% for professor in professores %}
-                                    <tr>
-                                        <td>{{professor.user.get_full_name}}</td>
-                                        <td>
-                                            <a class="btn btn-sm btn-warning btn-block" onclick="professorEscolhido('{{professor.pk}}', '{{professor.user.get_full_name}}')">
-                                                Selecionar professor(a)
-                                            </a>
-                                        </td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
+                        <!-- MODAL DE SELEÇÃO DE PROFESSOR -->
+
+                        <div class="modal modal-lg fade" id="modalSelecioneProfessor" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">Selecione o professor</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body row" id="modalBody">
+                                        <table class="sem-botoes sem-info sem-qtd-por-paginas" id="datatablesSimple">
+                                            <thead>
+                                                <tr>
+                                                    <th>Professor(a)</th>
+                                                    <th>Ações</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for professor in professores %}
+                                                <tr>
+                                                    <td>{{professor.user.get_full_name}}</td>
+                                                    <td>
+                                                        <a class="btn btn-sm btn-warning btn-block" onclick="professorEscolhido('{{professor.pk}}', '{{professor.user.get_full_name}}')">
+                                                            Selecionar professor(a)
+                                                        </a>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+                        
                         
                         <div class="mt-4 mb-0">
                             <div><button type="submit" class="btn btn-primary btn-block">Salvar dados</button></div>
@@ -161,12 +175,20 @@
 </div>
 
 <script>
+    const modalSelecioneProfessor = document.getElementById('modalSelecioneProfessor');
+    const modalProfessor = new bootstrap.Modal(modalSelecioneProfessor);
+    const campoVisual = document.getElementById('professor-visual');
+
+    campoVisual.onclick = () => {
+        modalProfessor.show();
+    };
+
     function professorEscolhido (professor_id, professor_nome) {
-        const campoVisual = document.getElementById('professor-visual');
         const campo = document.getElementById('professor');
 
         campo.value = professor_id;
         campoVisual.value = professor_nome;
+        modalProfessor.hide();
     }
 
     const form = document.forms['form-falta-professor'];
