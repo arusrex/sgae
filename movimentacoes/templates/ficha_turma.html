@@ -29,7 +29,7 @@
                     </thead>
                     <tbody>
                         {% for aluno in alunos_turma %}
-                        <tr {% if aluno.status == 'Transferido' %}class="text-bg-danger"{% elif aluno.ststus == 'Remanejado' %}class="text-bg-warning"{% endif %}>
+                        <tr {% if aluno.status == 'Transferido' %}class="bg-danger"{% elif aluno.ststus == 'Remanejado' %}class="bg-warning"{% endif %}>
                             <td {% if aluno.status != 'Ativo' %}class="text-light"{% endif %}>{{aluno.numero_aluno}}</td>
                             <td {% if aluno.status != 'Ativo' %}class="text-light"{% endif %}>{{aluno.aluno}}</td>
                             <td {% if aluno.status != 'Ativo' %}class="text-light"{% endif %}>{{aluno.aluno.nascimento}}</td>
