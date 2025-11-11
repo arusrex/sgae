@@ -92,10 +92,17 @@
     }
 </script>
 {% endfor %}
-<!-- {% endif %}
+{% endif %}
 <script>
     const btnSalvar = document.getElementById('confirmarSalvar');
     btnSalvar.onclick = () => {
-        btnSalvar.disabled = true;
+        btnSalvar.innerText = ""
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+        span1.classList.add('spinner-border', 'spinner-border-sm');
+        span2.innerText = " Aguarde ...";
+        span2.setAttribute('role', 'status');
+        btnSalvar.appendChild(span1);
+        btnSalvar.appendChild(span2);
     };
-</script> -->
+</script>
