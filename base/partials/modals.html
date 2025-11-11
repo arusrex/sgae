@@ -95,7 +95,7 @@
 {% endif %}
 <script>
     const btnSalvar = document.getElementById('confirmarSalvar');
-    btnSalvar.onclick = () => {
+    btnSalvar.addEventListener('click', () => {
         btnSalvar.innerText = ""
         const span1 = document.createElement('span');
         const span2 = document.createElement('span');
@@ -104,5 +104,5 @@
         span2.setAttribute('role', 'status');
         btnSalvar.appendChild(span1);
         btnSalvar.appendChild(span2);
-    };
+    });
 </script>
