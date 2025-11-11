@@ -8,6 +8,8 @@
 <script>
     window.addEventListener('load', () => {
         const overlay = document.getElementById('loading-overlay');
-        overlay.classList.add('d-none');
+        setTimeout(() => {
+            overlay.classList.add('d-none');
+        }, 3000);
     });
 </script>
