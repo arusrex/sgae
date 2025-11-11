@@ -1,0 +1,13 @@
+<div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50" style="z-index: 1055;">
+  <div>
+    <span class="spinner-border text-light"></span>
+    <span class="text-light" role="status"> Carregando...</span>
+  </div>
+</div>
+
+<script>
+    window.addEventListener('load', () => {
+        const overlay = document.getElementById('loading-overlay');
+        overlay.classList.add('d-none');
+    });
+</script>
