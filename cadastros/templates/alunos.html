@@ -267,6 +267,7 @@
                     <thead>
                         <tr>
                             <th>Nome</th>
+                            <th>Sala Atual</th>
                             <th>R.A.</th>
                             <th>Nascimento</th>
                             <th class="no-print">Ações</th>
@@ -276,6 +277,13 @@
                         {% for aluno in alunos %}
                         <tr>
                             <td>{{aluno.nome | default_if_none:""}}</td>
+                            <td>
+                                {% for sala in aluno.turmas.all %}
+                                    {% if sala.status == "Ativo" %}
+                                        {{sala.sala}}
+                                    {% endif %}
+                                {% endfor %}
+                            </td>
                             <td>{{aluno.ra | default_if_none:""}}</td>
                             <td>{{aluno.nascimento | default_if_none:""}}</td>
                             <td class="no-print">

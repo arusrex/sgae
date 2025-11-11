@@ -22,6 +22,7 @@
                         <tr>
                             <th>Número</th>
                             <th>Nome</th>
+                            <th>RA</th>
                             <th>Nascimento</th>
                             <th>Situação</th>
                             <th class="no-print">Ações</th>
@@ -32,6 +33,7 @@
                         <tr {% if aluno.status == 'Transferido' %}class="bg-danger"{% elif aluno.status == 'Remanejado' %}class="bg-warning"{% endif %}>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.numero_aluno}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno}}</td>
+                            <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.ra}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.nascimento}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.status}}</td>
                             <td>
