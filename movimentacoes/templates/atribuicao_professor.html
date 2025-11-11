@@ -182,12 +182,21 @@
     const modalSelecionarSala = document.getElementById('modalSelecionarSala');
     const modalSala = new bootstrap.Modal(modalSelecionarSala);
 
+    function procuraPesquisa (i) {
+        const inputsModal = document.querySelectorAll('.dt-search input[type="search"]')[i];
+        setTimeout(() => {
+            inputsModal.focus();
+        }, 500);
+    }
+
     professorVisual.onclick = () => {
         modalProfessor.show();
+        procuraPesquisa(0);
     }
 
     salaVisual.onclick = () => {
         modalSala.show();
+        procuraPesquisa(1);
     }
 
     function selecionaProfessor (professor_id, professor_nome) {

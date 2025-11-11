@@ -164,8 +164,16 @@
     const modalFuncionario = new bootstrap.Modal(modalSelecaoFuncionario);
     const campoVisual = document.getElementById('funcionario-visual');
 
+    function procuraPesquisa (i) {
+        const inputsModal = document.querySelectorAll('.dt-search input[type="search"]')[i];
+        setTimeout(() => {
+            inputsModal.focus();
+        }, 500);
+    }
+
     campoVisual.onclick = () => {
         modalFuncionario.show();
+        procuraPesquisa(0);
     };
 
     function funcionarioEscolhido (funcionario_id, funcionario_nome) {

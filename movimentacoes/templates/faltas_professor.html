@@ -179,8 +179,16 @@
     const modalProfessor = new bootstrap.Modal(modalSelecioneProfessor);
     const campoVisual = document.getElementById('professor-visual');
 
+    function procuraPesquisa (i) {
+        const inputsModal = document.querySelectorAll('.dt-search input[type="search"]')[i];
+        setTimeout(() => {
+            inputsModal.focus();
+        }, 500);
+    }
+
     campoVisual.onclick = () => {
         modalProfessor.show();
+        procuraPesquisa(0);
     };
 
     function professorEscolhido (professor_id, professor_nome) {
