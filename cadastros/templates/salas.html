@@ -133,7 +133,10 @@
 
         const botaoConfirmacao = document.getElementById('confirmarSalvar');
         if (botaoConfirmacao) {
-            botaoConfirmacao.onclick = () => form.submit();
+            botaoConfirmacao.onclick = () => {
+                botaoConfirmacao.disabled = true;
+                form.submit();
+            };
         }
     });
 

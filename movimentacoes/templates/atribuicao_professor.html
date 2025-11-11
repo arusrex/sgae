@@ -231,7 +231,10 @@
                 modalAtribuicao.show();
                 const botaoConfirmacaoAtribuicao = document.getElementById('confirmarSalvar');
                 if (botaoConfirmacaoAtribuicao) {
-                    botaoConfirmacaoAtribuicao.onclick = () => form.submit();
+                    botaoConfirmacaoAtribuicao.onclick = () => {
+                        botaoConfirmacaoAtribuicao.disabled = true;
+                        form.submit();
+                    };
                 }
             };
         });

@@ -381,7 +381,10 @@
                 });
                 modalConfirmacao.show();
                 const botaoConfirmacao = document.getElementById('confirmarSalvar');
-                botaoConfirmacao.onclick = () => form.submit();
+                botaoConfirmacao.onclick = () => {
+                    botaoConfirmacao.disabled = true;
+                    form.submit();
+                };
             }
         });
 

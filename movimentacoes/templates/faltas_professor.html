@@ -254,7 +254,10 @@
             modalConfirmacaoFalta.show();
             if (modalConfirmacaoFalta) {
                 const botaoConfirmacaoModal = document.getElementById('confirmarSalvar');
-                botaoConfirmacaoModal.onclick = () => form.submit();
+                botaoConfirmacaoModal.onclick = () => {
+                    botaoConfirmacaoModal.disabled = true;
+                    form.submit();
+                };
             }
         }
     });
