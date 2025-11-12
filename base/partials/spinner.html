@@ -1,4 +1,4 @@
-<div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50" style="z-index: 1055;">
+<div id="loading-overlay" class="d-none position-fixed top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center bg-dark bg-opacity-50" style="z-index: 1055;">
   <div>
     <span class="spinner-border text-light"></span>
     <span class="text-light" role="status"> Carregando...</span>
@@ -6,10 +6,27 @@
 </div>
 
 <script>
-    window.addEventListener('load', () => {
-        const overlay = document.getElementById('loading-overlay');
-        setTimeout(() => {
-            overlay.classList.add('d-none');
-        }, 2000);
-    });
+  const overlay = document.getElementById('loading-overlay');
+
+  function mostrarSpinner() {
+    if (overlay.classList.contains('d-none')) {
+      overlay.classList.remove("d-none");
+    }
+  }
+
+  function esconderSpinner() {
+    if (!overlay.classList.contains('d-none')) {
+      overlay.classList.add('d-none');
+    }
+  }
+
+  window.addEventListener('beforeload', () => {
+    mostrarSpinner();
+  });
+  
+  window.addEventListener('load', () => {
+    setTimeout(() => {
+      esconderSpinner();
+    }, 1000);
+  });
 </script>
