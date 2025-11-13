@@ -26,4 +26,6 @@ urlpatterns = [
 
     # COMUNICAR MOVIMENTAÇÕES
     path('comunicar-movimentacao/', views.comunicar_movimentacao, name='comunicar-movimentacao'),
+
+    path('altera-numero-aluno/<str:pk>/<str:numero>/', views.altera_numero_aluno, name='altera-numero-aluno'),
 ]

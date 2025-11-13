@@ -451,7 +451,7 @@ def turmas(request, pk=None):
 
 @login_required
 def ficha_turma(request, pk):
-    alunos_turma = Sala.objects.get(pk=pk).turmas.all() # type: ignore
+    alunos_turma = Sala.objects.get(pk=pk).turmas.all().order_by("numero_aluno") # type: ignore
 
     context = {
         'alunos_turma': alunos_turma,
@@ -599,3 +599,15 @@ def comunicar_movimentacao(request):
             })
 
     return JsonResponse(context, safe=False)
+
+def altera_numero_aluno(request, pk, numero):
+    print(pk, numero)
+    turma = Turma.objects.get(pk=pk)
+
+    print(turma.pk, turma.numero_aluno)
+    if turma:
+        turma.numero_aluno = numero
+        turma.save()
+
+        return JsonResponse({"ok": "Número de aluno alterado com sucesso"})
+    

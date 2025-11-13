@@ -2,6 +2,12 @@
 {% block title %}Ficha das Turmas{% endblock title %}
 
 {% block content %}
+<script>
+    async function alteraNumeroAluno(aluno_pk, value) {
+        const resp = await fetch(`/movimentacoes/altera-numero-aluno/${aluno_pk}/${value}/`);
+        console.log(resp.ok);
+    }
+</script>
 <div class="container-fluid px-4">
     <h1 class="mt-4">Gestão Escolar</h1>
     <ol class="breadcrumb mb-4">
@@ -31,7 +37,9 @@
                     <tbody>
                         {% for aluno in alunos_turma %}
                         <tr {% if aluno.status == 'Transferido' %}class="bg-danger"{% elif aluno.status == 'Remanejado' %}class="bg-warning"{% endif %}>
-                            <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.numero_aluno}}</td>
+                            <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>
+                                <input type="number" class="form-control" value="{{aluno.numero_aluno}}" onchange="alteraNumeroAluno('{{aluno.pk}}', value)">
+                            </td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.ra}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.nascimento}}</td>
@@ -49,3 +57,4 @@
     </div>
 </div>
 {% endblock content %}
+
