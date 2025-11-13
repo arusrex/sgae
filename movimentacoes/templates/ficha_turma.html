@@ -38,7 +38,8 @@
                         {% for aluno in alunos_turma %}
                         <tr {% if aluno.status == 'Transferido' %}class="bg-danger"{% elif aluno.status == 'Remanejado' %}class="bg-warning"{% endif %}>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>
-                                <input type="number" class="form-control" value="{{aluno.numero_aluno}}" onchange="alteraNumeroAluno('{{aluno.pk}}', value)">
+                                <input type="number" class="form-control form-control-sm w-auto" value="{{aluno.numero_aluno}}" onchange="alteraNumeroAluno('{{aluno.pk}}', value)">
+                                <span class="d-none">{{aluno.numero_aluno}}</span>
                             </td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.ra}}</td>
