@@ -57,7 +57,7 @@ PERIODOS = [
 @login_required
 def movimentacoes(request):
     user = request.user.get_full_name()
-    movimentacoes = Movimentacoes.objects.all().order_by('-data', 'pk')
+    movimentacoes = Movimentacoes.objects.all().order_by('-data', '-pk')
 
     context = {
         'movimentacoes': movimentacoes,
@@ -338,8 +338,8 @@ def excluir_atribuicoes(request, pk):
 @login_required
 def faltas_professor(request, pk=None):
     user = request.user.get_full_name()
-    professores = Professor.objects.all()
-    faltas = FrequenciaProfessores.objects.all().order_by('professor')
+    professores = Professor.objects.all().order_by('user__first_name')
+    faltas = FrequenciaProfessores.objects.all().order_by('-pk')
 
     if request.method == "POST":
         try:
@@ -601,10 +601,8 @@ def comunicar_movimentacao(request):
     return JsonResponse(context, safe=False)
 
 def altera_numero_aluno(request, pk, numero):
-    print(pk, numero)
     turma = Turma.objects.get(pk=pk)
 
-    print(turma.pk, turma.numero_aluno)
     if turma:
         turma.numero_aluno = numero
         turma.save()

@@ -26,6 +26,10 @@ def context_processors(request):
         logo_municipio = '/static/assets/img/arus_logo.png'
         logo_educacao = '/static/assets/img/arus_logo.png'
 
+    total_alunos_ativos = Turma.objects.filter(status="Ativo").count()
+    total_alunos_remanejados = Turma.objects.filter(status="Remanejado").count()
+    total_alunos_tranferidos = Turma.objects.filter(status="Transferido").count()
+
     context = {
         'usuario_sistema': usuario,
         'sistema_nome': nome,
@@ -34,7 +38,10 @@ def context_processors(request):
         'sistema_nova_conta': nova_conta,
         'sistema_logo': logo,
         'sistema_logo_municipio': logo_municipio,
-        'sistema_logo_educacao': logo_educacao
+        'sistema_logo_educacao': logo_educacao,
+        'total_alunos_ativos': total_alunos_ativos,
+        'total_alunos_remanejados': total_alunos_remanejados,
+        'total_alunos_tranferidos': total_alunos_tranferidos
     }
 
     return context
