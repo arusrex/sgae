@@ -327,14 +327,40 @@ def professores(request, pk=None):
 
 @login_required
 def ficha_professor(request, pk):
+    from datetime import timedelta
     professor = get_object_or_404(Professor, pk=pk)
     atribuicoes = AtribuicaoProfessor.objects.filter(professor=professor)
     frequencia = FrequenciaProfessores.objects.filter(professor=professor)
-    qtd_faltas = (FrequenciaProfessores.objects.filter(professor=professor)
-        .values('tipo')
-        .annotate(total=Count("tipo"))
-    )
 
+    # qtd_faltas = (FrequenciaProfessores.objects.filter(professor=professor)
+    #     .values('tipo')
+    #     .annotate(total=Count("tipo"))
+    # )
+
+    # for dado in qtd_faltas:
+    #     print(dado)
+
+    qtd_faltas = []
+
+
+    for dado in frequencia:
+        dias = (dado.data_final - dado.data_inicial).days + 1 #type:ignore
+
+        existe = False
+        
+        for falta in qtd_faltas:
+            if dado.tipo == falta['tipo']:
+                falta['total'] += dias
+                existe = True
+                break
+
+
+        if not existe:
+            qtd_faltas.append({
+                'tipo': dado.tipo,
+                'total': dias
+            })
+           
     context = {
         'professor': professor,
         'atribuicoes': atribuicoes,
@@ -734,11 +760,30 @@ def funcionarios(request, pk=None):
 def ficha_funcionario(request, pk):
     funcionario = get_object_or_404(Funcionario, pk=pk)
     frequencia = FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
-    qtd_faltas = (
-        FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
-        .values("tipo")
-        .annotate(total=Count("tipo"))
-    )
+    # qtd_faltas = (
+    #     FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
+    #     .values("tipo")
+    #     .annotate(total=Count("tipo"))
+    # )
+
+    qtd_faltas = []
+
+    for dado in frequencia:
+        dias = (dado.data_final - dado.data_inicial).days + 1 # type:ignore
+
+        existe = False
+
+        for falta in qtd_faltas:
+            if dado.tipo == falta['tipo']:
+                falta['total'] += dias
+                existe = True
+                break
+        
+        if not existe:
+            qtd_faltas.append({
+                'tipo': dado.tipo,
+                'total': dias
+            })
 
     context = {
         'funcionario': funcionario,
