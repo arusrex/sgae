@@ -15,6 +15,8 @@ from datetime import datetime
 from reportlab.pdfgen import canvas
 from django.db.models import Count, Q
 
+ano_atual = datetime.now().year
+
 def cabecalho_rodape(canvas, doc):
     dados = Sistema.objects.filter().first()
     user = usuario_sistema if usuario_sistema else ''
@@ -493,7 +495,7 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
         ('manha-tarde', 'Manhã e Tarde'),
     ]
 
-    faltas = FrequenciaProfessores.objects.filter(professor=professor).order_by('data_inicial')
+    faltas = FrequenciaProfessores.objects.filter(professor=professor).filter(data_inicial__year=ano_atual).order_by('data_inicial')
 
     faltaHead = [[
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
@@ -529,8 +531,6 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     story.append(Paragraph(f"Total das Faltas", sub_titulo))
     story.append(Spacer(1, 10))
 
-    tipos = FrequenciaProfessores.objects.filter(professor=professor).values("tipo").annotate(total=Count("tipo"))
-
     tiposHead = [[
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
         Paragraph(f"<b>Quantidade</b>", bodytext), # type: ignore
@@ -540,12 +540,47 @@ def ficha_professor(request, pk=None, tipo_pagina=None):
     linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
-    for tipo in tipos:
+    qtd_faltas = []
+
+    for falta in faltas:
+        dias = (falta.data_final - falta.data_inicial).days + 1 # type:ignore
+
+        existe = False
+        falta_aula = False
+
+        for i in qtd_faltas:
+            if falta.tipo == i['tipo'] and falta.tipo != "falta-aula":
+                i['total'] += dias
+                existe = True
+                break
+
+
+        if not existe and falta.tipo != 'falta-aula':
+            qtd_faltas.append({
+                'tipo':falta.tipo,
+                'total':dias
+            })
+        
+        if falta.tipo == 'falta-aula':
+            for i in qtd_faltas:
+                if falta.tipo == i['tipo']:
+                    i['total'] += falta.quantidade
+                    falta_aula = True
+                    break
+        
+            if not falta_aula:
+                qtd_faltas.append({
+                    'tipo':falta.tipo,
+                    'total':falta.quantidade
+                })
+
+    for j in qtd_faltas:
         for i in TIPOS:
-            if tipo["tipo"] == i[0]:
+            if j["tipo"] == i[0]:
+
                 colunaX = [[
                     Paragraph(f"{i[1]}", bodytext), # type: ignore
-                    Paragraph(f"{tipo['total']}", bodytext), # type: ignore
+                    Paragraph(f"{j['total']}", bodytext), # type: ignore
                 ]]
 
                 linha = Table(colunaX, colWidths=[200,100])
@@ -705,7 +740,7 @@ def ficha_funcionario(request, pk=None, tipo_pagina=None):
         ('manha-tarde', 'Manhã e Tarde'),
     ]
 
-    faltas = FrequenciaFuncionarios.objects.filter(funcionario=funcionario).order_by('data_inicial')
+    faltas = FrequenciaFuncionarios.objects.filter(funcionario=funcionario).filter(data_inicial__year=ano_atual).order_by('data_inicial')
 
     faltaHead = [[
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
@@ -739,9 +774,9 @@ def ficha_funcionario(request, pk=None, tipo_pagina=None):
     story.append(Paragraph(f"Total das Faltas", sub_titulo))
     story.append(Spacer(1, 10))
 
-    tipos = (FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
-        .values("tipo")
-        .annotate(quantidade=Count("tipo")))
+    # tipos = (FrequenciaFuncionarios.objects.filter(funcionario=funcionario)
+    #     .values("tipo")
+    #     .annotate(quantidade=Count("tipo")))
 
     tiposHead = [[
         Paragraph(f"<b>Tipo</b>", bodytext), # type: ignore
@@ -752,12 +787,31 @@ def ficha_funcionario(request, pk=None, tipo_pagina=None):
     linhaHead.setStyle(estilo_titulo)
     story.append(linhaHead)
 
-    for key in tipos:
+    qtd_faltas = []
+
+    for falta in faltas:
+        dias = (falta.data_final - falta.data_inicial).days + 1 # type:ignore
+
+        existe = False
+
+        for i in qtd_faltas:
+            if falta.tipo == i['tipo']:
+                i['total'] += dias
+                existe = True
+                break
+        
+        if not existe:
+            qtd_faltas.append({
+                'tipo':falta.tipo,
+                'total':dias
+            })
+
+    for key in qtd_faltas:
         for chave in TIPOS:
             if key['tipo'] == chave[0]:
                 colunaX = [[
                     Paragraph(f"{chave[1]}", bodytext), # type: ignore
-                    Paragraph(f"{key['quantidade']}", bodytext), # type: ignore
+                    Paragraph(f"{key['total']}", bodytext), # type: ignore
                 ]]
 
                 linha = Table(colunaX, colWidths=[200,100])

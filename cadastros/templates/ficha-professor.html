@@ -108,7 +108,7 @@
                                 {% for dado in qtd_faltas %}
                                 <tr>
                                     <td>{% for chave, valor in tipos %}{% if dado.tipo == chave %}{{valor}}{% endif %}{% endfor %}</td>
-                                    <td>{{dado.total}}</td>
+                                    <td>{{dado.total}}{% if dado.tipo == "falta-aula" %} aulas{% endif %}</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

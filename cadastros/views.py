@@ -10,6 +10,8 @@ from django.contrib import messages
 from movimentacoes.views import TIPOS_PROFESSOR, PERIODOS, TIPOS_FUNCIONARIOS
 from django.db.models import Count, Q
 
+ano_atual = datetime.now().year
+
 @login_required
 def salas(request, pk=None):
     user = request.user
@@ -330,7 +332,7 @@ def ficha_professor(request, pk):
     from datetime import timedelta
     professor = get_object_or_404(Professor, pk=pk)
     atribuicoes = AtribuicaoProfessor.objects.filter(professor=professor)
-    frequencia = FrequenciaProfessores.objects.filter(professor=professor)
+    frequencia = FrequenciaProfessores.objects.filter(professor=professor).filter(data_inicial__year=ano_atual)
 
     # qtd_faltas = (FrequenciaProfessores.objects.filter(professor=professor)
     #     .values('tipo')
@@ -342,25 +344,37 @@ def ficha_professor(request, pk):
 
     qtd_faltas = []
 
-
     for dado in frequencia:
         dias = (dado.data_final - dado.data_inicial).days + 1 #type:ignore
 
         existe = False
+        falta_aula = False
         
         for falta in qtd_faltas:
-            if dado.tipo == falta['tipo']:
+            if dado.tipo == falta['tipo'] and dado.tipo != "falta-aula":
                 falta['total'] += dias
                 existe = True
                 break
 
-
-        if not existe:
+        if not existe and dado.tipo != "falta-aula":
             qtd_faltas.append({
                 'tipo': dado.tipo,
                 'total': dias
             })
-           
+        
+        if dado.tipo == 'falta-aula':
+            for i in qtd_faltas:
+                if i['tipo'] == 'falta-aula':
+                    i['total'] += dado.quantidade
+                    falta_aula = True
+                    break
+                
+            if not falta_aula:
+                qtd_faltas.append({
+                    'tipo': dado.tipo,
+                    'total': dado.quantidade
+                })
+        
     context = {
         'professor': professor,
         'atribuicoes': atribuicoes,
