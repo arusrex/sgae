@@ -43,7 +43,7 @@
                             </td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno}}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.ra}}</td>
-                            <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.aluno.nascimento}}</td>
+                            <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{% if aluno.aluno.nascimento %}{{aluno.aluno.nascimento}}{% endif %}</td>
                             <td {% if aluno.status == 'Transferido' %}class="text-light"{% endif %}>{{aluno.status}}</td>
                             <td>
                                 <a href="{% url "movimentacoes:excluir-turma" aluno.pk %}" class="btn btn-sm btn-danger btn-block btn-excluir">Excluir</a>
