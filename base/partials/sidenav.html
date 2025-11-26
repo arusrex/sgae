@@ -32,6 +32,8 @@
                     Salas
                 </a>
 
+                {% if user.is_superuser %}
+                
                 <!--Gestão Escolar-->
 
                 <div class="sb-sidenav-menu-heading">Gestão Escolar</div>
@@ -56,6 +58,7 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-people-group"></i></div>
                     Turmas
                 </a>
+
                 <!--Configurações-->
 
                 <div class="sb-sidenav-menu-heading">Configurações</div>
@@ -76,6 +79,8 @@
                         
                     </nav>
                 </div>
+                {% endif %}
+                
                 {% comment %}  <div class="sb-sidenav-menu-heading">Interface</div>
                 <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts" aria-expanded="false" aria-controls="collapseLayouts">
                     <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
