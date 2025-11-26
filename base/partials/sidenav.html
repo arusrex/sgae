@@ -31,13 +31,11 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-people-roof"></i></div>
                     Salas
                 </a>
-
-                {% if user.is_superuser %}
                 
                 <!--Gestão Escolar-->
 
                 <div class="sb-sidenav-menu-heading">Gestão Escolar</div>
-                
+                {% if user.is_superuser %}
                 <a class="nav-link collapsed" href="{% url "movimentacoes:atribuicoes" %}">
                     <div class="sb-nav-link-icon"><i class="fas fa-link"></i></div>
                     Atribuições dos Professores
@@ -54,11 +52,13 @@
                     <div class="sb-nav-link-icon"><i class="fas fa-down-left-and-up-right-to-center"></i></div>
                     Movimentações
                 </a>
+                {% endif %}
                 <a class="nav-link collapsed" href="{% url "movimentacoes:turmas" %}">
                     <div class="sb-nav-link-icon"><i class="fas fa-people-group"></i></div>
                     Turmas
                 </a>
 
+                {% if user.is_superuser %}
                 <!--Configurações-->
 
                 <div class="sb-sidenav-menu-heading">Configurações</div>
